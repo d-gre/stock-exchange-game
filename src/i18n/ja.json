@@ -1,0 +1,311 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "max": "最大",
+    "edit": "編集",
+    "delete": "削除"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "appearance": "外観",
+    "dark": "ダーク",
+    "light": "ライト",
+    "updateInterval": "更新間隔（秒）",
+    "virtualPlayers": "仮想プレイヤー数（0〜{{max}}）",
+    "settings": "設定"
+  },
+  "game": {
+    "start": "ゲーム開始",
+    "startingCapital": "初期資金",
+    "preparingMarket": "マーケットを準備中...",
+    "nextCycle": "次の取引サイクル：",
+    "resume": "再開",
+    "pause": "一時停止",
+    "speed": "速度：{{speed}}倍（クリックで{{next}}倍）",
+    "trades": "{{count}}件の取引",
+    "players": "{{count}}人",
+    "showPlayers": "仮想プレイヤーを表示",
+    "hidePlayers": "仮想プレイヤーを非表示"
+  },
+  "gameModes": {
+    "realLife": {
+      "name": "リアルライフ",
+      "description": "現実的な市場条件"
+    },
+    "hardLife": {
+      "name": "ハードライフ",
+      "description": "追加の課題がある難易度モード"
+    },
+    "sandbox": {
+      "name": "サンドボックス",
+      "description": "制限なしの自由プレイ"
+    }
+  },
+  "orderTypes": {
+    "buy": {
+      "market": "成行",
+      "limit": "指値",
+      "stopBuy": "逆指値買い",
+      "stopBuyLimit": "逆指値買い（指値）"
+    },
+    "sell": {
+      "market": "成行",
+      "limit": "指値",
+      "stopBuy": "逆指値売り",
+      "stopBuyLimit": "逆指値売り（指値）"
+    }
+  },
+  "trading": {
+    "buy": "買い",
+    "sell": "売り",
+    "editOrder": "編集",
+    "currentPrice": "現在価格",
+    "availableCash": "利用可能残高",
+    "availableShares": "利用可能株数",
+    "reservedForOrders": "注文予約済み",
+    "quantity": "数量",
+    "type": "種類",
+    "stopPrice": "逆指値価格",
+    "limitPrice": "指値価格",
+    "validity": "有効期限",
+    "tradingCycles": "取引サイクル（ラウンド）",
+    "rate": "レート",
+    "effectivePrice": "実効価格/株",
+    "spread": "スプレッド",
+    "slippage": "スリッページ",
+    "subtotal": "小計",
+    "quantityTimesRate": "数量 × レート",
+    "orderFee": "注文手数料",
+    "totalCost": "合計コスト",
+    "netProceeds": "純収益",
+    "approx": "約",
+    "priceDeviation": "実際の約定価格は市場変動により異なる場合があります。",
+    "orderExecuteWhen": "この注文は価格条件が満たされた時に執行されます。",
+    "updateOrder": "注文を更新",
+    "placeOrder": "注文を出す",
+    "stopHintBuy": "価格 ≥ 逆指値で発動",
+    "stopHintSell": "価格 ≤ 逆指値で発動",
+    "limitHintBuy": "価格 ≤ 指値の時のみ買い",
+    "limitHintSell": "価格 ≥ 指値の時のみ売り",
+    "invalidStopBuyLimit": "無効な価格設定：逆指値買い（指値）では、指値価格（${{limit}}）が逆指値価格（${{stop}}）より高くなければなりません。そうでないと注文は執行されません。",
+    "invalidStopLossLimit": "無効な価格設定：逆指値売り（指値）では、指値価格（${{limit}}）が逆指値価格（${{stop}}）より低くなければなりません。そうでないと注文は執行されません。"
+  },
+  "errors": {
+    "invalidQuantity": "有効な数量を入力してください。",
+    "insufficientCash": "利用可能な残高が不足しています。",
+    "insufficientShares": "利用可能な株数が不足しています。",
+    "invalidLimitPrice": "有効な指値価格を入力してください。",
+    "invalidStopPrice": "有効な逆指値価格を入力してください。"
+  },
+  "portfolio": {
+    "title": "ポートフォリオ",
+    "available": "利用可能",
+    "reserved": "予約済み",
+    "stockValue": "株式評価額",
+    "totalValue": "総資産",
+    "profitLoss": "損益",
+    "assets": "資産",
+    "noHoldings": "保有株なし",
+    "orders": "注文",
+    "noOrders": "未決済注文なし",
+    "buy": "買",
+    "sell": "売",
+    "editOrder": "注文を編集",
+    "cancelOrder": "注文をキャンセル",
+    "nextCycle": "次サイクル",
+    "tradingCycles": "{{count}}サイクル",
+    "remainingCycles": "執行までの残りサイクル",
+    "symbol": "銘柄",
+    "qty": "数量",
+    "buyPrice": "購入",
+    "current": "現在",
+    "pl": "損益"
+  },
+  "stockList": {
+    "title": "取引所",
+    "symbol": "銘柄",
+    "price": "価格",
+    "change": "変動",
+    "marketCap": "時価総額",
+    "trend": "トレンド"
+  },
+  "chart": {
+    "marketIndex": "市場指数",
+    "orderHistory": "注文履歴",
+    "assets": "資産（{{count}}）",
+    "stock": "株式",
+    "stockNotFound": "銘柄が見つかりません",
+    "pendingOrder": "未決済注文あり",
+    "noStocksInPortfolio": "ポートフォリオに株式がありません",
+    "clickToShowChart": "右側のリストから銘柄をクリックしてチャートを表示",
+    "pieces": "株"
+  },
+  "notification": {
+    "change": "変更",
+    "delete": "削除",
+    "stockSplit": {
+      "title": "株式分割: {{symbol}}",
+      "message": "{{name}}が{{ratio}}:1で分割されました。新価格: ${{newPrice}}（旧価格: ${{oldPrice}}）"
+    },
+    "buyOrderFailed": {
+      "title": "買い注文が実行されませんでした",
+      "message": "{{shares}}x {{symbol}}を購入できませんでした。必要額: ${{required}}、利用可能: ${{available}}"
+    }
+  },
+  "tradeHistory": {
+    "title": "注文履歴",
+    "recentTrades": "最近の取引",
+    "noTrades": "取引履歴なし",
+    "buys": "{{count}}件の買い",
+    "sells": "{{count}}件の売り",
+    "buy": "買",
+    "sell": "売",
+    "failed": "失敗",
+    "time": "時間",
+    "type": "種類",
+    "symbol": "銘柄",
+    "shares": "数量",
+    "price": "価格",
+    "total": "合計",
+    "pl": "損益",
+    "failureReasons": {
+      "insufficient_funds": "残高不足",
+      "insufficient_shares": "株数不足",
+      "expired": "注文期限切れ",
+      "unknown": "不明な理由"
+    },
+    "chart": {
+      "noTrades": "まだ取引がありません",
+      "noTradesHint": "株式を売買してパフォーマンスを確認しましょう。",
+      "portfolioValue": "ポートフォリオ価値",
+      "realizedPL": "実現損益"
+    },
+    "riskProfile": {
+      "title": "リスクプロファイル",
+      "trades": "取引数",
+      "avgPosition": "平均ポジション",
+      "holdingDuration": "保有期間",
+      "winLoss": "勝敗比",
+      "avgWin": "平均利益",
+      "avgLoss": "平均損失",
+      "realizedPL": "実現損益",
+      "conservative": "保守的",
+      "moderate": "中立的",
+      "aggressive": "積極的",
+      "conservativeDesc": "安定した投資を好み、素早い損切り、小さなポジション",
+      "moderateDesc": "リスクと安全性のバランスが取れた戦略",
+      "aggressiveDesc": "大きなポジション、高い取引頻度、損失でも保有継続"
+    }
+  },
+  "virtualPlayers": {
+    "transactions": "取引",
+    "noTransactions": "取引履歴なし",
+    "decisionFactors": "判断要因",
+    "noDecisionData": "判断データなし",
+    "volatility": "ボラティリティ",
+    "trend": "トレンド",
+    "score": "スコア",
+    "playerType": "プレイヤータイプ",
+    "buyPrice": "購入価格",
+    "sellScore": "売却スコア",
+    "sellThreshold": "（≥40 = 売却）",
+    "cash": "現金",
+    "clickDetails": "クリックで詳細表示",
+    "risk": {
+      "averse": "リスク回避型",
+      "neutral": "中立型",
+      "seeking": "リスク選好型"
+    },
+    "volatilityLevel": {
+      "low": "低",
+      "medium": "中",
+      "high": "高"
+    },
+    "trendLevel": {
+      "strongUp": "強い上昇",
+      "up": "上昇",
+      "down": "下降",
+      "strongDown": "強い下降"
+    },
+    "reasoning": {
+      "prefersStable": "安定した上昇銘柄を好む",
+      "seeksVolatile": "利益可能性のある変動銘柄を探す",
+      "balanced": "バランス戦略",
+      "stopLoss": "損失時は素早く売却（損切り）",
+      "holdsLosses": "通常は損失を保有するが、トレンドが悪化",
+      "takesProfit": "利益確定",
+      "securesProfit": "トレンド悪化、利益を確保",
+      "balancedSell": "バランスの取れた売却判断"
+    },
+    "txType": {
+      "buy": "買",
+      "sell": "売"
+    }
+  },
+  "help": {
+    "linkText": "ゲームの遊び方",
+    "title": "D-GRE証券取引所へようこそ",
+    "understood": "了解、始めましょう！",
+    "intro": {
+      "title": "これは何？",
+      "text": "D-GRE証券取引所は、仮想通貨で本格的な取引戦略を試せるリアルな株式市場ゲームです。14社の有名企業の株を売買し、リアルタイムで価格変動を観察し、ポートフォリオを増やしましょう。仮想プレイヤーも取引に参加し、価格に影響を与えます。まるで本物の株式市場のように。"
+    },
+    "howToPlay": {
+      "title": "遊び方",
+      "step1": {
+        "title": "市場を観察する",
+        "text": "右側にすべての銘柄が表示されます。現在の価格とトレンドを確認できます。銘柄をクリックすると詳細チャートが表示されます。"
+      },
+      "step2": {
+        "title": "株を買う",
+        "text": "銘柄の「買う」ボタンをクリックします。数量と注文タイプ（成行は即時購入、指値は特定価格で）を選択してください。"
+      },
+      "step3": {
+        "title": "ポートフォリオを管理する",
+        "text": "左側にポートフォリオが表示されます。購入した株、利用可能な現金、未決済注文が確認できます。総資産を常にチェック！"
+      },
+      "step4": {
+        "title": "利益を得て売却する",
+        "text": "価格が上がったら、株を売って利益を確定させましょう。または、ストップロス注文で損失を限定しましょう。"
+      }
+    },
+    "rules": {
+      "title": "ゲームルール",
+      "rule1": "カスタマイズ可能な初期資金でスタート（デフォルト：$100,000）。",
+      "rule2": "価格は数秒ごとに更新されます。設定で速度を調整できます。",
+      "rule3": "各銘柄につき、1取引サイクルで1注文のみ実行可能です。",
+      "rule4": "本物の株式市場と同様に、取引手数料とスプレッドがあります。",
+      "rule5": "さまざまな戦略を持つ仮想プレイヤーも価格に影響を与えます。",
+      "rule6": "目標：賢い投資判断で初期資金を増やしましょう！"
+    },
+    "orderTypes": {
+      "title": "注文タイプの説明",
+      "marketName": "成行注文",
+      "limitName": "指値注文",
+      "stopName": "逆指値注文",
+      "market": "現在の市場価格で即時売買。",
+      "limit": "希望価格に達した時のみ実行。",
+      "stop": "特定の価格でトリガー。ブレイクアウトやストップロスに最適。"
+    },
+    "marketMechanics": {
+      "title": "スプレッド＆スリッページ",
+      "spreadName": "スプレッド",
+      "slippageName": "スリッページ",
+      "spread": "スプレッドとは、株式の買値（売り気配）と売値（買い気配）の差です。購入時は表示価格よりやや高く、売却時はやや安くなります。この差が隠れた取引コストであり、マーケットメイカーの利益となります。",
+      "slippage": "スリッページとは、注文が予想と異なる価格で約定することです。特に成行注文やボラティリティが高い時に発生します。実際の市場では、大口注文が価格を動かすこともあります。表示される実効価格には潜在的なスリッページが含まれており、実際のコストを把握できます。"
+    },
+    "tips": {
+      "title": "初心者へのアドバイス",
+      "tip1": "分散投資！一つの会社に全資金を投じないこと。",
+      "tip2": "購入前にチャートでトレンドを確認しましょう。",
+      "tip3": "大きな損失を避けるためにストップロス注文を活用しましょう。"
+    },
+    "virtualPlayers": {
+      "title": "仮想プレイヤー",
+      "text": "フッターバーに「仮想プレイヤーを表示」ボタンがあります。これをクリックすると、すべてのAIプレイヤーを表示するパネルが開きます。彼らのポートフォリオ、現金残高、取引判断を確認できます。保守的なものからリスク選好型まで、さまざまな戦略を観察し、市場でどのようなアプローチが機能するかを学びましょう。"
+    }
+  }
+}

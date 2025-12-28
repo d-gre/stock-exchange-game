@@ -1,0 +1,52 @@
+/* ==========================================================================
+   APP.CSS - Main Stylesheet
+
+   This file imports all component-specific stylesheets.
+   CSS custom properties (design tokens) are defined in variables.css
+   and imported via index.css.
+
+   Structure:
+   1. Base styles (global resets, app container)
+   2. Utilities (helper classes)
+   3. Layout (header, main grid, panels)
+   4. Components (alphabetically ordered)
+
+   --------------------------------------------------------------------------
+   BREAKPOINTS (Mobile-First)
+   --------------------------------------------------------------------------
+   Base styles:        0 - 480px   (Mobile)
+   min-width: 481px    481 - 768px (Tablet Portrait)
+   min-width: 769px    769 - 1200px (Tablet Landscape)
+   min-width: 1201px   1201px+     (Desktop)
+
+   Responsive styles are included in each component file.
+   ========================================================================== */
+
+/* ==========================================================================
+   BASE & UTILITIES
+   ========================================================================== */
+@import './styles/_base.css';
+@import './styles/_utilities.css';
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+@import './styles/_layout.css';
+
+/* ==========================================================================
+   COMPONENTS (alphabetically)
+   ========================================================================== */
+@import './styles/_app-control-panel.css';
+@import './styles/_candlestick-chart.css';
+@import './styles/_chart-panel.css';
+@import './styles/_multi-stock-chart.css';
+@import './styles/_game-start.css';
+@import './styles/_help-modal.css';
+@import './styles/_modals.css';
+@import './styles/_notification-toast.css';
+@import './styles/_settings-modal.css';
+@import './styles/_portfolio.css';
+@import './styles/_stock-list.css';
+@import './styles/_trade-history.css';
+@import './styles/_trade-history-chart.css';
+@import './styles/_trade-panel.css';

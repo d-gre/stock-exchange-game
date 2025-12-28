@@ -1,0 +1,358 @@
+/* ==========================================================================
+   MULTI STOCK CHART (BEM)
+   Block: multi-stock-chart
+   Grid display of multiple stock charts for portfolio view
+   Mobile-first approach
+   ========================================================================== */
+
+/* ==========================================================================
+   EMPTY STATE
+   ========================================================================== */
+
+.multi-stock-chart__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--text-disabled);
+  font-style: italic;
+  gap: 0.5rem;
+}
+
+.multi-stock-chart__empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+}
+
+/* ==========================================================================
+   GRID LAYOUT
+   Mobile: Single column for all counts
+   ========================================================================== */
+
+.multi-stock-chart__grid {
+  display: grid;
+  gap: 1rem;
+  padding: 0.5rem;
+  grid-template-columns: 1fr;
+}
+
+.multi-stock-chart__grid--single {
+  grid-template-columns: 1fr;
+}
+
+.multi-stock-chart__grid--single .multi-stock-chart__card {
+  display: flex;
+  flex-direction: column;
+}
+
+.multi-stock-chart__grid--single .multi-stock-chart__card-body {
+  aspect-ratio: 2 / 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Einzelner Chart braucht kein Highlighting */
+.multi-stock-chart__grid--single .multi-stock-chart__card,
+.multi-stock-chart__grid--single .multi-stock-chart__card--selected {
+  border-color: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+.multi-stock-chart__grid--single .multi-stock-chart__card:hover {
+  border-color: transparent;
+  transform: none;
+}
+
+/* Einzelne Aktie im Portfolio */
+.multi-stock-chart__grid--count-1 .multi-stock-chart__card {
+  display: flex;
+  flex-direction: column;
+}
+
+.multi-stock-chart__grid--count-1 .multi-stock-chart__card-body {
+  aspect-ratio: 2 / 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Einzelne Aktie im Portfolio braucht kein Highlighting */
+.multi-stock-chart__grid--count-1 .multi-stock-chart__card {
+  border-color: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+.multi-stock-chart__grid--count-1 .multi-stock-chart__card:hover {
+  border-color: transparent;
+  transform: none;
+}
+
+/* Mobile: All multi-chart counts use single column */
+.multi-stock-chart__grid--count-2,
+.multi-stock-chart__grid--count-3,
+.multi-stock-chart__grid--count-4,
+.multi-stock-chart__grid--count-5,
+.multi-stock-chart__grid--count-6 {
+  grid-template-columns: 1fr;
+}
+
+/* ==========================================================================
+   CARD
+   Mobile: Min-height for visibility
+   ========================================================================== */
+
+.multi-stock-chart__card {
+  background: var(--bg-card-alt);
+  border-radius: 12px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 200px;
+}
+
+.multi-stock-chart__card:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.multi-stock-chart__card--selected {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+/* ==========================================================================
+   CARD HEADER
+   ========================================================================== */
+
+.multi-stock-chart__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.multi-stock-chart__card-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.multi-stock-chart__card-symbol {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-white);
+}
+
+.multi-stock-chart__card-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.multi-stock-chart__card-shares {
+  font-size: 0.75rem;
+  color: var(--text-disabled);
+  padding: 0.15rem 0.4rem;
+  background: var(--bg-panel);
+  border-radius: 4px;
+}
+
+.multi-stock-chart__card-price {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.multi-stock-chart__card-change {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.multi-stock-chart__card-change-display {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.multi-stock-chart__card-change-display--positive {
+  color: var(--color-positive);
+}
+
+.multi-stock-chart__card-change-display--negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   HOLDING INFO & P/L
+   ========================================================================== */
+
+.multi-stock-chart__card-holding-info {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.multi-stock-chart__card-pnl {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.multi-stock-chart__card-holding-info .multi-stock-chart__card-pnl {
+  display: inline;
+}
+
+.multi-stock-chart__card-pnl--positive {
+  color: var(--color-positive);
+}
+
+.multi-stock-chart__card-pnl--negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   ACTIONS ROW
+   ========================================================================== */
+
+.multi-stock-chart__card-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.5rem;
+  gap: 1rem;
+}
+
+.multi-stock-chart__card-actions-row .multi-stock-chart__card-holding-info {
+  margin: 0;
+}
+
+.multi-stock-chart__card-actions-row .multi-stock-chart__card-actions {
+  margin-left: auto;
+}
+
+/* ==========================================================================
+   ACTION BUTTONS
+   ========================================================================== */
+
+.multi-stock-chart__card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.multi-stock-chart__card-actions--compact {
+  gap: 0.25rem;
+}
+
+.multi-stock-chart__action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.multi-stock-chart__action-btn--buy {
+  background: var(--color-positive);
+  color: white;
+}
+
+.multi-stock-chart__action-btn--buy:hover:not(:disabled) {
+  background: var(--color-positive-light);
+  transform: translateY(-1px);
+}
+
+.multi-stock-chart__action-btn--sell {
+  background: var(--color-negative);
+  color: white;
+}
+
+.multi-stock-chart__action-btn--sell:hover:not(:disabled) {
+  background: var(--color-negative-light);
+  transform: translateY(-1px);
+}
+
+.multi-stock-chart__action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.multi-stock-chart__card-actions--compact .multi-stock-chart__action-btn {
+  padding: 0.3rem 0.5rem;
+}
+
+.multi-stock-chart__card-actions--compact .multi-stock-chart__action-btn span {
+  display: none;
+}
+
+/* ==========================================================================
+   CARD BODY (Chart)
+   ========================================================================== */
+
+.multi-stock-chart__card-body {
+  padding: 0;
+  min-height: 150px;
+}
+
+.multi-stock-chart__card-body .candlestick-chart {
+  border-radius: 0;
+}
+
+/* Chart Header Layout for Single Stock */
+.multi-stock-chart__card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.multi-stock-chart__card-data-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   DESKTOP (min-width: 1201px)
+   Multi-column grid layouts
+   ========================================================================== */
+
+@media (min-width: 1201px) {
+  .multi-stock-chart__card {
+    min-height: auto;
+  }
+
+  .multi-stock-chart__card-body {
+    min-height: auto;
+  }
+
+  .multi-stock-chart__grid--count-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .multi-stock-chart__grid--count-3,
+  .multi-stock-chart__grid--count-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .multi-stock-chart__grid--count-5,
+  .multi-stock-chart__grid--count-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

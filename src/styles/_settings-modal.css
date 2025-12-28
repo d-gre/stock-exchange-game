@@ -1,0 +1,276 @@
+/* ==========================================================================
+   SETTINGS MODAL (BEM)
+   Block: settings-modal
+   Settings dialog for language, theme, and update interval
+   ========================================================================== */
+
+/* ==========================================================================
+   ELEMENT: Overlay
+   ========================================================================== */
+
+.settings-modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--alpha-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ==========================================================================
+   BLOCK: settings-modal
+   ========================================================================== */
+
+.settings-modal {
+  background: var(--bg-panel);
+  border-radius: 16px;
+  width: 400px;
+  max-width: 90vw;
+  border: 1px solid var(--border-primary);
+}
+
+/* ==========================================================================
+   ELEMENT: Header
+   ========================================================================== */
+
+.settings-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.settings-modal__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--accent-primary);
+}
+
+.settings-modal__close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.settings-modal__close-btn:hover {
+  color: var(--text-white);
+}
+
+/* ==========================================================================
+   ELEMENT: Body
+   ========================================================================== */
+
+.settings-modal__body {
+  padding: 1.5rem;
+}
+
+/* ==========================================================================
+   ELEMENT: Input Group
+   ========================================================================== */
+
+.settings-modal__input-group {
+  margin-bottom: 1rem;
+}
+
+.settings-modal__input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.settings-modal__input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  color: var(--text-white);
+  font-size: 1rem;
+}
+
+.settings-modal__input-group input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   ELEMENT: Language Dropdown
+   ========================================================================== */
+
+.settings-modal__language {
+  position: relative;
+}
+
+.settings-modal__language-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  color: var(--text-white);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.settings-modal__language-trigger:hover,
+.settings-modal__language-trigger--open {
+  border-color: var(--accent-primary);
+}
+
+.settings-modal__language-trigger svg {
+  transition: transform 0.2s;
+  color: var(--text-muted);
+}
+
+.settings-modal__language-trigger--open svg {
+  transform: rotate(180deg);
+}
+
+.settings-modal__language-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow-lg);
+  z-index: 100;
+  animation: settingsModal-languageDropdown 0.15s ease-out;
+}
+
+@keyframes settingsModal-languageDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-modal__language-option {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.settings-modal__language-option:hover {
+  background: var(--bg-panel);
+}
+
+.settings-modal__language-option--active {
+  background: var(--bg-panel);
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   ELEMENT: Theme Selector
+   ========================================================================== */
+
+.settings-modal__theme-selector {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.settings-modal__theme-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 2px solid var(--border-secondary);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-modal__theme-option:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.settings-modal__theme-option--active {
+  border-color: var(--accent-primary);
+  background: var(--bg-panel);
+  color: var(--accent-primary);
+}
+
+.settings-modal__theme-option svg {
+  opacity: 0.7;
+}
+
+.settings-modal__theme-option--active svg {
+  opacity: 1;
+}
+
+.settings-modal__theme-option span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   ELEMENT: Footer
+   ========================================================================== */
+
+.settings-modal__footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.settings-modal__cancel-btn,
+.settings-modal__confirm-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-modal__cancel-btn {
+  background: var(--border-secondary);
+  color: var(--text-white);
+}
+
+.settings-modal__cancel-btn:hover {
+  background: var(--border-hover);
+}
+
+.settings-modal__confirm-btn {
+  background: var(--color-positive);
+  color: white;
+}
+
+.settings-modal__confirm-btn:hover {
+  background: var(--color-positive-hover);
+}

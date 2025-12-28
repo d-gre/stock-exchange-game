@@ -1,0 +1,673 @@
+/* ==========================================================================
+   TRADE HISTORY (BEM)
+   Block: trade-history
+   Order history, risk profile, and trade list
+   Mobile-first approach
+   ========================================================================== */
+
+/* ==========================================================================
+   TRADE HISTORY CONTAINER
+   Mobile base styles
+   ========================================================================== */
+
+.trade-history {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.35rem;
+  overflow: hidden;
+}
+
+.trade-history__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.trade-history__header h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-white);
+}
+
+.trade-history__stats-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  font-size: 0.65rem;
+}
+
+.trade-history__stat--buy {
+  color: var(--color-positive);
+}
+
+.trade-history__stat--sell {
+  color: var(--color-negative);
+}
+
+.trade-history__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   TRADE HISTORY CHART SECTION
+   ========================================================================== */
+
+.trade-history__chart-section {
+  flex: 0 0 200px;
+  min-height: 150px;
+}
+
+.trade-history__chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.trade-history__chart-empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-disabled);
+  margin-top: 0.5rem;
+}
+
+.trade-history__chart-legend {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+}
+
+.trade-history__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.trade-history__legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   TRADE HISTORY DETAILS
+   ========================================================================== */
+
+.trade-history__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   RISK PROFILE CARD
+   Mobile base styles
+   ========================================================================== */
+
+.trade-history__risk-card {
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-header) 100%);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 0.4rem;
+}
+
+.trade-history__risk-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: var(--text-white);
+}
+
+/* Risk Gauge */
+.trade-history__risk-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.trade-history__risk-gauge {
+  flex: 1;
+  width: 100%;
+}
+
+.trade-history__risk-gauge-track {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(90deg, var(--color-positive) 0%, var(--color-yellow) 50%, var(--color-negative) 100%);
+  border-radius: 4px;
+}
+
+.trade-history__risk-gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: transparent;
+}
+
+.trade-history__risk-gauge-marker {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--text-white);
+  border: 2px solid var(--bg-panel);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.trade-history__risk-gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+/* Risk Score */
+.trade-history__risk-score {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 60px;
+}
+
+.trade-history__risk-score-value {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.trade-history__risk-score-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.trade-history__risk-score--conservative .trade-history__risk-score-value {
+  color: var(--color-positive);
+}
+
+.trade-history__risk-score--moderate .trade-history__risk-score-value {
+  color: var(--color-yellow);
+}
+
+.trade-history__risk-score--aggressive .trade-history__risk-score-value {
+  color: var(--color-negative);
+}
+
+.trade-history__risk-description {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+/* Risk Stats Grid */
+.trade-history__risk-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+}
+
+.trade-history__risk-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.trade-history__risk-stat-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.trade-history__risk-stat-value {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.trade-history__risk-stat-value--positive {
+  color: var(--color-positive);
+}
+
+.trade-history__risk-stat-value--negative {
+  color: var(--color-negative);
+}
+
+/* Total Realized P/L */
+.trade-history__total-pl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-secondary);
+}
+
+.trade-history__total-pl-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.trade-history__total-pl-value {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.trade-history__total-pl--positive .trade-history__total-pl-value {
+  color: var(--color-positive);
+}
+
+.trade-history__total-pl--negative .trade-history__total-pl-value {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   TRADE LIST
+   Mobile base styles (smallest, Zeit column hidden)
+   ========================================================================== */
+
+.trade-history__list-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.trade-history__list-section h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: var(--text-white);
+  flex-shrink: 0;
+}
+
+.trade-history__list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.trade-history__list-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  color: var(--text-muted);
+}
+
+/* Trade List Header - Mobile: Hide Zeit column */
+.trade-history__list-header {
+  display: grid;
+  grid-template-columns: minmax(35px, 48px) minmax(30px, 42px) minmax(20px, 28px) minmax(48px, 65px) minmax(50px, 70px);
+  gap: 0.15rem;
+  padding: 0.35rem 0.25rem;
+  background: var(--bg-header);
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.trade-history__list-header .trade-history__col--time {
+  display: none;
+}
+
+.trade-history__col--shares,
+.trade-history__col--price,
+.trade-history__col--total,
+.trade-history__col--pl {
+  text-align: right;
+}
+
+/* Trade List Body */
+.trade-history__list-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Trade List Row - Mobile */
+.trade-history__list-row {
+  display: grid;
+  grid-template-columns: minmax(35px, 48px) minmax(30px, 42px) minmax(20px, 28px) minmax(48px, 65px) minmax(50px, 70px);
+  gap: 0.15rem;
+  padding: 0.35rem 0.25rem;
+  font-size: 0.6rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.trade-history__list-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.trade-history__list-row .trade-history__col--time {
+  display: none;
+  color: var(--text-muted);
+}
+
+.trade-history__col--type {
+  font-weight: 500;
+}
+
+.trade-history__col--type-buy {
+  color: var(--color-positive);
+}
+
+.trade-history__col--type-sell {
+  color: var(--color-negative);
+}
+
+.trade-history__col--symbol {
+  font-weight: 500;
+  color: var(--text-white);
+}
+
+.trade-history__col--shares {
+  color: var(--text-secondary);
+}
+
+.trade-history__col--pl {
+  font-weight: 500;
+}
+
+.trade-history__col--pl-positive {
+  color: var(--color-positive);
+}
+
+.trade-history__col--pl-negative {
+  color: var(--color-negative);
+}
+
+.trade-history__col--pl-failed {
+  color: var(--color-warning);
+}
+
+/* Failed Trade Row */
+.trade-history__list-row--failed {
+  opacity: 0.7;
+  background: rgba(255, 152, 0, 0.05);
+}
+
+.trade-history__failure-reason {
+  font-weight: bold;
+  font-size: 0.5rem;
+  color: var(--color-warning);
+  margin-left: 1rem;
+  cursor: help;
+}
+
+/* ==========================================================================
+   TABLET PORTRAIT (min-width: 481px)
+   Show Zeit column, hide Preis column
+   ========================================================================== */
+
+@media (min-width: 481px) {
+  .trade-history {
+    padding: 0.5rem;
+  }
+
+  .trade-history__header h2 {
+    font-size: 1rem;
+  }
+
+  .trade-history__stats-summary {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  /* Show Zeit column, hide Preis column */
+  .trade-history__list-header,
+  .trade-history__list-row {
+    grid-template-columns: minmax(40px, 55px) minmax(38px, 50px) minmax(32px, 45px) minmax(22px, 30px) minmax(50px, 70px) minmax(55px, 75px);
+    padding: 0.4rem 0.35rem;
+  }
+
+  .trade-history__list-header .trade-history__col--time,
+  .trade-history__list-row .trade-history__col--time {
+    display: block;
+  }
+
+  .trade-history__list-header .trade-history__col--price,
+  .trade-history__list-row .trade-history__col--price {
+    display: none;
+  }
+
+  .trade-history__risk-card {
+    padding: 0.5rem;
+  }
+
+  .trade-history__risk-card h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .trade-history__risk-description {
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .trade-history__risk-stats-grid {
+    gap: 0.5rem;
+  }
+
+  .trade-history__risk-stat-label {
+    font-size: 0.6rem;
+  }
+
+  .trade-history__risk-stat-value {
+    font-size: 0.8rem;
+  }
+
+  .trade-history__total-pl {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+
+  .trade-history__total-pl-label {
+    font-size: 0.75rem;
+  }
+
+  .trade-history__total-pl-value {
+    font-size: 1rem;
+  }
+
+  .trade-history__list-section h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .trade-history__failure-reason {
+    font-size: 0.7rem;
+  }
+
+  .trade-history__risk-score-value {
+    font-size: 1.1rem;
+  }
+
+  .trade-history__risk-score-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* ==========================================================================
+   TABLET LANDSCAPE (min-width: 769px)
+   Show both Zeit and Preis columns
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .trade-history {
+    padding: 0.75rem;
+  }
+
+  .trade-history__stats-summary {
+    font-size: 0.75rem;
+  }
+
+  /* Show all columns */
+  .trade-history__list-header,
+  .trade-history__list-row {
+    grid-template-columns: minmax(45px, 60px) minmax(40px, 55px) minmax(35px, 50px) minmax(25px, 35px) minmax(45px, 65px) minmax(50px, 75px) minmax(55px, 80px);
+    gap: 0.2rem;
+  }
+
+  .trade-history__list-header .trade-history__col--price,
+  .trade-history__list-row .trade-history__col--price {
+    display: block;
+  }
+
+  .trade-history__risk-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trade-history__risk-card {
+    padding: 0.75rem;
+  }
+
+  .trade-history__risk-gauge-container {
+    gap: 1rem;
+  }
+
+  .trade-history__risk-score-value {
+    font-size: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   DESKTOP (min-width: 1201px)
+   Full desktop layout
+   ========================================================================== */
+
+@media (min-width: 1201px) {
+  .trade-history {
+    padding: 1rem;
+  }
+
+  .trade-history__header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .trade-history__header h2 {
+    font-size: 1.25rem;
+  }
+
+  .trade-history__stats-summary {
+    font-size: 0.85rem;
+    gap: 1rem;
+  }
+
+  .trade-history__chart-section {
+    flex: 0 0 300px;
+    min-height: 200px;
+  }
+
+  .trade-history__list-header,
+  .trade-history__list-row {
+    grid-template-columns: minmax(50px, 70px) minmax(45px, 65px) minmax(40px, 60px) minmax(30px, 40px) minmax(50px, 75px) minmax(55px, 85px) minmax(60px, 90px);
+    gap: 0.25rem;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .trade-history__list-header {
+    font-size: 0.7rem;
+  }
+
+  .trade-history__risk-card {
+    padding: 1rem;
+  }
+
+  .trade-history__risk-card h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .trade-history__risk-gauge-container {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .trade-history__risk-gauge {
+    width: auto;
+  }
+
+  .trade-history__risk-score {
+    flex-direction: column;
+    min-width: 80px;
+  }
+
+  .trade-history__risk-score-value {
+    font-size: 1.5rem;
+  }
+
+  .trade-history__risk-score-label {
+    font-size: 0.75rem;
+  }
+
+  .trade-history__risk-gauge-labels {
+    font-size: 0.7rem;
+  }
+
+  .trade-history__risk-description {
+    font-size: 0.85rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.4;
+  }
+
+  .trade-history__risk-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .trade-history__risk-stat-label {
+    font-size: 0.7rem;
+  }
+
+  .trade-history__risk-stat-value {
+    font-size: 0.9rem;
+  }
+
+  .trade-history__total-pl {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .trade-history__total-pl-label {
+    font-size: 0.85rem;
+  }
+
+  .trade-history__total-pl-value {
+    font-size: 1.25rem;
+  }
+
+  .trade-history__list-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+}

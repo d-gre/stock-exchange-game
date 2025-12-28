@@ -1,0 +1,57 @@
+/* ==========================================================================
+   TRADE HISTORY CHART (BEM)
+   Block: trade-history-chart
+   Portfolio value and P/L chart in trade history view
+   ========================================================================== */
+
+.trade-history-chart {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.trade-history-chart--auto-height {
+  flex: 1;
+  min-height: 0;
+}
+
+.trade-history-chart__canvas {
+  flex: 1;
+  min-height: 0;
+}
+
+.trade-history-chart__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.trade-history-chart__empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-disabled);
+  margin-top: 0.5rem;
+}
+
+.trade-history-chart__legend {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.8rem;
+}
+
+.trade-history-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.trade-history-chart__legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}

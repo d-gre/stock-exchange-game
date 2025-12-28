@@ -1,0 +1,167 @@
+/* ==========================================================================
+   CHART PANEL (BEM)
+   Block: chart-panel
+   Main chart view with tabs for stocks, index, and trade history
+   Mobile-first approach
+   ========================================================================== */
+
+/* ==========================================================================
+   TABS
+   ========================================================================== */
+
+.chart-panel__tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.chart-panel__tabs-left {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chart-panel__tabs-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chart-panel__tab {
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.chart-panel__tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-white);
+}
+
+.chart-panel__tab--active {
+  background: var(--gradient-accent);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   CONTENT AREA
+   Mobile: Full width with min-height
+   ========================================================================== */
+
+.chart-panel__area {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chart-panel__wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   WARMUP OVERLAY
+   ========================================================================== */
+
+.chart-panel__warmup-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 1rem;
+}
+
+/* ==========================================================================
+   MARKET INDEX
+   ========================================================================== */
+
+.chart-panel__market-index {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chart-panel__market-index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-header) 100%);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.chart-panel__market-index-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-white);
+}
+
+.chart-panel__market-index-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.chart-panel__market-index-value--positive {
+  color: var(--color-positive);
+}
+
+.chart-panel__market-index-value--negative {
+  color: var(--color-negative);
+}
+
+.chart-panel__market-index-change {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.chart-panel__market-index-trend {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  height: 18px;
+  margin-left: 0.5rem;
+}
+
+.chart-panel__trend-bar {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.chart-panel__trend-bar--up {
+  background-color: var(--color-positive);
+}
+
+.chart-panel__trend-bar--down {
+  background-color: var(--color-negative);
+}
+
+.chart-panel__trend-bar--neutral {
+  background-color: var(--text-muted);
+}
+
+/* ==========================================================================
+   DESKTOP (min-width: 1201px)
+   ========================================================================== */
+
+@media (min-width: 1201px) {
+  .chart-panel__wrapper {
+    min-height: auto;
+  }
+}

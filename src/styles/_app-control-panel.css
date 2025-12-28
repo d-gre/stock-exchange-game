@@ -1,0 +1,568 @@
+/* ==========================================================================
+   APP CONTROL PANEL (BEM)
+   Block: app-control-panel
+   Controls bar, timer, virtual players panel
+   ========================================================================== */
+
+.app-control-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-primary);
+  z-index: 100;
+  transition: max-height 0.3s ease;
+}
+
+/* ==========================================================================
+   BAR & LAYOUT
+   ========================================================================== */
+
+.app-control-panel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--gradient-header);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.app-control-panel__left {
+  display: flex;
+  align-items: center;
+  min-width: 80px;
+}
+
+.app-control-panel__center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.app-control-panel__right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 80px;
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   BADGE (Transaction/Player Count)
+   ========================================================================== */
+
+.app-control-panel__badge {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-control-panel__badge--clickable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 0.75rem;
+  border-radius: 8px;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-secondary);
+}
+
+.app-control-panel__badge--clickable:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.app-control-panel__badge-icon {
+  margin-top: 0.125rem;
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   TIMER
+   ========================================================================== */
+
+.app-control-panel__timer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-control-panel__timer-label {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.app-control-panel__timer--paused .app-control-panel__timer-fill {
+  background: var(--text-muted);
+}
+
+.app-control-panel__timer-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--bg-card);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.app-control-panel__timer-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  transition: width 0.3s linear;
+}
+
+.app-control-panel__timer-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  min-width: 20px;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.app-control-panel__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.app-control-panel__btn:hover,
+.app-control-panel__btn:active {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.app-control-panel__btn--pause.app-control-panel__btn--paused {
+  background: var(--color-positive);
+  border-color: var(--color-positive);
+  color: var(--text-white);
+}
+
+.app-control-panel__btn--pause:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app-control-panel__btn--theme:hover,
+.app-control-panel__btn--theme:active {
+  color: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+
+/* ==========================================================================
+   PLAYERS SECTION
+   ========================================================================== */
+
+.app-control-panel__players {
+  max-height: 400px;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.app-control-panel__players-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   PLAYER CARD
+   ========================================================================== */
+
+.app-control-panel__player {
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.app-control-panel__player:hover {
+  border-color: var(--border-hover);
+}
+
+.app-control-panel__player--expanded {
+  border-color: var(--accent-primary);
+}
+
+.app-control-panel__player--flash {
+  animation: playerCardFlash 0.8s ease-out;
+}
+
+@keyframes playerCardFlash {
+  0% {
+    background: var(--color-positive);
+    border-color: var(--color-positive);
+    box-shadow: 0 0 16px var(--color-positive);
+  }
+  100% {
+    background: var(--bg-card);
+    border-color: var(--border-secondary);
+    box-shadow: none;
+  }
+}
+
+/* Player Header */
+.app-control-panel__player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: background 0.2s;
+}
+
+.app-control-panel__player-header:hover {
+  background: var(--bg-hover);
+}
+
+.app-control-panel__player-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.app-control-panel__player-name {
+  font-weight: bold;
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+}
+
+.app-control-panel__player-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-control-panel__player-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
+.app-control-panel__player-value {
+  color: var(--color-positive);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.app-control-panel__expand-icon {
+  color: var(--text-disabled);
+  font-size: 0.7rem;
+}
+
+/* Risk Badge */
+.app-control-panel__risk-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+.app-control-panel__risk-badge--averse {
+  background: var(--alpha-info);
+  color: var(--color-info-light);
+}
+
+.app-control-panel__risk-badge--neutral {
+  background: var(--alpha-neutral);
+  color: var(--color-neutral);
+}
+
+.app-control-panel__risk-badge--seeking {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--color-warning-light);
+}
+
+/* Player Details */
+.app-control-panel__player-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  border-top: 1px solid var(--border-secondary);
+  padding-top: 0.5rem;
+}
+
+.app-control-panel__cash {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.app-control-panel__holdings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.app-control-panel__holding {
+  background: var(--bg-panel);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   TRANSACTIONS
+   ========================================================================== */
+
+.app-control-panel__transactions {
+  border-top: 1px solid var(--border-secondary);
+  background: var(--bg-card-alt);
+}
+
+.app-control-panel__tx-header {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.app-control-panel__tx-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.app-control-panel__no-transactions {
+  color: var(--text-disabled);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+.app-control-panel__tx-wrapper {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.app-control-panel__tx-wrapper:last-child {
+  border-bottom: none;
+}
+
+.app-control-panel__tx-wrapper--expanded {
+  background: var(--bg-panel);
+}
+
+.app-control-panel__tx-wrapper--expanded .app-control-panel__tx {
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.app-control-panel__tx {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.app-control-panel__tx:last-child {
+  border-bottom: none;
+}
+
+.app-control-panel__tx--buy {
+  border-left: 3px solid var(--color-positive);
+}
+
+.app-control-panel__tx--sell {
+  border-left: 3px solid var(--color-negative);
+}
+
+.app-control-panel__tx--clickable {
+  cursor: pointer;
+}
+
+.app-control-panel__tx--clickable:hover {
+  background: var(--bg-hover);
+}
+
+.app-control-panel__tx-type {
+  font-weight: bold;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  min-width: 38px;
+  text-align: center;
+}
+
+.app-control-panel__tx-type--buy {
+  background: var(--alpha-positive);
+  color: var(--color-positive);
+}
+
+.app-control-panel__tx-type--sell {
+  background: var(--alpha-negative);
+  color: var(--color-negative);
+}
+
+.app-control-panel__tx-symbol {
+  color: var(--text-white);
+  font-weight: bold;
+  min-width: 45px;
+}
+
+.app-control-panel__tx-shares {
+  color: var(--text-muted);
+  min-width: 30px;
+}
+
+.app-control-panel__tx-price {
+  color: var(--text-secondary);
+  flex: 1;
+  text-align: right;
+}
+
+.app-control-panel__tx-time {
+  color: var(--text-disabled);
+  font-size: 0.65rem;
+}
+
+.app-control-panel__tx-expand-icon {
+  color: var(--text-disabled);
+  font-size: 0.6rem;
+  margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   TRANSACTION DETAILS
+   ========================================================================== */
+
+.app-control-panel__tx-details {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  background: var(--bg-card-alt);
+}
+
+.app-control-panel__tx-details-header {
+  color: var(--accent-primary);
+  font-weight: bold;
+  font-size: 0.7rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.app-control-panel__tx-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.app-control-panel__tx-detail-row:last-of-type {
+  border-bottom: none;
+}
+
+.app-control-panel__tx-detail-label {
+  color: var(--text-muted);
+}
+
+.app-control-panel__tx-detail-value {
+  color: var(--text-white);
+  font-weight: 500;
+}
+
+/* Volatility Modifiers */
+.app-control-panel__tx-detail-value--volatility-low {
+  color: var(--color-positive);
+}
+
+.app-control-panel__tx-detail-value--volatility-medium {
+  color: var(--color-warning-light);
+}
+
+.app-control-panel__tx-detail-value--volatility-high {
+  color: var(--color-negative);
+}
+
+/* Trend Modifiers */
+.app-control-panel__tx-detail-value--trend-up {
+  color: var(--color-positive);
+}
+
+.app-control-panel__tx-detail-value--trend-down {
+  color: var(--color-negative);
+}
+
+/* Profit/Loss Modifiers */
+.app-control-panel__tx-detail-value--profit {
+  color: var(--color-positive);
+}
+
+.app-control-panel__tx-detail-value--loss {
+  color: var(--color-negative);
+}
+
+/* Risk Modifiers in Details */
+.app-control-panel__tx-detail-value--risk-averse {
+  color: var(--color-info-light);
+}
+
+.app-control-panel__tx-detail-value--risk-neutral {
+  color: var(--color-neutral);
+}
+
+.app-control-panel__tx-detail-value--risk-seeking {
+  color: var(--color-warning-light);
+}
+
+/* Reasoning */
+.app-control-panel__tx-reasoning {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--border-secondary);
+  color: var(--color-purple-light);
+  font-style: italic;
+  font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (min-width: 481px) {
+  .app-control-panel__bar {
+    padding: 0.5rem 1rem;
+  }
+
+  .app-control-panel__left {
+    min-width: 120px;
+  }
+
+  .app-control-panel__right {
+    min-width: 120px;
+  }
+
+  .app-control-panel__timer-label {
+    display: block;
+  }
+
+  .app-control-panel__timer-bar {
+    width: 40px;
+  }
+}

@@ -1,0 +1,137 @@
+/* ==========================================================================
+   LAYOUT
+   Header, main grid, and panel containers
+   Mobile-first approach
+   ========================================================================== */
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--gradient-header);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+}
+
+/* ==========================================================================
+   MAIN LAYOUT
+   Mobile: Single column, stacked panels
+   ========================================================================== */
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 1rem;
+  padding: 1rem;
+  padding-bottom: 60px; /* Platz fuer Virtual Players Panel */
+  flex: 1;
+  min-height: 0;
+}
+
+/* ==========================================================================
+   PANELS
+   ========================================================================== */
+
+.left-panel,
+.center-panel,
+.right-panel {
+  background: var(--bg-panel);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Mobile: Panel ordering */
+.left-panel {
+  order: 0;
+}
+
+.center-panel {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.right-panel {
+  order: 2;
+}
+
+/* ==========================================================================
+   TABLET LANDSCAPE (min-width: 769px)
+   Two-column layout: Portfolio + Charts, Stocks below
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .main {
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .left-panel {
+    order: unset;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .center-panel {
+    order: unset;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .right-panel {
+    order: unset;
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* ==========================================================================
+   DESKTOP (min-width: 1201px)
+   Three-column grid layout
+   ========================================================================== */
+
+@media (min-width: 1201px) {
+  .main {
+    grid-template-columns: 300px 1fr 360px;
+    grid-template-rows: auto;
+  }
+
+  .left-panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .center-panel {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .right-panel {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}

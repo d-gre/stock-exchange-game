@@ -1,0 +1,168 @@
+/* ==========================================================================
+   STOCK LIST (BEM)
+   Block: stock-list
+   Stock table, rows, and trend bars
+   Mobile-first approach
+   ========================================================================== */
+
+.stock-list__title {
+  margin: 0 0 1rem 0;
+  color: var(--accent-primary);
+  font-size: 1.3rem;
+}
+
+/* ==========================================================================
+   TABLE
+   Mobile: Compact grid
+   ========================================================================== */
+
+.stock-list__table {
+  font-size: 0.85rem;
+  width: fit-content;
+}
+
+.stock-list__header,
+.stock-list__row {
+  display: grid;
+  grid-template-columns: 50px 60px 50px 45px 40px;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
+  align-items: center;
+  width: fit-content;
+}
+
+.stock-list__header {
+  color: var(--text-disabled);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.stock-list__row {
+  background: var(--bg-card);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stock-list__row:hover {
+  background: var(--bg-hover);
+}
+
+.stock-list__row--selected {
+  background: var(--gradient-accent);
+  border: 1px solid var(--accent-primary);
+}
+
+.stock-list__symbol {
+  font-weight: bold;
+  color: var(--accent-primary);
+  cursor: help;
+}
+
+.stock-list__name {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stock-list__price {
+  font-weight: bold;
+}
+
+.stock-list__change {
+  font-size: 0.8rem;
+}
+
+.stock-list__change--positive {
+  color: var(--color-positive);
+}
+
+.stock-list__change--negative {
+  color: var(--color-negative);
+}
+
+.stock-list__market-cap {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   MINI TREND BARS
+   ========================================================================== */
+
+.stock-list__mini-trend {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 16px;
+}
+
+.stock-list__trend-bar {
+  width: 4px;
+  border-radius: 1px;
+  transition: height 0.2s ease;
+}
+
+.stock-list__trend-bar--up {
+  height: 12px;
+  background: var(--color-positive);
+}
+
+.stock-list__trend-bar--down {
+  height: 12px;
+  background: var(--color-negative);
+}
+
+.stock-list__trend-bar--neutral {
+  height: 6px;
+  background: var(--text-disabled);
+}
+
+/* ==========================================================================
+   TABLET LANDSCAPE (min-width: 769px)
+   Two-column stock list layout
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .stock-list__table {
+    column-count: 2;
+    column-gap: 1.5rem;
+  }
+
+  .stock-list__header {
+    display: none; /* Header passt nicht gut bei Spalten */
+  }
+
+  .stock-list__row {
+    break-inside: avoid;
+    width: fit-content;
+  }
+}
+
+/* ==========================================================================
+   DESKTOP (min-width: 1201px)
+   Single column, larger grid
+   ========================================================================== */
+
+@media (min-width: 1201px) {
+  .stock-list__table {
+    column-count: 1;
+    font-size: 0.9rem;
+    width: auto;
+  }
+
+  .stock-list__header {
+    display: grid;
+  }
+
+  .stock-list__header,
+  .stock-list__row {
+    grid-template-columns: 55px 75px 55px 55px 50px;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    width: auto;
+  }
+}

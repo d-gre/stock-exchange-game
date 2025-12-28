@@ -1,0 +1,311 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "max": "Max",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "dark": "Dark",
+    "light": "Light",
+    "updateInterval": "Update Interval (seconds)",
+    "virtualPlayers": "Number of virtual players (0-{{max}})",
+    "settings": "Settings"
+  },
+  "game": {
+    "start": "Start Game",
+    "startingCapital": "Starting Capital",
+    "preparingMarket": "Preparing market...",
+    "nextCycle": "Next trading cycle:",
+    "resume": "Resume",
+    "pause": "Pause",
+    "speed": "Speed: {{speed}}x (click for {{next}}x)",
+    "trades": "{{count}} Trades",
+    "players": "{{count}} Players",
+    "showPlayers": "Show virtual players",
+    "hidePlayers": "Hide virtual players"
+  },
+  "gameModes": {
+    "realLife": {
+      "name": "Real Life",
+      "description": "Realistic market conditions"
+    },
+    "hardLife": {
+      "name": "Hard Life",
+      "description": "Difficult mode with additional challenges"
+    },
+    "sandbox": {
+      "name": "Sandbox",
+      "description": "Free play without restrictions"
+    }
+  },
+  "orderTypes": {
+    "buy": {
+      "market": "Market",
+      "limit": "Limit",
+      "stopBuy": "Stop Buy",
+      "stopBuyLimit": "Stop Buy Limit"
+    },
+    "sell": {
+      "market": "Market",
+      "limit": "Limit",
+      "stopBuy": "Stop Loss",
+      "stopBuyLimit": "Stop Loss Limit"
+    }
+  },
+  "trading": {
+    "buy": "Buy",
+    "sell": "Sell",
+    "editOrder": "Edit",
+    "currentPrice": "Current Price",
+    "availableCash": "Available Cash",
+    "availableShares": "Available Shares",
+    "reservedForOrders": "Reserved for Orders",
+    "quantity": "Quantity",
+    "type": "Type",
+    "stopPrice": "Stop Price",
+    "limitPrice": "Limit Price",
+    "validity": "Validity",
+    "tradingCycles": "Trading cycles (rounds)",
+    "rate": "Rate",
+    "effectivePrice": "Effective Price/Share",
+    "spread": "Spread",
+    "slippage": "Slippage",
+    "subtotal": "Subtotal",
+    "quantityTimesRate": "Quantity × Rate",
+    "orderFee": "Order Fee",
+    "totalCost": "Total Cost",
+    "netProceeds": "Net Proceeds",
+    "approx": "approx.",
+    "priceDeviation": "The actual execution price may differ due to market fluctuations.",
+    "orderExecuteWhen": "This order will be executed when the price condition is met.",
+    "updateOrder": "Update Order",
+    "placeOrder": "Place Order",
+    "stopHintBuy": "Order triggered when price ≥ stop",
+    "stopHintSell": "Order triggered when price ≤ stop",
+    "limitHintBuy": "Buy only when price ≤ limit",
+    "limitHintSell": "Sell only when price ≥ limit",
+    "invalidStopBuyLimit": "Invalid price combination: For Stop Buy Limit, the limit price (${{limit}}) must be higher than the stop price (${{stop}}). Otherwise the order can never be executed.",
+    "invalidStopLossLimit": "Invalid price combination: For Stop Loss Limit, the limit price (${{limit}}) must be lower than the stop price (${{stop}}). Otherwise the order can never be executed."
+  },
+  "errors": {
+    "invalidQuantity": "Please enter a valid quantity.",
+    "insufficientCash": "Not enough available cash.",
+    "insufficientShares": "You don't own enough available shares.",
+    "invalidLimitPrice": "Please enter a valid limit price.",
+    "invalidStopPrice": "Please enter a valid stop price."
+  },
+  "portfolio": {
+    "title": "Your Portfolio",
+    "available": "Available",
+    "reserved": "Reserved",
+    "stockValue": "Stock Value",
+    "totalValue": "Total Value",
+    "profitLoss": "Profit/Loss",
+    "assets": "Assets",
+    "noHoldings": "no stocks in portfolio",
+    "orders": "Orders",
+    "noOrders": "no pending orders",
+    "buy": "BUY",
+    "sell": "SELL",
+    "editOrder": "Edit order",
+    "cancelOrder": "Cancel order",
+    "nextCycle": "Next Cycle",
+    "tradingCycles": "{{count}} trading cycles",
+    "remainingCycles": "Remaining trading cycles until execution",
+    "symbol": "Symbol",
+    "qty": "Qty",
+    "buyPrice": "Buy",
+    "current": "Current",
+    "pl": "P/L"
+  },
+  "stockList": {
+    "title": "Exchange",
+    "symbol": "Symbol",
+    "price": "Price",
+    "change": "Chg.",
+    "marketCap": "MCap",
+    "trend": "Trend"
+  },
+  "chart": {
+    "marketIndex": "Market Index",
+    "orderHistory": "Order History",
+    "assets": "Assets ({{count}})",
+    "stock": "Stocks",
+    "stockNotFound": "Stock not found",
+    "pendingOrder": "Pending order exists",
+    "noStocksInPortfolio": "No stocks in portfolio",
+    "clickToShowChart": "Click on a stock in the list on the right to view the chart.",
+    "pieces": "pcs"
+  },
+  "notification": {
+    "change": "Edit",
+    "delete": "Delete",
+    "stockSplit": {
+      "title": "Stock Split: {{symbol}}",
+      "message": "{{name}} has been split {{ratio}}:1. New price: ${{newPrice}} (was: ${{oldPrice}})"
+    },
+    "buyOrderFailed": {
+      "title": "Buy order not executed",
+      "message": "{{shares}}x {{symbol}} could not be purchased. Required: ${{required}}, Available: ${{available}}"
+    }
+  },
+  "tradeHistory": {
+    "title": "Order History",
+    "recentTrades": "Recent Trades",
+    "noTrades": "No trades yet",
+    "buys": "{{count}} Buys",
+    "sells": "{{count}} Sells",
+    "buy": "BUY",
+    "sell": "SELL",
+    "failed": "FAILED",
+    "time": "Time",
+    "type": "Type",
+    "symbol": "Symbol",
+    "shares": "Qty",
+    "price": "Price",
+    "total": "Total",
+    "pl": "P/L",
+    "failureReasons": {
+      "insufficient_funds": "Insufficient funds",
+      "insufficient_shares": "Insufficient shares",
+      "expired": "Order expired",
+      "unknown": "Unknown reason"
+    },
+    "chart": {
+      "noTrades": "No trades executed yet",
+      "noTradesHint": "Buy or sell stocks to see your performance.",
+      "portfolioValue": "Portfolio Value",
+      "realizedPL": "Realized P/L"
+    },
+    "riskProfile": {
+      "title": "Your Risk Profile",
+      "trades": "Trades",
+      "avgPosition": "Avg. Position",
+      "holdingDuration": "Hold Duration",
+      "winLoss": "Win/Loss",
+      "avgWin": "Avg. Win",
+      "avgLoss": "Avg. Loss",
+      "realizedPL": "Realized P/L",
+      "conservative": "Conservative",
+      "moderate": "Moderate",
+      "aggressive": "Aggressive",
+      "conservativeDesc": "Prefers stable investments, quick stop-losses, smaller positions",
+      "moderateDesc": "Balanced strategy between risk and safety",
+      "aggressiveDesc": "Large positions, high trading frequency, holds even at losses"
+    }
+  },
+  "virtualPlayers": {
+    "transactions": "Transactions",
+    "noTransactions": "No transactions yet",
+    "decisionFactors": "Decision Factors",
+    "noDecisionData": "No decision data available",
+    "volatility": "Volatility",
+    "trend": "Trend",
+    "score": "Score",
+    "playerType": "Player Type",
+    "buyPrice": "Buy Price",
+    "sellScore": "Sell Score",
+    "sellThreshold": "(≥40 = sell)",
+    "cash": "Cash",
+    "clickDetails": "Click for details",
+    "risk": {
+      "averse": "Conservative",
+      "neutral": "Neutral",
+      "seeking": "Risk Seeking"
+    },
+    "volatilityLevel": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "trendLevel": {
+      "strongUp": "Strong uptrend",
+      "up": "Uptrend",
+      "down": "Downtrend",
+      "strongDown": "Strong downtrend"
+    },
+    "reasoning": {
+      "prefersStable": "Prefers stable, rising stocks",
+      "seeksVolatile": "Seeks volatile stocks with profit potential",
+      "balanced": "Balanced strategy",
+      "stopLoss": "Sells quickly on losses (Stop-Loss)",
+      "holdsLosses": "Usually holds losses, but trend too negative",
+      "takesProfit": "Takes profits",
+      "securesProfit": "Trend worsening, secures profit",
+      "balancedSell": "Balanced sell decision"
+    },
+    "txType": {
+      "buy": "BUY",
+      "sell": "SELL"
+    }
+  },
+  "help": {
+    "linkText": "How does the game work?",
+    "title": "Welcome to D-GRE Stock Exchange",
+    "understood": "Got it, let's go!",
+    "intro": {
+      "title": "What is this?",
+      "text": "D-GRE Stock Exchange is a realistic stock market game where you can try real trading strategies with virtual money. Buy and sell stocks from 14 well-known companies, watch price movements in real-time, and try to grow your portfolio. Virtual players also trade and influence prices – just like on the real stock market."
+    },
+    "howToPlay": {
+      "title": "How to Play",
+      "step1": {
+        "title": "Watch the Market",
+        "text": "On the right, you'll see all available stocks with their current prices and trends. Click on a stock to see its detailed chart."
+      },
+      "step2": {
+        "title": "Buy Stocks",
+        "text": "Click the Buy button on any stock. Choose the quantity and order type (Market for instant purchase, Limit for a specific price)."
+      },
+      "step3": {
+        "title": "Manage Your Portfolio",
+        "text": "On the left, you'll see your portfolio with all purchased stocks, available cash, and open orders. Keep an eye on the total value!"
+      },
+      "step4": {
+        "title": "Sell for Profit",
+        "text": "When the price has risen, sell your stocks for a profit. Or use Stop-Loss orders to limit your losses."
+      }
+    },
+    "rules": {
+      "title": "Game Rules",
+      "rule1": "You start with customizable starting capital (default: $100,000).",
+      "rule2": "Prices update every few seconds – you can adjust the speed in settings.",
+      "rule3": "You can only execute one order per stock per trading cycle.",
+      "rule4": "There are trading fees and spreads like on the real stock market.",
+      "rule5": "Virtual players with different strategies also influence prices.",
+      "rule6": "Goal: Grow your starting capital through smart investment decisions!"
+    },
+    "orderTypes": {
+      "title": "Order Types Explained",
+      "marketName": "Market Order",
+      "limitName": "Limit Order",
+      "stopName": "Stop Buy / Stop Loss",
+      "market": "Immediate buy/sell at current market price.",
+      "limit": "Only executes when the price reaches your desired level.",
+      "stop": "Automatic trigger at a specific price – ideal for breakouts or stop-loss."
+    },
+    "marketMechanics": {
+      "title": "Spread & Slippage",
+      "spreadName": "Spread",
+      "slippageName": "Slippage",
+      "spread": "The spread is the difference between the buy price (ask) and sell price (bid) of a stock. When you buy, you pay slightly more than the displayed price; when you sell, you receive slightly less. This difference represents a hidden trading cost and is how market makers earn their profit.",
+      "slippage": "Slippage occurs when your order is executed at a different price than expected. This happens especially with market orders and during high volatility. In real markets, large orders can also move the price. The displayed effective price includes potential slippage so you know your actual cost."
+    },
+    "tips": {
+      "title": "Tips for Beginners",
+      "tip1": "Diversify! Don't put all your money in one company.",
+      "tip2": "Watch the trends in the chart before you buy.",
+      "tip3": "Use Stop-Loss orders to avoid large losses."
+    },
+    "virtualPlayers": {
+      "title": "Virtual Players",
+      "text": "In the footer bar, you'll find the 'Show virtual players' button. This opens a panel showing all AI-controlled players. You can see their portfolios, cash balances, and trading decisions. Observe their strategies – from conservative to risk-seeking – and learn how different approaches work in the market."
+    }
+  }
+}

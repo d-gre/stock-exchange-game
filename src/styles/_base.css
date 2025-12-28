@@ -1,0 +1,22 @@
+/* ==========================================================================
+   BASE STYLES
+   Global resets and app container
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-app);
+  color: var(--text-primary);
+}
+
+#tv-attr-logo {
+  /* TODO: remove me if app is published! */
+  /*display: none !important;*/
+  opacity: 0.1;
+}

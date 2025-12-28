@@ -1,0 +1,165 @@
+/* ==========================================================================
+   NOTIFICATION TOAST (BEM)
+   Block: notification-toast
+   Toast notifications and action buttons
+   ========================================================================== */
+
+.notification-toast__container {
+  position: fixed;
+  top: 80px;
+  right: 1rem;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 400px;
+}
+
+.notification-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: 10px;
+  border-left: 4px solid var(--text-muted);
+  box-shadow: 0 8px 32px var(--shadow-lg);
+  animation: notification-toast-slide-in 0.3s ease-out;
+}
+
+@keyframes notification-toast-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   TYPE MODIFIERS
+   ========================================================================== */
+
+.notification-toast--warning {
+  border-left-color: var(--color-warning);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 20%, var(--bg-card)) 0%, var(--bg-card) 100%);
+}
+
+.notification-toast--warning .notification-toast__icon {
+  color: var(--color-warning);
+}
+
+.notification-toast--error {
+  border-left-color: var(--color-negative);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-negative) 20%, var(--bg-card)) 0%, var(--bg-card) 100%);
+}
+
+.notification-toast--error .notification-toast__icon {
+  color: var(--color-negative);
+}
+
+.notification-toast--success {
+  border-left-color: var(--color-positive);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-positive) 20%, var(--bg-card)) 0%, var(--bg-card) 100%);
+}
+
+.notification-toast--success .notification-toast__icon {
+  color: var(--color-positive);
+}
+
+.notification-toast--info {
+  border-left-color: var(--accent-primary);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-primary) 20%, var(--bg-card)) 0%, var(--bg-card) 100%);
+}
+
+.notification-toast--info .notification-toast__icon {
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   ELEMENTS
+   ========================================================================== */
+
+.notification-toast__icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.notification-toast__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-toast__title {
+  font-weight: 600;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
+}
+
+.notification-toast__message {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.notification-toast__close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-disabled);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.notification-toast__close:hover {
+  background: var(--alpha-white);
+  color: var(--text-white);
+}
+
+/* ==========================================================================
+   ACTIONS
+   ========================================================================== */
+
+.notification-toast--has-actions {
+  align-items: flex-start;
+}
+
+.notification-toast__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.notification-toast__action-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid;
+}
+
+.notification-toast__action-btn--edit {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.notification-toast__action-btn--edit:hover {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+.notification-toast__action-btn--delete {
+  background: rgba(239, 83, 80, 0.15);
+  border-color: var(--color-negative);
+  color: var(--color-negative);
+}
+
+.notification-toast__action-btn--delete:hover {
+  background: rgba(239, 83, 80, 0.3);
+}

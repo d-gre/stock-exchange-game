@@ -1,0 +1,311 @@
+{
+  "common": {
+    "save": "Serva",
+    "cancel": "Abnega",
+    "close": "Claude",
+    "max": "Max",
+    "edit": "Muta",
+    "delete": "Dele"
+  },
+  "settings": {
+    "title": "Dispositiones",
+    "language": "Lingua",
+    "appearance": "Aspectus",
+    "dark": "Obscurum",
+    "light": "Lucidum",
+    "updateInterval": "Intervallum renovationis (secundae)",
+    "virtualPlayers": "Numerus lusorum fictorum (0-{{max}})",
+    "settings": "Dispositiones"
+  },
+  "game": {
+    "start": "Incipe Ludum",
+    "startingCapital": "Pecunia Initialis",
+    "preparingMarket": "Mercatus paratur...",
+    "nextCycle": "Proximus cyclus:",
+    "resume": "Perge",
+    "pause": "Siste",
+    "speed": "Celeritas: {{speed}}x (clicca pro {{next}}x)",
+    "trades": "{{count}} Negotia",
+    "players": "{{count}} Lusores",
+    "showPlayers": "Monstra lusores fictos",
+    "hidePlayers": "Absconde lusores fictos"
+  },
+  "gameModes": {
+    "realLife": {
+      "name": "Vita Vera",
+      "description": "Condiciones mercatus reales"
+    },
+    "hardLife": {
+      "name": "Vita Dura",
+      "description": "Modus difficilis cum provocationibus"
+    },
+    "sandbox": {
+      "name": "Arena",
+      "description": "Ludus liber sine restrictionibus"
+    }
+  },
+  "orderTypes": {
+    "buy": {
+      "market": "Pretio Fori",
+      "limit": "Pretio Fixo",
+      "stopBuy": "Emere ad Signum",
+      "stopBuyLimit": "Emere ad Signum Fixum"
+    },
+    "sell": {
+      "market": "Pretio Fori",
+      "limit": "Pretio Fixo",
+      "stopBuy": "Vendere ad Signum",
+      "stopBuyLimit": "Vendere ad Signum Fixum"
+    }
+  },
+  "trading": {
+    "buy": "Eme",
+    "sell": "Vende",
+    "editOrder": "Muta",
+    "currentPrice": "Pretium Praesens",
+    "availableCash": "Pecunia Praesto",
+    "availableShares": "Partes Praesto",
+    "reservedForOrders": "Reservatum pro Mandatis",
+    "quantity": "Quantitas",
+    "type": "Genus",
+    "stopPrice": "Pretium Signi",
+    "limitPrice": "Pretium Fixum",
+    "validity": "Validitas",
+    "tradingCycles": "Cycli negotiandi",
+    "rate": "Pretium",
+    "effectivePrice": "Pretium Effectivum/Pars",
+    "spread": "Differentia",
+    "slippage": "Lapsus",
+    "subtotal": "Summa Partialis",
+    "quantityTimesRate": "Quantitas × Pretium",
+    "orderFee": "Vectigal Mandati",
+    "totalCost": "Summa Totalis",
+    "netProceeds": "Proventus Netus",
+    "approx": "circa",
+    "priceDeviation": "Pretium executionis variare potest propter fluctuationes mercatus.",
+    "orderExecuteWhen": "Hoc mandatum exequetur cum conditio pretii implebitur.",
+    "updateOrder": "Renova Mandatum",
+    "placeOrder": "Da Mandatum",
+    "stopHintBuy": "Mandatum activatur cum pretium ≥ signum",
+    "stopHintSell": "Mandatum activatur cum pretium ≤ signum",
+    "limitHintBuy": "Eme solum cum pretium ≤ fixum",
+    "limitHintSell": "Vende solum cum pretium ≥ fixum",
+    "invalidStopBuyLimit": "Combinatio pretii invalida: Pretium fixum (${{limit}}) debet esse maius quam pretium signi (${{stop}}).",
+    "invalidStopLossLimit": "Combinatio pretii invalida: Pretium fixum (${{limit}}) debet esse minus quam pretium signi (${{stop}})."
+  },
+  "errors": {
+    "invalidQuantity": "Quantitatem validam inscribe.",
+    "insufficientCash": "Pecunia non sufficit.",
+    "insufficientShares": "Partes non sufficiunt.",
+    "invalidLimitPrice": "Pretium fixum validum inscribe.",
+    "invalidStopPrice": "Pretium signi validum inscribe."
+  },
+  "portfolio": {
+    "title": "Patrimonium Tuum",
+    "available": "Praesto",
+    "reserved": "Reservatum",
+    "stockValue": "Valor Partium",
+    "totalValue": "Valor Totalis",
+    "profitLoss": "Lucrum/Damnum",
+    "assets": "Bona",
+    "noHoldings": "nullae partes in patrimonio",
+    "orders": "Mandata",
+    "noOrders": "nulla mandata pendentia",
+    "buy": "EME",
+    "sell": "VENDE",
+    "editOrder": "Muta mandatum",
+    "cancelOrder": "Abroga mandatum",
+    "nextCycle": "Proximus Cyclus",
+    "tradingCycles": "{{count}} cycli",
+    "remainingCycles": "Cycli residui ante executionem",
+    "symbol": "Signum",
+    "qty": "Quant.",
+    "buyPrice": "Emptio",
+    "current": "Praesens",
+    "pl": "L/D"
+  },
+  "stockList": {
+    "title": "Forum Nummarium",
+    "symbol": "Signum",
+    "price": "Pretium",
+    "change": "Mut.",
+    "marketCap": "Valor",
+    "trend": "Cursus"
+  },
+  "chart": {
+    "marketIndex": "Index Mercatus",
+    "orderHistory": "Historia Mandatorum",
+    "assets": "Bona ({{count}})",
+    "stock": "Partes",
+    "stockNotFound": "Pars non inventa",
+    "pendingOrder": "Mandatum pendens",
+    "noStocksInPortfolio": "Nullae partes in patrimonio",
+    "clickToShowChart": "Clicca partem in indice dextro ad chartam videndam.",
+    "pieces": "part."
+  },
+  "notification": {
+    "change": "Muta",
+    "delete": "Dele",
+    "stockSplit": {
+      "title": "Divisio Partium: {{symbol}}",
+      "message": "{{name}} divisa est {{ratio}}:1. Novum pretium: ${{newPrice}} (antea: ${{oldPrice}})"
+    },
+    "buyOrderFailed": {
+      "title": "Mandatum emptionis non executum",
+      "message": "{{shares}}x {{symbol}} emi non potuit. Requiritur: ${{required}}, Praesto: ${{available}}"
+    }
+  },
+  "tradeHistory": {
+    "title": "Historia Mandatorum",
+    "recentTrades": "Negotia Recentia",
+    "noTrades": "Nulla negotia adhuc",
+    "buys": "{{count}} Emptiones",
+    "sells": "{{count}} Venditiones",
+    "buy": "EME",
+    "sell": "VENDE",
+    "failed": "FRUSTRA",
+    "time": "Tempus",
+    "type": "Genus",
+    "symbol": "Signum",
+    "shares": "Quant.",
+    "price": "Pretium",
+    "total": "Summa",
+    "pl": "L/D",
+    "failureReasons": {
+      "insufficient_funds": "Pecunia non sufficit",
+      "insufficient_shares": "Partes non sufficiunt",
+      "expired": "Mandatum exspiravit",
+      "unknown": "Causa ignota"
+    },
+    "chart": {
+      "noTrades": "Nulla negotia perfecta",
+      "noTradesHint": "Eme vel vende partes ad progressum videndum.",
+      "portfolioValue": "Valor Patrimonii",
+      "realizedPL": "Lucrum/Damnum Effectum"
+    },
+    "riskProfile": {
+      "title": "Profil Periculi Tui",
+      "trades": "Negotia",
+      "avgPosition": "Positio Media",
+      "holdingDuration": "Duratio Possessionis",
+      "winLoss": "Victoria/Clades",
+      "avgWin": "Lucrum Medium",
+      "avgLoss": "Damnum Medium",
+      "realizedPL": "L/D Effectum",
+      "conservative": "Cautus",
+      "moderate": "Moderatus",
+      "aggressive": "Audax",
+      "conservativeDesc": "Praefert stabilia, celeriter claudit damna, positiones parvae",
+      "moderateDesc": "Strategia aequilibrata inter periculum et securitatem",
+      "aggressiveDesc": "Positiones magnae, frequentia alta, tenet etiam in damnis"
+    }
+  },
+  "virtualPlayers": {
+    "transactions": "Transactiones",
+    "noTransactions": "Nullae transactiones adhuc",
+    "decisionFactors": "Factores Decisionis",
+    "noDecisionData": "Nulla data decisionis",
+    "volatility": "Volatilitas",
+    "trend": "Cursus",
+    "score": "Puncta",
+    "playerType": "Genus Lusoris",
+    "buyPrice": "Pretium Emptionis",
+    "sellScore": "Puncta Venditionis",
+    "sellThreshold": "(≥40 = vende)",
+    "cash": "Pecunia",
+    "clickDetails": "Clicca pro detaliis",
+    "risk": {
+      "averse": "Cautus",
+      "neutral": "Neutralis",
+      "seeking": "Audax"
+    },
+    "volatilityLevel": {
+      "low": "Humilis",
+      "medium": "Medius",
+      "high": "Altus"
+    },
+    "trendLevel": {
+      "strongUp": "Valde Ascendens",
+      "up": "Ascendens",
+      "down": "Descendens",
+      "strongDown": "Valde Descendens"
+    },
+    "reasoning": {
+      "prefersStable": "Praefert partes stabiles ascendentes",
+      "seeksVolatile": "Quaerit partes volatiles cum potentia lucri",
+      "balanced": "Strategia aequilibrata",
+      "stopLoss": "Celeriter vendit in damnis",
+      "holdsLosses": "Usualiter tenet damna, sed cursus nimis negativus",
+      "takesProfit": "Capit lucra",
+      "securesProfit": "Cursus deterior, securat lucrum",
+      "balancedSell": "Decisio venditionis aequilibrata"
+    },
+    "txType": {
+      "buy": "EME",
+      "sell": "VENDE"
+    }
+  },
+  "help": {
+    "linkText": "Quomodo ludus operatur?",
+    "title": "Salve ad Forum Nummarium D-GRE",
+    "understood": "Intellexi, eamus!",
+    "intro": {
+      "title": "Quid est hoc?",
+      "text": "Forum Nummarium D-GRE est ludus bursae realisticus ubi strategias negotiandi veras cum pecunia virtuali experiri potes. Partes a 14 societatibus notis eme et vende, pretia in tempore reali observa, et patrimonium tuum augere conare. Lusores virtuales etiam negotiantur et pretia afficiunt – sicut in bursa vera."
+    },
+    "howToPlay": {
+      "title": "Quomodo Ludere",
+      "step1": {
+        "title": "Mercatum Observa",
+        "text": "A dextra omnes partes praesto vides cum pretiis et cursibus currentibus. Clicca partem ut chartam detailiatam videas."
+      },
+      "step2": {
+        "title": "Partes Eme",
+        "text": "Clicca bullam Emere in quavis parte. Quantitatem et genus mandati elige (Pretio Fori pro emptione immediata, Pretio Fixo pro pretio specifico)."
+      },
+      "step3": {
+        "title": "Patrimonium Tuum Administra",
+        "text": "A sinistra patrimonium tuum vides cum omnibus partibus emptis, pecunia praesto, et mandatis apertis. Valorem totalem observa!"
+      },
+      "step4": {
+        "title": "Cum Lucro Vende",
+        "text": "Cum pretium ascendit, partes tuas cum lucro vende. Vel utere mandatis Stop-Loss ad damna limitanda."
+      }
+    },
+    "rules": {
+      "title": "Regulae Ludi",
+      "rule1": "Incipis cum pecunia initiali electiva (defaltum: $100,000).",
+      "rule2": "Pretia renovantur quibusque secundis – celeritatem in dispositionibus mutare potes.",
+      "rule3": "Solum unum mandatum per partem per cyclum negotiandi exequi potes.",
+      "rule4": "Sunt vectigalia negotiandi et differentiae sicut in bursa vera.",
+      "rule5": "Lusores virtuales cum strategiis diversis etiam pretia afficiunt.",
+      "rule6": "Scopus: Auge pecuniam initialem per decisiones investitionis sapientes!"
+    },
+    "orderTypes": {
+      "title": "Genera Mandatorum Explicata",
+      "marketName": "Mandatum Fori",
+      "limitName": "Mandatum Pretii Fixi",
+      "stopName": "Stop Buy / Stop Loss",
+      "market": "Emptio/venditio immediata ad pretium fori currentem.",
+      "limit": "Exequitur solum cum pretium ad gradum desideratum pervenit.",
+      "stop": "Trigger automaticus ad pretium specificum – ideale pro breakouts vel stop-loss."
+    },
+    "marketMechanics": {
+      "title": "Differentia & Lapsus",
+      "spreadName": "Differentia (Spread)",
+      "slippageName": "Lapsus (Slippage)",
+      "spread": "Differentia est discrepantia inter pretium emptionis et pretium venditionis partis. Cum emis, paulo plus solvis quam pretium ostensum; cum vendis, paulo minus accipis. Haec differentia sumptus negotiandi occultus est et lucrum fabricatorum mercatus.",
+      "slippage": "Lapsus fit cum mandatum tuum ad pretium diversum quam exspectatum exequitur. Hoc praecipue fit cum mandatis fori et in alta volatilitate. In mercatibus veris, mandata magna etiam pretium movere possunt. Pretium effectivum ostensum includit lapsum potentialem ut sumptus tuos veros cognoscas."
+    },
+    "tips": {
+      "title": "Consilia pro Incipientibus",
+      "tip1": "Diversifica! Noli omnem pecuniam in una societate ponere.",
+      "tip2": "Cursus in charta observa antequam emas.",
+      "tip3": "Utere mandatis Stop-Loss ad damna magna vitanda."
+    },
+    "virtualPlayers": {
+      "title": "Lusores Ficti",
+      "text": "In fascia inferiore invenies bullam 'Monstra lusores fictos'. Hac aperies tabulam quae omnes lusores ab intelligentia artificiali gubernatos ostendit. Videre potes eorum patrimonia, pecuniam, et decisiones negotiandi. Observa eorum strategias – a cautis ad audaces – et disce quomodo diversi modi in mercatu operentur."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+/* ==========================================================================
+   UTILITY CLASSES
+   Shared helper classes used across components
+   ========================================================================== */
+
+.positive {
+  color: var(--color-positive) !important;
+}
+
+.negative {
+  color: var(--color-negative) !important;
+}
+
+.error {
+  color: var(--color-negative);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}

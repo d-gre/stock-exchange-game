@@ -1,0 +1,182 @@
+/* ===========================================
+   CSS Variables & Theme Definitions
+   =========================================== */
+
+:root {
+  /* =========================================
+     Bootstrap-Compatible Breakpoints
+     ========================================= */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-xxl: 1400px;
+
+  /* =========================================
+     Dark Theme (Default)
+     ========================================= */
+
+  /* Background Colors */
+  --bg-app: #0f0f1a;
+  --bg-panel: #1a1a2e;
+  --bg-card: #252540;
+  --bg-card-alt: #1e1e35;
+  --bg-hover: #303050;
+  --bg-header: #16213e;
+  --bg-input: #252540;
+  --bg-gradient-start: #1a1a2e;
+  --bg-gradient-end: #16213e;
+  --bg-gradient-accent-start: #1a3a5c;
+  --bg-gradient-accent-end: #2a1a5c;
+
+  /* Border Colors */
+  --border-primary: #2a2a4a;
+  --border-secondary: #3a3a5a;
+  --border-hover: #4a4a6a;
+
+  /* Text Colors */
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-white: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-muted: #888888;
+  --text-disabled: #666666;
+  --text-dark: #555555;
+
+  /* Accent Colors */
+  --accent-primary: #00d4ff;
+  --accent-secondary: #7b2cbf;
+
+  /* Status Colors */
+  --color-positive: #26a69a;
+  --color-positive-hover: #2bbd9b;
+  --color-positive-light: #4db6ac;
+  --color-negative: #ef5350;
+  --color-negative-hover: #f44336;
+  --color-negative-light: #ef9a9a;
+  --color-warning: #ff9800;
+  --color-warning-light: #ffb74d;
+  --color-yellow: #ffc107;
+  --color-info: #2196f3;
+  --color-info-light: #64b5f6;
+  --color-neutral: #9e9e9e;
+  --color-purple-light: #b388ff;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-accent: 0 4px 20px rgba(0, 212, 255, 0.3);
+  --shadow-glow: 0 0 20px rgba(0, 212, 255, 0.2);
+
+  /* Gradients */
+  --gradient-header: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--bg-gradient-accent-start) 0%, var(--bg-gradient-accent-end) 100%);
+  --gradient-text: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  --gradient-button: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+
+  /* Transparency */
+  --alpha-positive: rgba(38, 166, 154, 0.2);
+  --alpha-negative: rgba(239, 83, 80, 0.2);
+  --alpha-warning: rgba(255, 152, 0, 0.15);
+  --alpha-warning-border: rgba(255, 152, 0, 0.4);
+  --alpha-info: rgba(33, 150, 243, 0.2);
+  --alpha-neutral: rgba(158, 158, 158, 0.2);
+  --alpha-white: rgba(255, 255, 255, 0.1);
+  --alpha-overlay: rgba(0, 0, 0, 0.8);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+
+  /* Color Scheme */
+  color-scheme: dark;
+}
+
+/* =========================================
+   Light Theme
+   ========================================= */
+[data-theme="light"] {
+  /* Background Colors */
+  --bg-app: #f0f2f5;
+  --bg-panel: #ffffff;
+  --bg-card: #f8f9fa;
+  --bg-card-alt: #ffffff;
+  --bg-hover: #e9ecef;
+  --bg-header: #ffffff;
+  --bg-input: #ffffff;
+  --bg-gradient-start: #ffffff;
+  --bg-gradient-end: #f8f9fa;
+  --bg-gradient-accent-start: #e3f2fd;
+  --bg-gradient-accent-end: #f3e5f5;
+
+  /* Border Colors */
+  --border-primary: #dee2e6;
+  --border-secondary: #ced4da;
+  --border-hover: #adb5bd;
+
+  /* Text Colors */
+  --text-primary: #212529;
+  --text-white: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6c757d;
+  --text-disabled: #adb5bd;
+  --text-dark: #343a40;
+
+  /* Accent Colors - slightly darker for better contrast */
+  --accent-primary: #0099cc;
+  --accent-secondary: #6a1ba9;
+
+  /* Status Colors remain similar, slightly adjusted */
+  --color-positive: #198754;
+  --color-positive-hover: #157347;
+  --color-positive-light: #75b798;
+  --color-negative: #dc3545;
+  --color-negative-hover: #bb2d3b;
+  --color-negative-light: #ea868f;
+  --color-warning: #fd7e14;
+  --color-warning-light: #ffb74d;
+  --color-yellow: #ffc107;
+  --color-info: #0d6efd;
+  --color-info-light: #6ea8fe;
+  --color-neutral: #6c757d;
+  --color-purple-light: #9c27b0;
+
+  /* Shadows - softer for light theme */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  --shadow-accent: 0 4px 14px rgba(0, 153, 204, 0.25);
+  --shadow-glow: 0 0 15px rgba(0, 153, 204, 0.15);
+
+  /* Transparency */
+  --alpha-positive: rgba(25, 135, 84, 0.1);
+  --alpha-negative: rgba(220, 53, 69, 0.1);
+  --alpha-warning: rgba(253, 126, 20, 0.1);
+  --alpha-warning-border: rgba(253, 126, 20, 0.3);
+  --alpha-info: rgba(13, 110, 253, 0.1);
+  --alpha-neutral: rgba(108, 117, 125, 0.1);
+  --alpha-white: rgba(0, 0, 0, 0.05);
+  --alpha-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Color Scheme */
+  color-scheme: light;
+}

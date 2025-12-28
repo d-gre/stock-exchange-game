@@ -1,0 +1,460 @@
+/* ==========================================================================
+   GAME START MODAL (BEM: game-start)
+   Game mode selection and warmup progress
+   ========================================================================== */
+
+/* Block: game-start (overlay) */
+.game-start {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+/* Element: modal container */
+.game-start__modal {
+  width: 450px;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ==========================================================================
+   TOOLBAR
+   ========================================================================== */
+
+.game-start__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -2rem -2rem 1.5rem -2rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+/* ==========================================================================
+   THEME TOGGLE
+   ========================================================================== */
+
+.game-start__theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-secondary);
+  cursor: pointer;
+  padding: 0.5rem 0.5rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.game-start__theme-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.game-start__theme-icon {
+  display: none;
+  width: 18px;
+  height: 18px;
+}
+
+.game-start__theme-icon--active {
+  display: block;
+}
+
+/* ==========================================================================
+   LANGUAGE DROPDOWN
+   ========================================================================== */
+
+.game-start__language {
+  position: relative;
+}
+
+.game-start__language-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.game-start__language-trigger:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.game-start__language-trigger--open {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.game-start__language-trigger svg {
+  transition: transform var(--transition-fast);
+}
+
+.game-start__language-trigger--open svg {
+  transform: rotate(180deg);
+}
+
+.game-start__language-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  animation: game-start-dropdown-fade 0.15s ease-out;
+}
+
+@keyframes game-start-dropdown-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.game-start__language-option {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.game-start__language-option:hover {
+  background: var(--bg-hover);
+}
+
+.game-start__language-option--active {
+  background: var(--bg-panel);
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   LOGO
+   ========================================================================== */
+
+.game-start__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.game-start__logo img {
+  width: 48px;
+  height: 48px;
+}
+
+@media (max-width: 480px) {
+  .game-start__logo {
+    flex-direction: column;
+    gap: 0;
+    font-size: 1.5rem;
+  }
+
+  .game-start__logo img {
+    width: 128px;
+    height: 128px;
+  }
+}
+
+/* ==========================================================================
+   GAME MODE SELECTION
+   ========================================================================== */
+
+.game-start__modes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.game-start__mode {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 2px solid var(--border-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.game-start__mode:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+}
+
+.game-start__mode:has(input:checked) {
+  background: var(--gradient-accent);
+  border-color: var(--accent-primary);
+}
+
+.game-start__mode input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-secondary);
+  border-radius: 50%;
+  background: var(--bg-panel);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.game-start__mode input[type="radio"]:checked {
+  border-color: var(--accent-primary);
+  background: var(--bg-panel);
+}
+
+.game-start__mode input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+}
+
+.game-start__mode-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.game-start__mode-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.game-start__mode:has(input:checked) .game-start__mode-name {
+  color: var(--accent-primary);
+}
+
+.game-start__mode-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   STARTING CAPITAL INPUT
+   ========================================================================== */
+
+.game-start__capital {
+  margin-bottom: 1.5rem;
+}
+
+.game-start__capital-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.game-start__capital-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 2px solid var(--border-secondary);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.game-start__capital-input-wrapper:focus-within {
+  border-color: var(--accent-primary);
+}
+
+.game-start__capital-currency {
+  padding: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: var(--bg-hover);
+}
+
+.game-start__capital-input {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: left;
+}
+
+.game-start__capital-input::-webkit-inner-spin-button,
+.game-start__capital-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.game-start__capital-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* ==========================================================================
+   START BUTTON
+   ========================================================================== */
+
+.game-start__button {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.game-start__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+}
+
+/* ==========================================================================
+   WARMUP PROGRESS (PIE CHART)
+   ========================================================================== */
+
+.game-start__progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.game-start__progress-pie {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.game-start__progress-pie svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.game-start__progress-pie-bg {
+  fill: none;
+  stroke: var(--bg-card);
+  stroke-width: 8;
+}
+
+.game-start__progress-pie-fill {
+  fill: none;
+  stroke: url(#pie-gradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s ease-out;
+}
+
+.game-start__progress-pie-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.game-start__progress-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   CHART WARMUP OVERLAY (same style as modal)
+   ========================================================================== */
+
+.chart-warmup-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  height: 100%;
+  min-height: 300px;
+}
+
+/* ==========================================================================
+   HELP LINK
+   ========================================================================== */
+
+.game-start__help-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.game-start__help-link:hover {
+  color: var(--accent-primary);
+}

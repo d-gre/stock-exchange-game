@@ -1,0 +1,311 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "max": "Max",
+    "edit": "Ändern",
+    "delete": "Löschen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "appearance": "Erscheinungsbild",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "updateInterval": "Update-Intervall (Sekunden)",
+    "virtualPlayers": "Anzahl virtueller Mitspieler (0-{{max}})",
+    "settings": "Einstellungen"
+  },
+  "game": {
+    "start": "Spiel starten",
+    "startingCapital": "Startkapital",
+    "preparingMarket": "Markt wird vorbereitet...",
+    "nextCycle": "Nächster Handelszyklus:",
+    "resume": "Fortsetzen",
+    "pause": "Pausieren",
+    "speed": "Geschwindigkeit: {{speed}}x (Klick für {{next}}x)",
+    "trades": "{{count}} Trades",
+    "players": "{{count}} Spieler",
+    "showPlayers": "Virtuelle Spieler anzeigen",
+    "hidePlayers": "Virtuelle Spieler ausblenden"
+  },
+  "gameModes": {
+    "realLife": {
+      "name": "Real Life",
+      "description": "Realistische Marktbedingungen"
+    },
+    "hardLife": {
+      "name": "Hard Life",
+      "description": "Schwieriger Modus mit zusätzlichen Herausforderungen"
+    },
+    "sandbox": {
+      "name": "Sandbox",
+      "description": "Freies Spielen ohne Einschränkungen"
+    }
+  },
+  "orderTypes": {
+    "buy": {
+      "market": "Billigst",
+      "limit": "Limit",
+      "stopBuy": "Stop Buy",
+      "stopBuyLimit": "Stop Buy Limit"
+    },
+    "sell": {
+      "market": "Bestens",
+      "limit": "Limit",
+      "stopBuy": "Stop Loss",
+      "stopBuyLimit": "Stop Loss Limit"
+    }
+  },
+  "trading": {
+    "buy": "Kaufen",
+    "sell": "Verkaufen",
+    "editOrder": "Bearbeiten",
+    "currentPrice": "Aktueller Preis",
+    "availableCash": "Verfügbares Bargeld",
+    "availableShares": "Verfügbare Aktien",
+    "reservedForOrders": "Reserviert für Orders",
+    "quantity": "Anzahl",
+    "type": "Typ",
+    "stopPrice": "Stop-Preis",
+    "limitPrice": "Limit-Preis",
+    "validity": "Gültigkeit",
+    "tradingCycles": "Handelszyklen (Runden)",
+    "rate": "Kurs",
+    "effectivePrice": "Effektiver Preis/Aktie",
+    "spread": "Spread",
+    "slippage": "Slippage",
+    "subtotal": "Zwischensumme",
+    "quantityTimesRate": "Anzahl × Kurs",
+    "orderFee": "Ordergebühr",
+    "totalCost": "Gesamtkosten",
+    "netProceeds": "Nettoerlös",
+    "approx": "ca.",
+    "priceDeviation": "Der tatsächliche Ausführungspreis kann aufgrund von Marktschwankungen abweichen.",
+    "orderExecuteWhen": "Diese Order wird ausgeführt, sobald die Preisbedingung erfüllt ist.",
+    "updateOrder": "Order aktualisieren",
+    "placeOrder": "Order aufgeben",
+    "stopHintBuy": "Order wird ausgelöst wenn Kurs ≥ Stop",
+    "stopHintSell": "Order wird ausgelöst wenn Kurs ≤ Stop",
+    "limitHintBuy": "Kaufe nur wenn Kurs ≤ Limit",
+    "limitHintSell": "Verkaufe nur wenn Kurs ≥ Limit",
+    "invalidStopBuyLimit": "Ungültige Preiskombination: Bei Stop Buy Limit muss der Limit-Preis (${{limit}}) höher sein als der Stop-Preis (${{stop}}). Andernfalls kann die Order nie ausgeführt werden.",
+    "invalidStopLossLimit": "Ungültige Preiskombination: Bei Stop Loss Limit muss der Limit-Preis (${{limit}}) niedriger sein als der Stop-Preis (${{stop}}). Andernfalls kann die Order nie ausgeführt werden."
+  },
+  "errors": {
+    "invalidQuantity": "Bitte geben Sie eine gültige Anzahl ein.",
+    "insufficientCash": "Nicht genug verfügbares Bargeld vorhanden.",
+    "insufficientShares": "Sie besitzen nicht genug verfügbare Aktien.",
+    "invalidLimitPrice": "Bitte geben Sie einen gültigen Limit-Preis ein.",
+    "invalidStopPrice": "Bitte geben Sie einen gültigen Stop-Preis ein."
+  },
+  "portfolio": {
+    "title": "Ihr Portfolio",
+    "available": "Verfügbar",
+    "reserved": "Reserviert",
+    "stockValue": "Aktien-Wert",
+    "totalValue": "Gesamtwert",
+    "profitLoss": "Gewinn/Verlust",
+    "assets": "Assets",
+    "noHoldings": "keine Aktien im Depot",
+    "orders": "Orders",
+    "noOrders": "keine offenen Vorgänge",
+    "buy": "KAUF",
+    "sell": "VERKAUF",
+    "editOrder": "Order bearbeiten",
+    "cancelOrder": "Order stornieren",
+    "nextCycle": "Nächster Zyklus",
+    "tradingCycles": "{{count}} Handelszyklen",
+    "remainingCycles": "Verbleibende Handelszyklen bis zur Ausführung",
+    "symbol": "Symbol",
+    "qty": "Anz.",
+    "buyPrice": "Kauf",
+    "current": "Aktuell",
+    "pl": "G/V"
+  },
+  "stockList": {
+    "title": "Börse",
+    "symbol": "Symbol",
+    "price": "Preis",
+    "change": "Änd.",
+    "marketCap": "MCap",
+    "trend": "Trend"
+  },
+  "chart": {
+    "marketIndex": "Markt Index",
+    "orderHistory": "Order-Historie",
+    "assets": "Assets ({{count}})",
+    "stock": "Aktien",
+    "stockNotFound": "Aktie nicht gefunden",
+    "pendingOrder": "Offene Order vorhanden",
+    "noStocksInPortfolio": "Keine Aktien im Portfolio",
+    "clickToShowChart": "Klicken Sie auf eine Aktie in der Liste rechts, um den Chart anzuzeigen.",
+    "pieces": "Stk."
+  },
+  "notification": {
+    "change": "Ändern",
+    "delete": "Löschen",
+    "stockSplit": {
+      "title": "Aktien-Split: {{symbol}}",
+      "message": "{{name}} wurde {{ratio}}:1 gesplittet. Neuer Kurs: ${{newPrice}} (vorher: ${{oldPrice}})"
+    },
+    "buyOrderFailed": {
+      "title": "Kauforder nicht ausgeführt",
+      "message": "{{shares}}x {{symbol}} konnte nicht gekauft werden. Benötigt: ${{required}}, Verfügbar: ${{available}}"
+    }
+  },
+  "tradeHistory": {
+    "title": "Order-Historie",
+    "recentTrades": "Letzte Trades",
+    "noTrades": "Noch keine Trades vorhanden",
+    "buys": "{{count}} Käufe",
+    "sells": "{{count}} Verkäufe",
+    "buy": "KAUF",
+    "sell": "VERKAUF",
+    "failed": "FEHLGESCHLAGEN",
+    "time": "Zeit",
+    "type": "Typ",
+    "symbol": "Symbol",
+    "shares": "Stk.",
+    "price": "Preis",
+    "total": "Gesamt",
+    "pl": "G/V",
+    "failureReasons": {
+      "insufficient_funds": "Nicht genug Guthaben",
+      "insufficient_shares": "Nicht genug Aktien",
+      "expired": "Order verfallen",
+      "unknown": "Unbekannter Grund"
+    },
+    "chart": {
+      "noTrades": "Noch keine Trades durchgeführt",
+      "noTradesHint": "Kaufen oder verkaufen Sie Aktien, um Ihre Performance zu sehen.",
+      "portfolioValue": "Portfolio-Wert",
+      "realizedPL": "Realisierter G/V"
+    },
+    "riskProfile": {
+      "title": "Ihr Risikoprofil",
+      "trades": "Trades",
+      "avgPosition": "Avg. Position",
+      "holdingDuration": "Haltedauer",
+      "winLoss": "Win/Loss",
+      "avgWin": "Avg. Gewinn",
+      "avgLoss": "Avg. Verlust",
+      "realizedPL": "Realisierter G/V",
+      "conservative": "Konservativ",
+      "moderate": "Moderat",
+      "aggressive": "Aggressiv",
+      "conservativeDesc": "Bevorzugt stabile Anlagen, schnelle Stop-Losses, kleinere Positionen",
+      "moderateDesc": "Ausgewogene Strategie zwischen Risiko und Sicherheit",
+      "aggressiveDesc": "Große Positionen, hohe Handelsfrequenz, hält auch bei Verlusten"
+    }
+  },
+  "virtualPlayers": {
+    "transactions": "Transaktionen",
+    "noTransactions": "Noch keine Transaktionen",
+    "decisionFactors": "Entscheidungsfaktoren",
+    "noDecisionData": "Keine Entscheidungsdaten verfügbar",
+    "volatility": "Volatilität",
+    "trend": "Trend",
+    "score": "Score",
+    "playerType": "Spielertyp",
+    "buyPrice": "Kaufpreis",
+    "sellScore": "Verkaufs-Score",
+    "sellThreshold": "(≥40 = verkaufen)",
+    "cash": "Cash",
+    "clickDetails": "Klicken für Details",
+    "risk": {
+      "averse": "Vorsichtig",
+      "neutral": "Neutral",
+      "seeking": "Risikofreudig"
+    },
+    "volatilityLevel": {
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch"
+    },
+    "trendLevel": {
+      "strongUp": "Stark steigend",
+      "up": "Steigend",
+      "down": "Fallend",
+      "strongDown": "Stark fallend"
+    },
+    "reasoning": {
+      "prefersStable": "Bevorzugt stabile, steigende Aktien",
+      "seeksVolatile": "Sucht volatile Aktien mit Gewinnpotenzial",
+      "balanced": "Ausgewogene Strategie",
+      "stopLoss": "Verkauft bei Verlusten schnell (Stop-Loss)",
+      "holdsLosses": "Hält normalerweise bei Verlusten, aber Trend zu negativ",
+      "takesProfit": "Nimmt Gewinne mit",
+      "securesProfit": "Trend verschlechtert sich, sichert Gewinn",
+      "balancedSell": "Ausgewogene Verkaufsentscheidung"
+    },
+    "txType": {
+      "buy": "KAUF",
+      "sell": "VERK"
+    }
+  },
+  "help": {
+    "linkText": "Wie funktioniert das Spiel?",
+    "title": "Willkommen bei D-GRE Stock Exchange",
+    "understood": "Alles klar, los geht's!",
+    "intro": {
+      "title": "Was ist das?",
+      "text": "D-GRE Stock Exchange ist ein realistisches Börsenspiel, bei dem Sie mit virtuellem Geld echte Handelsstrategien ausprobieren können. Kaufen und verkaufen Sie Aktien von 14 bekannten Unternehmen, beobachten Sie die Kursentwicklung in Echtzeit und versuchen Sie, Ihr Portfolio zu vergrößern. Virtuelle Mitspieler handeln ebenfalls und beeinflussen die Kurse – genau wie an der echten Börse."
+    },
+    "howToPlay": {
+      "title": "So spielen Sie",
+      "step1": {
+        "title": "Beobachten Sie den Markt",
+        "text": "Rechts sehen Sie alle verfügbaren Aktien mit ihren aktuellen Kursen und Trends. Klicken Sie auf eine Aktie, um den detaillierten Chart zu sehen."
+      },
+      "step2": {
+        "title": "Kaufen Sie Aktien",
+        "text": "Klicken Sie auf den Kaufen-Button einer Aktie. Wählen Sie die Anzahl und den Order-Typ (Market für sofortigen Kauf, Limit für einen bestimmten Preis)."
+      },
+      "step3": {
+        "title": "Verwalten Sie Ihr Portfolio",
+        "text": "Links sehen Sie Ihr Portfolio mit allen gekauften Aktien, Ihrem verfügbaren Bargeld und offenen Orders. Behalten Sie den Gesamtwert im Blick!"
+      },
+      "step4": {
+        "title": "Verkäufe",
+        "text": "Wenn der Kurs gestiegen ist, verkaufen Sie Ihre Aktien mit Gewinn. Oder nutzen Sie Stop-Loss Orders, um Verluste zu begrenzen."
+      }
+    },
+    "rules": {
+      "title": "Spielregeln",
+      "rule1": "Sie starten mit einem frei wählbaren Startkapital (Standard: $100.000).",
+      "rule2": "Kurse werden alle paar Sekunden aktualisiert – die Geschwindigkeit können Sie in den Einstellungen anpassen.",
+      "rule3": "Pro Aktie können Sie nur eine Order pro Handelszyklus ausführen.",
+      "rule4": "Es gibt Handelsgebühren und Spreads wie an der echten Börse.",
+      "rule5": "Virtuelle Mitspieler mit unterschiedlichen Strategien beeinflussen ebenfalls die Kurse.",
+      "rule6": "Ziel: Vermehren Sie Ihr Startkapital durch kluge Investitionsentscheidungen!"
+    },
+    "orderTypes": {
+      "title": "Order-Typen erklärt",
+      "marketName": "Billigst/Bestens",
+      "limitName": "Limit",
+      "stopName": "Stop Buy / Stop Loss",
+      "market": "Sofortige Ausführung zum aktuellen Marktpreis.",
+      "limit": "Wird nur ausgeführt, wenn der Kurs Ihren gewünschten Preis erreicht.",
+      "stop": "Automatischer Auslöser bei einem bestimmten Kurs – ideal für Breakouts oder Stop-Loss."
+    },
+    "marketMechanics": {
+      "title": "Spread & Slippage",
+      "spreadName": "Spread",
+      "slippageName": "Slippage",
+      "spread": "Der Spread ist die Differenz zwischen dem Kaufpreis (Brief) und dem Verkaufspreis (Geld) einer Aktie. Beim Kauf zahlen Sie etwas mehr als den angezeigten Preis, beim Verkauf erhalten Sie etwas weniger. Diese Differenz stellt versteckte Handelskosten dar und ist der Verdienst der Market Maker.",
+      "slippage": "Slippage tritt auf, wenn Ihre Order zu einem anderen Preis als erwartet ausgeführt wird. Dies geschieht besonders bei Market-Orders und hoher Volatilität. An echten Märkten können große Orders auch den Kurs bewegen. Der angezeigte effektive Preis berücksichtigt mögliche Slippage, damit Sie Ihre tatsächlichen Kosten kennen."
+    },
+    "tips": {
+      "title": "Tipps für Einsteiger",
+      "tip1": "Diversifizieren Sie! Kaufen Sie nicht alle Aktien von einem Unternehmen.",
+      "tip2": "Beobachten Sie die Trends im Chart, bevor Sie kaufen.",
+      "tip3": "Nutzen Sie Stop-Loss Orders, um große Verluste zu vermeiden."
+    },
+    "virtualPlayers": {
+      "title": "Virtuelle Spieler",
+      "text": "In der Fußleiste finden Sie den Button 'Virtuelle Spieler anzeigen'. Damit öffnen Sie ein Panel, das alle KI-gesteuerten Mitspieler zeigt. Sie sehen ihre Portfolios, Bargeldbestände und Handelsentscheidungen. Beobachten Sie ihre Strategien – von vorsichtig bis risikofreudig – und lernen Sie, wie verschiedene Ansätze am Markt funktionieren."
+    }
+  }
+}
