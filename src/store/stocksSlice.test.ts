@@ -14,6 +14,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 100,
             change: 0,
             changePercent: 0,
@@ -37,6 +38,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 100,
             change: 0,
             changePercent: 0,
@@ -61,6 +63,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 100,
             change: 0,
             changePercent: 0,
@@ -86,6 +89,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 100,
             change: 0,
             changePercent: 0,
@@ -111,6 +115,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 100,
             change: 0,
             changePercent: 0,
@@ -122,6 +127,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'GOOGL',
             name: 'Alphabet Inc.',
+            sector: 'tech' as const,
             currentPrice: 200,
             change: 0,
             changePercent: 0,
@@ -149,6 +155,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 900,
             change: 30,
             changePercent: 3.45,
@@ -174,6 +181,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 900,
             change: 30,
             changePercent: 3.45,
@@ -199,6 +207,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 900,
             change: 30,
             changePercent: 3.45,
@@ -229,6 +238,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 900,
             change: 30,
             changePercent: 3.45,
@@ -240,6 +250,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'GOOGL',
             name: 'Alphabet Inc.',
+            sector: 'tech' as const,
             currentPrice: 800,
             change: 20,
             changePercent: 2.56,
@@ -267,6 +278,7 @@ describe('stocksSlice', () => {
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
+            sector: 'tech' as const,
             currentPrice: 900,
             change: 30,
             changePercent: 3.45,
@@ -291,6 +303,7 @@ describe('stocksSlice', () => {
     const createMockStock = (symbol: string, price: number): Stock => ({
       symbol,
       name: `${symbol} Inc.`,
+      sector: 'tech',
       currentPrice: price,
       change: 0,
       changePercent: 0,
@@ -374,6 +387,7 @@ describe('stocksSlice', () => {
     const createMockStock = (symbol: string, price: number): Stock => ({
       symbol,
       name: `${symbol} Inc.`,
+      sector: 'tech',
       currentPrice: price,
       change: 0,
       changePercent: 0,
@@ -481,6 +495,18 @@ describe('stocksSlice', () => {
       // Only one notification for the owned stock
       expect(state.notifications.items).toHaveLength(1);
       expect(state.notifications.items[0].title).toContain('OWNED');
+    });
+
+    it('should include stockSymbol in notification for chart navigation', () => {
+      const stocks = [createMockStock('EXPENSIVE', 800)];
+      const holdings = [{ symbol: 'EXPENSIVE', shares: 10, avgBuyPrice: 500 }];
+      const store = createTestStore({ stocks, holdings });
+
+      store.dispatch(checkAndApplyStockSplits() as unknown as Parameters<typeof store.dispatch>[0]);
+
+      const state = store.getState();
+      expect(state.notifications.items).toHaveLength(1);
+      expect(state.notifications.items[0].stockSymbol).toBe('EXPENSIVE');
     });
   });
 });

@@ -1,0 +1,36 @@
+/* ==========================================================================
+   CIRCULAR TIMER (BEM)
+   Block: circular-timer
+   A circular progress indicator for timers
+   ========================================================================== */
+
+.circular-timer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.circular-timer__bg {
+  opacity: 0.3;
+}
+
+.circular-timer__progress {
+  transition: stroke-dashoffset 0.3s ease-out;
+}
+
+.circular-timer--paused .circular-timer__progress {
+  stroke: var(--circular-stroke-paused);
+}
+
+.circular-timer__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--circular-stroke);
+  line-height: 1;
+}

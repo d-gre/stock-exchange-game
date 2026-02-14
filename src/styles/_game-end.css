@@ -1,0 +1,651 @@
+/* ==========================================================================
+   GAME END (BEM: game-end)
+   Full-screen view showing game results when a timed game ends
+   ========================================================================== */
+
+.game-end {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-app);
+  z-index: 2000;
+  overflow-y: auto;
+  animation: game-end--fade-in 0.3s ease-out;
+}
+
+/* Use background image like game screen for medieval theme */
+[data-theme="medieval"] .game-end {
+  background-image: url('/assets/img/paper_background.jpg');
+  background-size: contain;
+  background-attachment: fixed;
+  background-color: var(--bg-app);
+}
+
+@keyframes game-end--fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.game-end__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.game-end__header {
+  padding-bottom: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-primary);
+  margin-bottom: 1.5rem;
+}
+
+.game-end__header h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==========================================================================
+   CONTENT - THREE COLUMN LAYOUT
+   ========================================================================== */
+
+.game-end__content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+/* Tablet Landscape and up: 3 columns */
+@media (min-width: 769px) {
+  .game-end__content {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* ==========================================================================
+   COLUMNS
+   ========================================================================== */
+
+.game-end__column {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-end__column--ranking {
+  display: block;
+}
+
+.game-end__column h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.game-end__column h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   RESULT COLUMN - RANKING HIGHLIGHT
+   ========================================================================== */
+
+.game-end__result-highlight {
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--bg-accent-subtle);
+  border-radius: var(--radius-md);
+}
+
+.game-end__result-rank {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   NET WORTH BREAKDOWN
+   ========================================================================== */
+
+.game-end__breakdown {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.game-end__breakdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.game-end__breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.game-end__breakdown-item--total {
+  border-top: 1px solid var(--border-secondary);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.game-end__breakdown-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.game-end__breakdown-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.game-end__breakdown-item--total .game-end__breakdown-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.game-end__breakdown-item--total .game-end__breakdown-value {
+  font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   STAT ITEMS
+   ========================================================================== */
+
+.game-end__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.game-end__stat-item:last-child {
+  border-bottom: none;
+}
+
+.game-end__stat-row {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.game-end__stat-row .game-end__stat-item--half {
+  flex: 1;
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   CREDIT SCORE BREAKDOWN
+   ========================================================================== */
+
+.game-end__credit-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.game-end__credit-base {
+  color: var(--text-muted);
+}
+
+.game-end__credit-event {
+  font-weight: 500;
+}
+
+.game-end__stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-end__stat-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game-end__stat-symbol {
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.game-end__stat-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   PROFIT COLORS
+   ========================================================================== */
+
+.game-end__profit--positive {
+  color: var(--color-positive);
+}
+
+.game-end__profit--negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   CREDIT SCORE COLORS
+   ========================================================================== */
+
+.game-end__credit-score--excellent {
+  color: var(--color-positive);
+}
+
+.game-end__credit-score--good {
+  color: var(--color-positive-light);
+}
+
+.game-end__credit-score--fair {
+  color: var(--color-yellow);
+}
+
+.game-end__credit-score--poor {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   RISK LEVEL COLORS
+   ========================================================================== */
+
+.game-end__risk--conservative {
+  color: var(--color-positive);
+}
+
+.game-end__risk--moderate {
+  color: var(--color-yellow);
+}
+
+.game-end__risk--aggressive {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   RANKING ILLUSTRATION (medieval theme only)
+   ========================================================================== */
+
+.game-end__ranking-illustration {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.game-end__ranking-illustration img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   PLAYER LIST (RANKING COLUMN)
+   ========================================================================== */
+.game-end__player-list {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-secondary);
+  overflow: hidden;
+  flex: 1;
+}
+
+.game-end__player-header {
+  display: grid;
+  grid-template-columns: 50px 1fr 90px 90px 90px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-hover);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.game-end__player-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 90px 90px 90px;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-secondary);
+  font-size: 0.85rem;
+}
+
+.game-end__player-row:last-child {
+  border-bottom: none;
+}
+
+.game-end__player-row--human {
+  background: var(--bg-accent-subtle);
+}
+
+/* Medieval theme: Better highlighting for human player */
+[data-theme="medieval"] .game-end__player-row--human {
+  background: var(--btn-primary-text);
+}
+
+[data-theme="medieval"] .game-end__player-row--human .game-end__player-name {
+  color: var(--accent-primary);
+  text-shadow: 1px 1px 2px var(--alpha-subtle);
+}
+
+.game-end__player-rank {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.game-end__player-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-end__player-row--human .game-end__player-name {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.game-end__player-risk {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.game-end__player-risk--conservative {
+  color: var(--color-positive);
+}
+
+.game-end__player-risk--moderate {
+  color: var(--color-yellow);
+}
+
+.game-end__player-risk--aggressive {
+  color: var(--color-negative);
+}
+
+.game-end__player-profit {
+  text-align: right;
+  font-weight: 600;
+}
+
+.game-end__separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border-secondary);
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+}
+
+.game-end__player-networth {
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   CLIMATE COLUMN
+   ========================================================================== */
+
+.game-end__climate-stats {
+  margin-bottom: 1rem;
+}
+
+/* Climate colors */
+.game-end__climate--very-positive {
+  color: var(--color-positive);
+}
+
+.game-end__climate--positive {
+  color: var(--color-positive-light);
+}
+
+.game-end__climate--neutral {
+  color: var(--text-secondary);
+}
+
+.game-end__climate--negative {
+  color: var(--color-warning);
+}
+
+.game-end__climate--very-negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   CLIMATE HISTORY CHART
+   ========================================================================== */
+
+.game-end__chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.game-end__chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--text-secondary);
+}
+
+.game-end__chart-legend-color {
+  width: 12px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+.game-end__chart-legend-color--phase {
+  background: var(--color-info);
+}
+
+.game-end__chart-legend-color--feargreed {
+  background: var(--color-yellow);
+}
+
+.climate-history-chart {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.climate-history-chart__canvas {
+  width: 100%;
+  height: 120px;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.game-end__footer {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.game-end__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.game-end__button {
+  padding: 0.875rem 1.5rem;
+  background: var(--btn-game-bg);
+  border: 1px solid var(--btn-game-border-color);
+  border-radius: var(--radius-md);
+  color: var(--btn-game-text-color);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 320px;
+}
+
+.game-end__button:hover {
+  background: var(--btn-game-bg-hover);
+  color: var(--btn-game-text-hover);
+  border-color: var(--border-secondary);
+}
+
+/* ==========================================================================
+   CONTINUE GAME DROPDOWN
+   ========================================================================== */
+
+.game-end__continue-wrapper {
+  position: relative;
+}
+
+.game-end__continue-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: 10;
+  animation: game-end--dropdown-in 0.15s ease-out;
+  min-width: 200px;
+}
+
+@keyframes game-end--dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.game-end__continue-option {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.game-end__continue-option:hover {
+  background: var(--bg-hover);
+}
+
+.game-end__continue-option:not(:last-child) {
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .game-end__container {
+    padding: 1rem;
+  }
+
+  .game-end__header h2 {
+    font-size: 1.5rem;
+  }
+
+  .game-end__column {
+    padding: 1rem;
+  }
+
+  .game-end__player-header,
+  .game-end__player-row {
+    grid-template-columns: 40px 1fr 80px;
+  }
+
+  /* Hide risk and networth columns on mobile */
+  .game-end__player-risk,
+  .game-end__player-networth {
+    display: none;
+  }
+
+  /* Hide 3rd (risk) and 5th (networth) header columns */
+  .game-end__player-header span:nth-child(3),
+  .game-end__player-header span:nth-child(5) {
+    display: none;
+  }
+
+  .game-end__actions {
+    flex-direction: column;
+  }
+
+  .game-end__button {
+    width: 100%;
+  }
+
+  .game-end__continue-dropdown {
+    left: 0;
+    right: 0;
+    transform: none;
+    min-width: auto;
+  }
+
+  @keyframes game-end--dropdown-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

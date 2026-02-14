@@ -4,6 +4,7 @@ import { createChart, LineSeries, AreaSeries } from 'lightweight-charts';
 import type { IChartApi, ISeriesApi, LineData, Time } from 'lightweight-charts';
 import type { CompletedTrade } from '../types';
 import type { Theme } from '../hooks/useTheme';
+import type { FormatLocale } from '../utils/formatting';
 import { getDefaultChartOptions, getChartColors, createResizeHandler, setupResizeListeners } from '../utils/chartUtils';
 
 interface TradeHistoryChartProps {
@@ -16,6 +17,7 @@ interface TradeHistoryChartProps {
   height?: number;
   autoHeight?: boolean;
   theme?: Theme;
+  locale?: FormatLocale;
 }
 
 export const TradeHistoryChart = ({
@@ -24,6 +26,7 @@ export const TradeHistoryChart = ({
   height = 300,
   autoHeight = false,
   theme = 'dark',
+  locale = 'en',
 }: TradeHistoryChartProps) => {
   const { t } = useTranslation();
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -31,6 +34,67 @@ export const TradeHistoryChart = ({
   const plSeriesRef = useRef<ISeriesApi<'Area'> | null>(null);
   const valueSeriesRef = useRef<ISeriesApi<'Line'> | null>(null);
 
+  // Helper function to set chart data
+  const setChartData = (
+    plSeries: ISeriesApi<'Area'>,
+    valueSeries: ISeriesApi<'Line'>,
+    chart: IChartApi,
+    history: typeof portfolioValueHistory,
+    currentTheme: Theme
+  ) => {
+    if (history.length === 0) return;
+
+    const colors = getChartColors(currentTheme);
+
+    // Deduplicate entries with the same second timestamp (keep last value)
+    const deduplicatedHistory = new Map<number, typeof history[0]>();
+    for (const point of history) {
+      const timeInSeconds = Math.floor(point.timestamp / 1000);
+      deduplicatedHistory.set(timeInSeconds, point);
+    }
+    const sortedHistory = Array.from(deduplicatedHistory.entries())
+      .sort((a, b) => a[0] - b[0])
+      .map(([, point]) => point);
+
+    // P&L data
+    const plData: LineData<Time>[] = sortedHistory.map(point => ({
+      time: Math.floor(point.timestamp / 1000) as Time,
+      value: point.realizedProfitLoss,
+    }));
+    plSeries.setData(plData);
+
+    // Portfolio value data
+    const valueData: LineData<Time>[] = sortedHistory.map(point => ({
+      time: Math.floor(point.timestamp / 1000) as Time,
+      value: point.value,
+    }));
+    valueSeries.setData(valueData);
+
+    // Adjust the color of the P&L chart
+    const lastPL = history[history.length - 1]?.realizedProfitLoss ?? 0;
+    const positiveTopColor = currentTheme === 'dark' ? 'rgba(38, 166, 154, 0.4)' : 'rgba(25, 135, 84, 0.3)';
+    const positiveBottomColor = currentTheme === 'dark' ? 'rgba(38, 166, 154, 0.0)' : 'rgba(25, 135, 84, 0.0)';
+    const negativeTopColor = currentTheme === 'dark' ? 'rgba(239, 83, 80, 0.4)' : 'rgba(220, 53, 69, 0.3)';
+    const negativeBottomColor = currentTheme === 'dark' ? 'rgba(239, 83, 80, 0.0)' : 'rgba(220, 53, 69, 0.0)';
+
+    if (lastPL >= 0) {
+      plSeries.applyOptions({
+        lineColor: colors.upColor,
+        topColor: positiveTopColor,
+        bottomColor: positiveBottomColor,
+      });
+    } else {
+      plSeries.applyOptions({
+        lineColor: colors.downColor,
+        topColor: negativeTopColor,
+        bottomColor: negativeBottomColor,
+      });
+    }
+
+    chart.timeScale().fitContent();
+  };
+
+  // Create chart and recreate on theme/size changes
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
@@ -41,7 +105,8 @@ export const TradeHistoryChart = ({
     const chart = createChart(container, getDefaultChartOptions(
       { width: container.clientWidth, height: chartHeight },
       { timeVisible: true, secondsVisible: false },
-      theme
+      theme,
+      locale
     ));
 
     // P&L Area Chart (green/red depending on profit/loss)
@@ -70,6 +135,9 @@ export const TradeHistoryChart = ({
     plSeriesRef.current = plSeries;
     valueSeriesRef.current = valueSeries;
 
+    // Set initial data immediately after chart creation
+    setChartData(plSeries, valueSeries, chart, portfolioValueHistory, theme);
+
     const handleResize = createResizeHandler({
       container,
       chart,
@@ -78,62 +146,13 @@ export const TradeHistoryChart = ({
     });
 
     return setupResizeListeners(container, chart, handleResize);
-  }, [height, autoHeight, theme]);
+  }, [height, autoHeight, theme, locale, portfolioValueHistory]);
 
+  // Update data when only portfolioValueHistory changes (chart already exists)
   useEffect(() => {
-    if (!plSeriesRef.current || !valueSeriesRef.current) return;
-
-    const colors = getChartColors(theme);
-
-    if (portfolioValueHistory.length > 0) {
-      // Deduplicate entries with the same second timestamp (keep last value)
-      const deduplicatedHistory = new Map<number, typeof portfolioValueHistory[0]>();
-      for (const point of portfolioValueHistory) {
-        const timeInSeconds = Math.floor(point.timestamp / 1000);
-        deduplicatedHistory.set(timeInSeconds, point);
-      }
-      const sortedHistory = Array.from(deduplicatedHistory.entries())
-        .sort((a, b) => a[0] - b[0])
-        .map(([, point]) => point);
-
-      // P&L data
-      const plData: LineData<Time>[] = sortedHistory.map(point => ({
-        time: Math.floor(point.timestamp / 1000) as Time,
-        value: point.realizedProfitLoss,
-      }));
-      plSeriesRef.current.setData(plData);
-
-      // Portfolio value data
-      const valueData: LineData<Time>[] = sortedHistory.map(point => ({
-        time: Math.floor(point.timestamp / 1000) as Time,
-        value: point.value,
-      }));
-      valueSeriesRef.current.setData(valueData);
-
-      // Adjust the color of the P&L chart
-      const lastPL = portfolioValueHistory[portfolioValueHistory.length - 1]?.realizedProfitLoss ?? 0;
-      const positiveTopColor = theme === 'dark' ? 'rgba(38, 166, 154, 0.4)' : 'rgba(25, 135, 84, 0.3)';
-      const positiveBottomColor = theme === 'dark' ? 'rgba(38, 166, 154, 0.0)' : 'rgba(25, 135, 84, 0.0)';
-      const negativeTopColor = theme === 'dark' ? 'rgba(239, 83, 80, 0.4)' : 'rgba(220, 53, 69, 0.3)';
-      const negativeBottomColor = theme === 'dark' ? 'rgba(239, 83, 80, 0.0)' : 'rgba(220, 53, 69, 0.0)';
-
-      if (lastPL >= 0) {
-        plSeriesRef.current.applyOptions({
-          lineColor: colors.upColor,
-          topColor: positiveTopColor,
-          bottomColor: positiveBottomColor,
-        });
-      } else {
-        plSeriesRef.current.applyOptions({
-          lineColor: colors.downColor,
-          topColor: negativeTopColor,
-          bottomColor: negativeBottomColor,
-        });
-      }
-
-      chartRef.current?.timeScale().fitContent();
-    }
-  }, [portfolioValueHistory, theme]);
+    if (!plSeriesRef.current || !valueSeriesRef.current || !chartRef.current) return;
+    setChartData(plSeriesRef.current, valueSeriesRef.current, chartRef.current, portfolioValueHistory, theme);
+  }, [portfolioValueHistory]);
 
   if (trades.length === 0 && portfolioValueHistory.length <= 1) {
     return (

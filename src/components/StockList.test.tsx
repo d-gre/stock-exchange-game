@@ -8,6 +8,7 @@ describe('StockList', () => {
     {
       symbol: 'AAPL',
       name: 'Apple Inc.',
+      sector: 'tech',
       currentPrice: 100,
       change: 2.5,
       changePercent: 2.56,
@@ -23,6 +24,7 @@ describe('StockList', () => {
     {
       symbol: 'GOOGL',
       name: 'Alphabet Inc.',
+      sector: 'tech',
       currentPrice: 200,
       change: -5,
       changePercent: -2.44,
@@ -34,6 +36,22 @@ describe('StockList', () => {
         { time: 5, open: 190, high: 192, low: 188, close: 189 }, // down
       ],
       marketCapBillions: 2000,
+    },
+    {
+      symbol: 'JPM',
+      name: 'JPMorgan Chase',
+      sector: 'finance',
+      currentPrice: 150,
+      change: 1.0,
+      changePercent: 0.67,
+      priceHistory: [
+        { time: 1, open: 148, high: 150, low: 147, close: 149 },
+        { time: 2, open: 149, high: 151, low: 148, close: 150 },
+        { time: 3, open: 150, high: 152, low: 149, close: 151 },
+        { time: 4, open: 151, high: 152, low: 150, close: 150 },
+        { time: 5, open: 150, high: 151, low: 149, close: 150 },
+      ],
+      marketCapBillions: 600,
     },
   ];
 
@@ -55,13 +73,16 @@ describe('StockList', () => {
 
       expect(screen.getByText('AAPL')).toBeInTheDocument();
       expect(screen.getByText('GOOGL')).toBeInTheDocument();
+      expect(screen.getByText('JPM')).toBeInTheDocument();
     });
 
     it('should display stock prices', () => {
       render(<StockList {...defaultProps} />);
 
-      expect(screen.getByText('$100.00')).toBeInTheDocument();
-      expect(screen.getByText('$200.00')).toBeInTheDocument();
+      // Format: "$X,XX" with German locale (de-DE uses comma as decimal separator)
+      expect(screen.getByText('$100,00')).toBeInTheDocument();
+      expect(screen.getByText('$200,00')).toBeInTheDocument();
+      expect(screen.getByText('$150,00')).toBeInTheDocument();
     });
 
     it('should show stock name as tooltip on symbol', () => {
@@ -81,51 +102,45 @@ describe('StockList', () => {
     it('should display positive change with green color class', () => {
       render(<StockList {...defaultProps} />);
 
-      const aaplChange = screen.getByText(/\+2\.6%/);
+      // Format: "+X,X%" with German locale (comma as decimal separator)
+      const aaplChange = screen.getByText(/\+2,6%/);
       expect(aaplChange).toHaveClass('stock-list__change--positive');
     });
 
     it('should display negative change with red color class', () => {
       render(<StockList {...defaultProps} />);
 
-      const googlChange = screen.getByText(/-2\.4%/);
+      // Format: "-X,X%" with German locale (comma as decimal separator)
+      const googlChange = screen.getByText(/-2,4%/);
       expect(googlChange).toHaveClass('stock-list__change--negative');
     });
 
     it('should render header with column labels', () => {
-      render(<StockList {...defaultProps} />);
+      const { container } = render(<StockList {...defaultProps} />);
 
-      expect(screen.getByText('Symbol')).toBeInTheDocument();
-      expect(screen.getByText('Preis')).toBeInTheDocument();
-      expect(screen.getByText('Änd.')).toBeInTheDocument();
-      expect(screen.getByText('MCap')).toBeInTheDocument();
-      expect(screen.getByText('Trend')).toBeInTheDocument();
+      // Check header cells specifically (not sort bar buttons)
+      const header = container.querySelector('.stock-list__header');
+      expect(header).toHaveTextContent('Symbol');
+      expect(header).toHaveTextContent('Preis');
+      expect(header).toHaveTextContent('Änd.');
+      expect(header).toHaveTextContent('Trend');
+      expect(header).toHaveTextContent('Grp.');
     });
 
-    it('should display market cap in trillions for large cap stocks', () => {
+    it('should display sector tags with correct labels', () => {
       render(<StockList {...defaultProps} />);
 
-      // 3000B = 3.0T, 2000B = 2.0T
-      expect(screen.getByText('$3.0T')).toBeInTheDocument();
-      expect(screen.getByText('$2.0T')).toBeInTheDocument();
-    });
-
-    it('should display market cap in billions for smaller values', () => {
-      const smallCapStocks: Stock[] = [
-        { ...mockStocks[0], marketCapBillions: 500 },
-        { ...mockStocks[1], marketCapBillions: 250 },
-      ];
-      render(<StockList {...defaultProps} stocks={smallCapStocks} />);
-
-      expect(screen.getByText('$500B')).toBeInTheDocument();
-      expect(screen.getByText('$250B')).toBeInTheDocument();
+      // Tech stocks should show 'T', Finance should show 'F'
+      const sectorTags = screen.getAllByText('T');
+      expect(sectorTags.length).toBe(2); // AAPL and GOOGL
+      expect(screen.getByText('F')).toBeInTheDocument(); // JPM
     });
 
     it('should render mini trend bars', () => {
       const { container } = render(<StockList {...defaultProps} />);
 
       const trendContainers = container.querySelectorAll('.stock-list__mini-trend');
-      expect(trendContainers).toHaveLength(2);
+      expect(trendContainers).toHaveLength(3);
 
       // Each stock should have 5 trend bars
       const aaplRow = screen.getByText('AAPL').closest('.stock-list__row');
@@ -169,17 +184,109 @@ describe('StockList', () => {
   });
 
   describe('sorting', () => {
-    it('should sort stocks alphabetically by symbol', () => {
+    it('should sort stocks alphabetically by symbol by default', () => {
       const unsortedStocks: Stock[] = [
         { ...mockStocks[1] }, // GOOGL
         { ...mockStocks[0] }, // AAPL
+        { ...mockStocks[2] }, // JPM
       ];
 
       render(<StockList {...defaultProps} stocks={unsortedStocks} />);
 
-      const rows = screen.getAllByText(/AAPL|GOOGL/);
+      const rows = screen.getAllByText(/AAPL|GOOGL|JPM/);
       expect(rows[0]).toHaveTextContent('AAPL');
       expect(rows[1]).toHaveTextContent('GOOGL');
+      expect(rows[2]).toHaveTextContent('JPM');
+    });
+
+    it('should toggle sort direction when clicking same column header', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // Click symbol header cell to toggle to descending
+      const symbolHeader = container.querySelector('.stock-list__header-cell');
+      fireEvent.click(symbolHeader!);
+
+      // Should now be descending (JPM first)
+      const rows = screen.getAllByText(/AAPL|GOOGL|JPM/);
+      expect(rows[0]).toHaveTextContent('JPM');
+    });
+
+    it('should show sort indicator on active column', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // By default, symbol column should show ascending indicator
+      const sortIndicator = container.querySelector('.stock-list__sort-indicator');
+      expect(sortIndicator).toBeInTheDocument();
+      expect(sortIndicator?.textContent).toBe('↑');
+    });
+
+    it('should sort by price when clicking price header', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // Click the price header cell (2nd header cell)
+      const headerCells = container.querySelectorAll('.stock-list__header-cell');
+      fireEvent.click(headerCells[1]); // Price is 2nd column
+
+      // Should be ascending by price (100, 150, 200)
+      const rows = screen.getAllByText(/AAPL|GOOGL|JPM/);
+      expect(rows[0]).toHaveTextContent('AAPL'); // $100
+      expect(rows[1]).toHaveTextContent('JPM');  // $150
+      expect(rows[2]).toHaveTextContent('GOOGL'); // $200
+    });
+
+    it('should sort by sector when clicking sector header', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // Click the sector header cell (5th header cell)
+      const headerCells = container.querySelectorAll('.stock-list__header-cell');
+      fireEvent.click(headerCells[4]); // Sector is 5th column
+
+      // Tech (T) comes before Finance (F) in sort order
+      const rows = screen.getAllByText(/AAPL|GOOGL|JPM/);
+      // First tech stocks, then finance
+      expect(rows[0]).toHaveTextContent('AAPL');
+      expect(rows[1]).toHaveTextContent('GOOGL');
+      expect(rows[2]).toHaveTextContent('JPM');
+    });
+
+    it('should render sort bar with all sort buttons', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      const sortBar = container.querySelector('.stock-list__sort-bar');
+      expect(sortBar).toBeInTheDocument();
+
+      const sortButtons = container.querySelectorAll('.stock-list__sort-btn');
+      expect(sortButtons).toHaveLength(5); // Symbol, Price, Change, Trend, Sector
+    });
+
+    it('should sort via sort bar buttons', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // Click price sort button (2nd button)
+      const sortButtons = container.querySelectorAll('.stock-list__sort-btn');
+      fireEvent.click(sortButtons[1]); // Price button
+
+      // Should be ascending by price (100, 150, 200)
+      const rows = screen.getAllByText(/AAPL|GOOGL|JPM/);
+      expect(rows[0]).toHaveTextContent('AAPL'); // $100
+      expect(rows[1]).toHaveTextContent('JPM');  // $150
+      expect(rows[2]).toHaveTextContent('GOOGL'); // $200
+    });
+
+    it('should mark active sort button', () => {
+      const { container } = render(<StockList {...defaultProps} />);
+
+      // By default, symbol button should be active
+      const symbolButton = container.querySelector('.stock-list__sort-btn--active');
+      expect(symbolButton).toHaveTextContent('Symbol');
+
+      // Click price button
+      const sortButtons = container.querySelectorAll('.stock-list__sort-btn');
+      fireEvent.click(sortButtons[1]); // Price button
+
+      // Now price button should be active
+      const activeButton = container.querySelector('.stock-list__sort-btn--active');
+      expect(activeButton).toHaveTextContent('Preis');
     });
   });
 });

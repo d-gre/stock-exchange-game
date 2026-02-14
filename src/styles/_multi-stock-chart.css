@@ -22,7 +22,7 @@
 
 .multi-stock-chart__empty-hint {
   font-size: 0.85rem;
-  color: var(--text-dark);
+  color: var(--text-faint);
 }
 
 /* ==========================================================================
@@ -33,7 +33,6 @@
 .multi-stock-chart__grid {
   display: grid;
   gap: 1rem;
-  padding: 0.5rem;
   grid-template-columns: 1fr;
 }
 
@@ -56,13 +55,11 @@
 /* Einzelner Chart braucht kein Highlighting */
 .multi-stock-chart__grid--single .multi-stock-chart__card,
 .multi-stock-chart__grid--single .multi-stock-chart__card--selected {
-  border-color: transparent;
-  box-shadow: none;
   cursor: default;
 }
 
 .multi-stock-chart__grid--single .multi-stock-chart__card:hover {
-  border-color: transparent;
+  border-width: 1px;
   transform: none;
 }
 
@@ -81,13 +78,11 @@
 
 /* Einzelne Aktie im Portfolio braucht kein Highlighting */
 .multi-stock-chart__grid--count-1 .multi-stock-chart__card {
-  border-color: transparent;
-  box-shadow: none;
   cursor: default;
 }
 
 .multi-stock-chart__grid--count-1 .multi-stock-chart__card:hover {
-  border-color: transparent;
+  border-width: 1px;
   transform: none;
 }
 
@@ -107,23 +102,23 @@
 
 .multi-stock-chart__card {
   background: var(--bg-card-alt);
-  border-radius: 12px;
-  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-secondary);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 200px;
 }
 
-.multi-stock-chart__card:hover {
-  border-color: rgba(0, 212, 255, 0.3);
-  transform: translateY(-2px);
+.multi-stock-chart__card--no-click {
+  cursor: default;
 }
 
-.multi-stock-chart__card--selected {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+.multi-stock-chart__card--no-click:hover {
+  border-width: 1px;
+  transform: none;
 }
+
 
 /* ==========================================================================
    CARD HEADER
@@ -148,12 +143,37 @@
 .multi-stock-chart__card-symbol {
   font-weight: 700;
   font-size: 1rem;
-  color: var(--text-white);
+  color: var(--text-emphasis);
 }
 
 .multi-stock-chart__card-name {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: var(--text-muted);
+}
+
+.multi-stock-chart__card-sector {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 3px;
+  cursor: help;
+}
+
+.multi-stock-chart__card-sector--tech {
+  background-color: var(--sector-tech);
+}
+
+.multi-stock-chart__card-sector--finance {
+  background-color: var(--sector-finance);
+}
+
+.multi-stock-chart__card-sector--industrial {
+  background-color: var(--sector-industrial);
+}
+
+.multi-stock-chart__card-sector--commodities {
+  background-color: var(--sector-commodities);
 }
 
 .multi-stock-chart__card-shares {
@@ -164,9 +184,18 @@
   border-radius: 4px;
 }
 
+.multi-stock-chart__card-marketcap {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .multi-stock-chart__card-price {
   font-weight: 600;
   font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 5.5rem;
+  text-align: right;
 }
 
 .multi-stock-chart__card-change {
@@ -177,6 +206,7 @@
 .multi-stock-chart__card-change-display {
   font-size: 0.85rem;
   font-weight: 500;
+  margin-left: 0.25rem;
 }
 
 .multi-stock-chart__card-change-display--positive {
@@ -284,6 +314,16 @@
   transform: translateY(-1px);
 }
 
+.multi-stock-chart__action-btn--short {
+  background: var(--color-warning, #f59e0b);
+  color: white;
+}
+
+.multi-stock-chart__action-btn--short:hover:not(:disabled) {
+  background: var(--color-warning-light, #fbbf24);
+  transform: translateY(-1px);
+}
+
 .multi-stock-chart__action-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -340,6 +380,11 @@
 
   .multi-stock-chart__card-body {
     min-height: auto;
+  }
+
+  /* Hide name in multi-chart grid view on desktop to save space */
+  .multi-stock-chart__grid:not(.multi-stock-chart__grid--single) .multi-stock-chart__card-name {
+    display: none;
   }
 
   .multi-stock-chart__grid--count-2 {

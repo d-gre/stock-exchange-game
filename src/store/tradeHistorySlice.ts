@@ -1,7 +1,15 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createSelector, type PayloadAction } from '@reduxjs/toolkit';
 import type { CompletedTrade, RiskProfileAnalysis, RiskProfileCategory } from '../types';
 import type { RootState } from './index';
 import { CONFIG } from '../config';
+
+/** Trade with profit/loss info for game-end statistics */
+export interface TradeWithProfitLoss {
+  symbol: string;
+  shares: number;
+  profitLoss: number;
+  pricePerShare: number;
+}
 
 interface TradeHistoryState {
   trades: CompletedTrade[];
@@ -59,6 +67,12 @@ const tradeHistorySlice = createSlice({
         value: CONFIG.initialCash,
         realizedProfitLoss: 0,
       }];
+    },
+    /**
+     * Restore trade history from saved game
+     */
+    restoreTradeHistory: (_state, action: PayloadAction<TradeHistoryState>) => {
+      return action.payload;
     },
   },
 });
@@ -213,5 +227,121 @@ export const selectRiskProfile = (state: RootState): RiskProfileAnalysis | null 
   };
 };
 
-export const { addCompletedTrade, updatePortfolioValueHistory, resetTradeHistory } = tradeHistorySlice.actions;
+/**
+ * Selects the best regular trade (sell with highest profit).
+ * Returns null if no profitable sell trades exist.
+ */
+export const selectBestTrade = createSelector(
+  [selectAllTrades],
+  (trades): TradeWithProfitLoss | null => {
+    const profitableSells = trades.filter(
+      t => t.type === 'sell' && t.realizedProfitLoss !== undefined && t.realizedProfitLoss > 0
+    );
+    if (profitableSells.length === 0) return null;
+
+    const best = profitableSells.reduce((max, t) =>
+      (t.realizedProfitLoss ?? 0) > (max.realizedProfitLoss ?? 0) ? t : max
+    );
+
+    return {
+      symbol: best.symbol,
+      shares: best.shares,
+      profitLoss: best.realizedProfitLoss ?? 0,
+      pricePerShare: best.pricePerShare,
+    };
+  }
+);
+
+/**
+ * Selects the worst regular trade (sell with biggest loss).
+ * Returns null if no loss-making sell trades exist.
+ */
+export const selectWorstTrade = createSelector(
+  [selectAllTrades],
+  (trades): TradeWithProfitLoss | null => {
+    const losingSells = trades.filter(
+      t => t.type === 'sell' && t.realizedProfitLoss !== undefined && t.realizedProfitLoss < 0
+    );
+    if (losingSells.length === 0) return null;
+
+    const worst = losingSells.reduce((min, t) =>
+      (t.realizedProfitLoss ?? 0) < (min.realizedProfitLoss ?? 0) ? t : min
+    );
+
+    return {
+      symbol: worst.symbol,
+      shares: worst.shares,
+      profitLoss: worst.realizedProfitLoss ?? 0,
+      pricePerShare: worst.pricePerShare,
+    };
+  }
+);
+
+/**
+ * Selects the best short trade (buyToCover with highest profit).
+ * Returns null if no profitable buyToCover trades exist.
+ */
+export const selectBestShortTrade = createSelector(
+  [selectAllTrades],
+  (trades): TradeWithProfitLoss | null => {
+    const profitableShorts = trades.filter(
+      t => t.type === 'buyToCover' && t.realizedProfitLoss !== undefined && t.realizedProfitLoss > 0
+    );
+    if (profitableShorts.length === 0) return null;
+
+    const best = profitableShorts.reduce((max, t) =>
+      (t.realizedProfitLoss ?? 0) > (max.realizedProfitLoss ?? 0) ? t : max
+    );
+
+    return {
+      symbol: best.symbol,
+      shares: best.shares,
+      profitLoss: best.realizedProfitLoss ?? 0,
+      pricePerShare: best.pricePerShare,
+    };
+  }
+);
+
+/**
+ * Selects the worst short trade (buyToCover with biggest loss).
+ * Returns null if no loss-making buyToCover trades exist.
+ */
+export const selectWorstShortTrade = createSelector(
+  [selectAllTrades],
+  (trades): TradeWithProfitLoss | null => {
+    const losingShorts = trades.filter(
+      t => t.type === 'buyToCover' && t.realizedProfitLoss !== undefined && t.realizedProfitLoss < 0
+    );
+    if (losingShorts.length === 0) return null;
+
+    const worst = losingShorts.reduce((min, t) =>
+      (t.realizedProfitLoss ?? 0) < (min.realizedProfitLoss ?? 0) ? t : min
+    );
+
+    return {
+      symbol: worst.symbol,
+      shares: worst.shares,
+      profitLoss: worst.realizedProfitLoss ?? 0,
+      pricePerShare: worst.pricePerShare,
+    };
+  }
+);
+
+/**
+ * Count of regular sell trades (for conditional display)
+ */
+export const selectSellTradeCount = createSelector(
+  [selectAllTrades],
+  (trades): number => trades.filter(t => t.type === 'sell').length
+);
+
+/**
+ * Count of short cover trades (for conditional display)
+ */
+export const selectShortTradeCount = createSelector(
+  [selectAllTrades],
+  (trades): number => trades.filter(t => t.type === 'buyToCover').length
+);
+
+export const { addCompletedTrade, updatePortfolioValueHistory, resetTradeHistory, restoreTradeHistory } = tradeHistorySlice.actions;
 export default tradeHistorySlice.reducer;

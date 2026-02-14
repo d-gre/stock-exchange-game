@@ -1,38 +1,8 @@
 /* ==========================================================================
    LAYOUT
-   Header, main grid, and panel containers
+   Main grid and panel containers
    Mobile-first approach
    ========================================================================== */
-
-/* ==========================================================================
-   HEADER
-   ========================================================================== */
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: var(--gradient-header);
-  border-bottom: 1px solid var(--border-primary);
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  background: var(--gradient-text);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.header-logo {
-  width: 40px;
-  height: 40px;
-}
 
 /* ==========================================================================
    MAIN LAYOUT
@@ -73,10 +43,47 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+.center-panel__chart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  transition: filter 0.2s ease;
+}
+
+.center-panel__chart--blurred {
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.center-panel__trade-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 10;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* Block stock selection when trade panel is open */
+.main--trading .portfolio__holdings-row,
+.main--trading .stock-list__row {
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .right-panel {
   order: 2;
+}
+
+/* Hide main content when an overlay screen is active (e.g., GameEnd) */
+.app--overlay-active .main {
+  display: none;
 }
 
 /* ==========================================================================
@@ -116,7 +123,7 @@
 
 @media (min-width: 1201px) {
   .main {
-    grid-template-columns: 300px 1fr 360px;
+    grid-template-columns: 320px 1fr 360px;
     grid-template-rows: auto;
   }
 

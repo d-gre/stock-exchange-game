@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectStock, setChartTab } from '../store/uiSlice';
+import { selectStock, setChartTab, type TradeType } from '../store/uiSlice';
 import { selectAllTrades } from '../store/tradeHistorySlice';
-import { calculateMarketIndex } from '../utils/indexCalculation';
+import { calculateMarketIndex, calculateAllSectorIndices } from '../utils/indexCalculation';
+import { formatNumber, formatPercent, getFormatLocale } from '../utils/formatting';
 import CandlestickChart from './CandlestickChart';
-import { MultiStockChart } from './MultiStockChart';
+import MultiStockChart from './MultiStockChart';
 import { TradeHistory } from './TradeHistory';
-import type { Stock, Portfolio } from '../types';
+import type { Stock, Portfolio, Sector } from '../types';
 import type { Theme } from '../hooks/useTheme';
 
 /**
@@ -23,6 +24,28 @@ const calculateMiniTrend = (priceHistory: { open: number; close: number }[]): nu
   });
 };
 
+/** Sector display order */
+const SECTOR_ORDER: Sector[] = ['tech', 'finance', 'industrial', 'commodities'];
+
+/** Sector colors for chart lines - theme dependent */
+const getSectorLineColors = (theme: Theme): Record<Sector, string> => {
+  if (theme === 'medieval') {
+    return {
+      tech: '#1a4a6a',
+      finance: '#084a3a',
+      industrial: '#7a4a0a',
+      commodities: '#4a2a6a',
+    };
+  }
+  // Light and dark theme use the same sector colors
+  return {
+    tech: '#3b82f6',
+    finance: '#10b981',
+    industrial: '#f59e0b',
+    commodities: '#8b5cf6',
+  };
+};
+
 interface ChartPanelProps {
   stocks: Stock[];
   portfolio: Portfolio;
@@ -34,7 +57,7 @@ interface ChartPanelProps {
   /** Warmup progress in percent (0-100) */
   warmupProgress?: number;
   onSelectStock: (symbol: string) => void;
-  onTrade: (symbol: string, type: 'buy' | 'sell') => void;
+  onTrade: (symbol: string, type: TradeType) => void;
 }
 
 export const ChartPanel = ({
@@ -49,12 +72,14 @@ export const ChartPanel = ({
   onTrade,
 }: ChartPanelProps) => {
   const { t, i18n } = useTranslation();
+  const locale = getFormatLocale(i18n.language);
   const dispatch = useAppDispatch();
   const chartTab = useAppSelector(state => state.ui.chartTab);
   const tradeHistory = useAppSelector(selectAllTrades);
 
   const selectedStockData = stocks.find(s => s.symbol === selectedStock);
   const marketIndex = calculateMarketIndex(stocks);
+  const sectorIndices = calculateAllSectorIndices(stocks);
 
   // With no holdings and no selection -> show market index (only if not history tab)
   const showIndexInstead = chartTab === 'stock' && portfolio.holdings.length === 0 && !selectedStock;
@@ -127,7 +152,7 @@ export const ChartPanel = ({
               }}
             >
               {portfolio.holdings.length > 0
-                ? t('chart.assets', { count: portfolio.holdings.length })
+                ? t('chart.assets')
                 : selectedStockData
                   ? `${selectedStockData.symbol} - ${selectedStockData.name}`
                   : t('chart.stock')}
@@ -166,25 +191,57 @@ export const ChartPanel = ({
             />
           )}
           {(chartTab === 'index' || showIndexInstead) && (
-            <div className="chart-panel__market-index">
-              <div className="chart-panel__market-index-header">
-                <h2>D-GREX Prime</h2>
-                <div className={`chart-panel__market-index-value${marketIndex.change >= 0 ? ' chart-panel__market-index-value--positive' : ' chart-panel__market-index-value--negative'}`}>
-                  {Math.round(marketIndex.currentPrice).toLocaleString(i18n.language === 'de' ? 'de-DE' : 'en-US')}
-                  <span className="chart-panel__market-index-change">
-                    {marketIndex.change >= 0 ? '+' : ''}{marketIndex.changePercent.toFixed(2)}%
-                  </span>
-                  <span className="chart-panel__market-index-trend">
-                    {calculateMiniTrend(marketIndex.priceHistory).map((trend, i) => (
-                      <span
-                        key={i}
-                        className={`chart-panel__trend-bar${trend > 0 ? ' chart-panel__trend-bar--up' : trend < 0 ? ' chart-panel__trend-bar--down' : ' chart-panel__trend-bar--neutral'}`}
-                      />
-                    ))}
-                  </span>
+            <div className="chart-panel__indices-container">
+              {/* Main Market Index */}
+              <div className="chart-panel__market-index">
+                <div className="chart-panel__market-index-header">
+                  <h2>D-GREX Prime</h2>
+                  <div className={`chart-panel__market-index-value${marketIndex.change >= 0 ? ' chart-panel__market-index-value--positive' : ' chart-panel__market-index-value--negative'}`}>
+                    {formatNumber(Math.round(marketIndex.currentPrice), 0, locale)}
+                    <span className="chart-panel__market-index-change">
+                      {formatPercent(marketIndex.changePercent / 100, 2, true, locale)}
+                    </span>
+                    <span className="chart-panel__market-index-trend">
+                      {calculateMiniTrend(marketIndex.priceHistory).map((trend, i) => (
+                        <span
+                          key={i}
+                          className={`chart-panel__trend-bar${trend > 0 ? ' chart-panel__trend-bar--up' : trend < 0 ? ' chart-panel__trend-bar--down' : ' chart-panel__trend-bar--neutral'}`}
+                        />
+                      ))}
+                    </span>
+                  </div>
                 </div>
+                <CandlestickChart data={marketIndex.priceHistory} type="area" autoHeight theme={theme} locale={locale} />
               </div>
-              <CandlestickChart data={marketIndex.priceHistory} type="area" autoHeight theme={theme} />
+
+              {/* Sector Indices Grid */}
+              <div className="chart-panel__sector-indices">
+                {SECTOR_ORDER.map(sector => {
+                  const sectorIndex = sectorIndices[sector];
+                  return (
+                    <div key={sector} className="chart-panel__sector-index-chart">
+                      <div className="chart-panel__sector-index-header">
+                        <h3 className={`chart-panel__sector-title--${sector}`}>{sectorIndex.name}</h3>
+                        <div className={`chart-panel__sector-index-value${sectorIndex.change >= 0 ? ' chart-panel__sector-index-value--positive' : ' chart-panel__sector-index-value--negative'}`}>
+                          {formatNumber(Math.round(sectorIndex.currentPrice), 0, locale)}
+                          <span className="chart-panel__sector-index-change">
+                            {formatPercent(sectorIndex.changePercent / 100, 2, true, locale)}
+                          </span>
+                          <span className="chart-panel__market-index-trend">
+                            {calculateMiniTrend(sectorIndex.priceHistory).map((trend, i) => (
+                              <span
+                                key={i}
+                                className={`chart-panel__trend-bar${trend > 0 ? ' chart-panel__trend-bar--up' : trend < 0 ? ' chart-panel__trend-bar--down' : ' chart-panel__trend-bar--neutral'}`}
+                              />
+                            ))}
+                          </span>
+                        </div>
+                      </div>
+                      <CandlestickChart data={sectorIndex.priceHistory} type="area" autoHeight theme={theme} lineColor={getSectorLineColors(theme)[sector]} locale={locale} />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
           {chartTab === 'history' && (

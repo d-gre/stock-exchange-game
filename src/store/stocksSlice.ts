@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction, type Dispatch } from '@reduxjs/toolkit';
-import type { Stock, Portfolio } from '../types';
+import type { Stock, Portfolio, Sector } from '../types';
 import { initializeStocks, generateNewCandle, applyTradeImpact } from '../utils/stockData';
 import { CONFIG } from '../config';
 import { applyStockSplit as applyStockSplitToPortfolio } from './portfolioSlice';
@@ -11,6 +11,11 @@ interface StocksState {
   items: Stock[];
 }
 
+interface UpdatePricesPayload {
+  sectorInfluences?: Record<Sector, number>;
+  volatilityMultipliers?: Record<string, number>;
+}
+
 const initialState: StocksState = {
   items: initializeStocks(),
 };
@@ -19,8 +24,23 @@ const stocksSlice = createSlice({
   name: 'stocks',
   initialState,
   reducers: {
-    updatePrices: (state) => {
-      state.items = state.items.map(stock => generateNewCandle(stock));
+    updatePrices: (state, action: PayloadAction<UpdatePricesPayload | Record<Sector, number> | undefined>) => {
+      // Support both old format (just sector influences) and new format (with volatility multipliers)
+      let sectorInfluences: Record<Sector, number> | undefined;
+      let volatilityMultipliers: Record<string, number> | undefined;
+
+      if (action.payload && 'sectorInfluences' in action.payload) {
+        sectorInfluences = action.payload.sectorInfluences;
+        volatilityMultipliers = action.payload.volatilityMultipliers;
+      } else {
+        sectorInfluences = action.payload as Record<Sector, number> | undefined;
+      }
+
+      state.items = state.items.map(stock => {
+        const influence = sectorInfluences?.[stock.sector] ?? 0;
+        const volatilityMultiplier = volatilityMultipliers?.[stock.symbol] ?? 1.0;
+        return generateNewCandle(stock, influence, volatilityMultiplier);
+      });
     },
     setStocks: (state, action: PayloadAction<Stock[]>) => {
       state.items = action.payload;
@@ -33,6 +53,9 @@ const stocksSlice = createSlice({
     },
     resetStocks: (state) => {
       state.items = initializeStocks();
+    },
+    restoreState: (_state, action: PayloadAction<StocksState>) => {
+      return action.payload;
     },
     applyStockSplit: (state, action: PayloadAction<{ symbol: string; ratio: number }>) => {
       const { symbol, ratio } = action.payload;
@@ -63,7 +86,7 @@ const stocksSlice = createSlice({
   },
 });
 
-export const { updatePrices, setStocks, applyTrade, resetStocks, applyStockSplit } = stocksSlice.actions;
+export const { updatePrices, setStocks, applyTrade, resetStocks, restoreState, applyStockSplit } = stocksSlice.actions;
 export default stocksSlice.reducer;
 
 /** Formats currency values in German format */
@@ -119,6 +142,7 @@ export const checkAndApplyStockSplits = () => {
               oldPrice: formatCurrency(oldPrice),
             }),
             autoDismissMs: 8000,
+            stockSymbol: stock.symbol,
           }));
         }
 

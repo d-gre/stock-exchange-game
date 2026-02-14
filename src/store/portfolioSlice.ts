@@ -15,8 +15,9 @@ const portfolioSlice = createSlice({
       const { symbol, shares, price } = action.payload;
       const totalCost = shares * price;
 
-      if (totalCost > state.cash) return;
-
+      // Note: Cash validation is handled by executePendingOrders thunk
+      // which properly accounts for loans. Removing validation here
+      // allows loan-funded purchases to work correctly.
       state.cash -= totalCost;
 
       const existingHolding = state.holdings.find(h => h.symbol === symbol);
@@ -50,13 +51,31 @@ const portfolioSlice = createSlice({
       const { symbol, ratio } = action.payload;
       const holding = state.holdings.find(h => h.symbol === symbol);
       if (holding) {
-        // Aktienanzahl multiplizieren, Durchschnittspreis teilen
+        // Multiply shares, divide average price
         holding.shares = holding.shares * ratio;
         holding.avgBuyPrice = holding.avgBuyPrice / ratio;
       }
     },
+    /**
+     * Add cash to portfolio (e.g., loan disbursement)
+     */
+    addCash: (state, action: PayloadAction<number>) => {
+      state.cash += action.payload;
+    },
+    /**
+     * Deduct cash from portfolio (e.g., loan repayment, fees)
+     */
+    deductCash: (state, action: PayloadAction<number>) => {
+      state.cash = Math.max(0, state.cash - action.payload);
+    },
+    /**
+     * Restore portfolio state from saved game
+     */
+    restorePortfolio: (_state, action: PayloadAction<Portfolio>) => {
+      return action.payload;
+    },
   },
 });
 
-export const { buyStock, sellStock, resetPortfolio, applyStockSplit } = portfolioSlice.actions;
+export const { buyStock, sellStock, resetPortfolio, applyStockSplit, addCash, deductCash, restorePortfolio } = portfolioSlice.actions;
 export default portfolioSlice.reducer;

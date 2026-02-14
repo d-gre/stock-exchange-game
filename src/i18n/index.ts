@@ -20,15 +20,17 @@ export const LANGUAGES = ALL_LANGUAGES.filter(l => l.code !== 'la');
 
 const STORAGE_KEY = 'stock-game-language';
 
-// All valid languages (including hidden ones for localStorage)
-const VALID_LANGUAGES: Language[] = ALL_LANGUAGES.map(l => l.code);
+// User-selectable languages (without Easter Egg)
+type UserLanguage = 'de' | 'en' | 'ja';
+const USER_LANGUAGES: UserLanguage[] = ['de', 'en', 'ja'];
 
 // Load language from localStorage or default to 'de'
-export const getStoredLanguage = (): Language => {
+// Note: Latin (Easter Egg) is never stored, so only user languages are returned
+export const getStoredLanguage = (): UserLanguage => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && VALID_LANGUAGES.includes(stored as Language)) {
-      return stored as Language;
+    if (stored && USER_LANGUAGES.includes(stored as UserLanguage)) {
+      return stored as UserLanguage;
     }
   } catch {
     // localStorage not available
@@ -37,7 +39,12 @@ export const getStoredLanguage = (): Language => {
 };
 
 // Save language to localStorage
+// Note: Latin (Easter Egg) is never persisted
 export const setStoredLanguage = (lang: Language): void => {
+  // Only persist user-selectable languages (not Latin Easter Egg)
+  if (lang === 'la') {
+    return;
+  }
   try {
     localStorage.setItem(STORAGE_KEY, lang);
   } catch {

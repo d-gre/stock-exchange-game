@@ -63,12 +63,13 @@ describe('i18n', () => {
       expect(result).toBe('ja');
     });
 
-    it('should return stored Latin language', () => {
+    it('should return default "de" when stored language is Latin (Easter Egg not persisted)', () => {
+      // Latin is never stored, but if it somehow was, it should be treated as invalid
       vi.mocked(localStorage.getItem).mockReturnValue('la');
 
       const result = getStoredLanguage();
 
-      expect(result).toBe('la');
+      expect(result).toBe('de');
     });
 
     it('should return default "de" when stored value is invalid', () => {
@@ -109,10 +110,10 @@ describe('i18n', () => {
       expect(localStorage.setItem).toHaveBeenCalledWith('stock-game-language', 'ja');
     });
 
-    it('should save Latin language', () => {
+    it('should NOT save Latin language (Easter Egg not persisted)', () => {
       setStoredLanguage('la');
 
-      expect(localStorage.setItem).toHaveBeenCalledWith('stock-game-language', 'la');
+      expect(localStorage.setItem).not.toHaveBeenCalled();
     });
 
     it('should not throw when localStorage is unavailable', () => {
@@ -125,10 +126,11 @@ describe('i18n', () => {
   });
 
   describe('language persistence roundtrip', () => {
-    it('should persist and retrieve the same language', () => {
-      const languages: Language[] = ['de', 'en', 'ja', 'la'];
+    it('should persist and retrieve the same language (excluding Easter Egg)', () => {
+      // Latin (Easter Egg) is explicitly excluded from persistence
+      const persistableLanguages: Language[] = ['de', 'en', 'ja'];
 
-      for (const lang of languages) {
+      for (const lang of persistableLanguages) {
         let storedValue: string | null = null;
         vi.mocked(localStorage.setItem).mockImplementation((_, value) => {
           storedValue = value;
@@ -140,6 +142,20 @@ describe('i18n', () => {
 
         expect(result).toBe(lang);
       }
+    });
+
+    it('should not persist Latin (Easter Egg) language', () => {
+      let storedValue: string | null = 'en'; // Previous language
+      vi.mocked(localStorage.setItem).mockImplementation((_, value) => {
+        storedValue = value;
+      });
+      vi.mocked(localStorage.getItem).mockImplementation(() => storedValue);
+
+      setStoredLanguage('la');
+      const result = getStoredLanguage();
+
+      // Should return previous language since Latin was not stored
+      expect(result).toBe('en');
     });
   });
 });

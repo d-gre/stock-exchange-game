@@ -213,6 +213,26 @@ describe('NotificationToast', () => {
       });
     });
 
+    it('should not show close button for failed order notifications', () => {
+      mockNotifications = [
+        createMockNotification({
+          failedOrderId: 'order-123',
+          failedOrderSymbol: 'AAPL',
+          autoDismissMs: 0,
+        }),
+      ];
+      render(<NotificationToast />);
+
+      expect(screen.queryByLabelText('Schließen')).not.toBeInTheDocument();
+    });
+
+    it('should show close button for regular notifications', () => {
+      mockNotifications = [createMockNotification()];
+      render(<NotificationToast />);
+
+      expect(screen.getByLabelText('Schließen')).toBeInTheDocument();
+    });
+
     it('should not throw when clicking edit without callback', () => {
       mockNotifications = [
         createMockNotification({
@@ -239,6 +259,64 @@ describe('NotificationToast', () => {
       expect(() => {
         fireEvent.click(screen.getByText('Löschen'));
       }).not.toThrow();
+    });
+  });
+
+  describe('stock symbol click', () => {
+    it('should be clickable when stockSymbol is set', () => {
+      mockNotifications = [createMockNotification({ stockSymbol: 'AAPL' })];
+      const { container } = render(<NotificationToast />);
+
+      const toast = container.querySelector('.notification-toast');
+      expect(toast).toHaveClass('notification-toast--clickable');
+      expect(toast).toHaveAttribute('role', 'button');
+      expect(toast).toHaveAttribute('tabIndex', '0');
+    });
+
+    it('should dispatch selectStock when clicked', () => {
+      mockNotifications = [createMockNotification({ stockSymbol: 'AAPL' })];
+      const { container } = render(<NotificationToast />);
+
+      const toast = container.querySelector('.notification-toast');
+      fireEvent.click(toast!);
+
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'ui/selectStock',
+        payload: 'AAPL',
+      });
+    });
+
+    it('should not be clickable when stockSymbol is not set', () => {
+      mockNotifications = [createMockNotification()];
+      const { container } = render(<NotificationToast />);
+
+      const toast = container.querySelector('.notification-toast');
+      expect(toast).not.toHaveClass('notification-toast--clickable');
+      expect(toast).not.toHaveAttribute('role');
+    });
+  });
+
+  describe('margin call click', () => {
+    it('should be clickable when marginCallSymbol is set', () => {
+      mockNotifications = [createMockNotification({ marginCallSymbol: 'AAPL' })];
+      const { container } = render(<NotificationToast />);
+
+      const toast = container.querySelector('.notification-toast');
+      expect(toast).toHaveClass('notification-toast--clickable');
+      expect(toast).toHaveAttribute('role', 'button');
+    });
+
+    it('should dispatch setPaused when margin call notification is clicked', () => {
+      mockNotifications = [createMockNotification({ marginCallSymbol: 'AAPL' })];
+      const { container } = render(<NotificationToast />);
+
+      const toast = container.querySelector('.notification-toast');
+      fireEvent.click(toast!);
+
+      expect(mockDispatch).toHaveBeenCalledWith({
+        type: 'settings/setPaused',
+        payload: true,
+      });
     });
   });
 

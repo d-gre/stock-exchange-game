@@ -1,0 +1,48 @@
+/* ==========================================================================
+   PORTFOLIO SUMMARY (BEM)
+   Block: portfolio-summary
+   ========================================================================== */
+
+.portfolio-summary {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.portfolio-summary__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+}
+
+.portfolio-summary__item--total {
+  background: var(--bg-card-highlight);
+  font-weight: bold;
+}
+
+.portfolio-summary__item--reserved {
+  background: color-mix(in srgb, var(--color-warning) 15%, var(--bg-card));
+}
+
+.portfolio-summary__item--reserved .portfolio-summary__label,
+.portfolio-summary__item--reserved .portfolio-summary__value {
+  color: var(--color-warning);
+}
+
+.portfolio-summary__label {
+  color: var(--text-muted);
+}
+
+.portfolio-summary__value {
+  color: var(--text-emphasis);
+}
+
+.portfolio-summary__value--positive {
+  color: var(--color-positive);
+}
+
+.portfolio-summary__value--negative {
+  color: var(--color-negative);
+}

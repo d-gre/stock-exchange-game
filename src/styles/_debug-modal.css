@@ -1,0 +1,101 @@
+.debug-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--alpha-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.debug-modal {
+  /* Override theme variables for consistent dark appearance */
+  --bg-panel: #1a1a2e;
+  --bg-card: #252540;
+  --border-primary: #2a2a4a;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: #aaaaaa;
+  --btn-primary-bg: #2563eb;
+  --btn-primary-hover: #1d4ed8;
+
+  background: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-xl);
+}
+
+.debug-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.debug-modal__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.debug-modal__close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  line-height: 1;
+}
+
+.debug-modal__close:hover {
+  color: var(--text-primary);
+}
+
+.debug-modal__content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+.debug-modal__code {
+  margin: 0;
+  padding: var(--spacing-lg);
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.debug-modal__footer {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.debug-modal__copy-btn {
+  background: var(--btn-primary-bg);
+  color: var(--text-on-dark);
+  border: none;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debug-modal__copy-btn:hover {
+  background: var(--btn-primary-hover);
+}

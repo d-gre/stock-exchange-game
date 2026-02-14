@@ -33,6 +33,7 @@ export const createMockPriceHistory = (count = 5): CandleData[] => {
 export const createMockStock = (overrides: Partial<Stock> = {}): Stock => ({
   symbol: 'AAPL',
   name: 'Apple Inc.',
+  sector: 'tech',
   currentPrice: 150,
   change: 2.5,
   changePercent: 1.69,
@@ -46,6 +47,7 @@ export const createMockStocks = (): Stock[] => [
   createMockStock({
     symbol: 'GOOGL',
     name: 'Alphabet Inc.',
+    sector: 'tech',
     currentPrice: 200,
     change: -1.5,
     changePercent: -0.74,

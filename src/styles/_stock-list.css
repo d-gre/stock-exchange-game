@@ -1,7 +1,7 @@
 /* ==========================================================================
    STOCK LIST (BEM)
    Block: stock-list
-   Stock table, rows, and trend bars
+   Stock table with sortable columns, rows, sector tags, and trend bars
    Mobile-first approach
    ========================================================================== */
 
@@ -13,7 +13,7 @@
 
 /* ==========================================================================
    TABLE
-   Mobile: Compact grid
+   Mobile: Compact grid (5 columns: Symbol, Price, Change, Trend, Sector)
    ========================================================================== */
 
 .stock-list__table {
@@ -24,7 +24,7 @@
 .stock-list__header,
 .stock-list__row {
   display: grid;
-  grid-template-columns: 50px 60px 50px 45px 40px;
+  grid-template-columns: 50px 60px 50px 40px 28px;
   gap: 0.3rem;
   padding: 0.4rem 0.5rem;
   align-items: center;
@@ -37,9 +37,62 @@
   text-transform: uppercase;
 }
 
+/* ==========================================================================
+   SORT BAR (for tablet landscape when header is hidden)
+   Hidden by default, shown only at tablet landscape
+   ========================================================================== */
+
+.stock-list__sort-bar {
+  display: none;
+}
+
+.stock-list__sort-btn {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--border-secondary);
+  border-radius: 4px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.stock-list__sort-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.stock-list__sort-btn--active {
+  background: var(--bg-accent-subtle);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.stock-list__header-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.stock-list__header-cell--sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.stock-list__header-cell--sortable:hover {
+  color: var(--accent-primary);
+}
+
+.stock-list__sort-indicator {
+  font-size: 0.7rem;
+  color: var(--accent-primary);
+}
+
 .stock-list__row {
   background: var(--bg-card);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -50,7 +103,7 @@
 }
 
 .stock-list__row--selected {
-  background: var(--gradient-accent);
+  background: var(--bg-accent-subtle);
   border: 1px solid var(--accent-primary);
 }
 
@@ -84,9 +137,38 @@
   color: var(--color-negative);
 }
 
-.stock-list__market-cap {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+/* ==========================================================================
+   SECTOR TAG
+   Colored badge showing sector (T/F/I/R)
+   ========================================================================== */
+
+.stock-list__sector {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: var(--text-on-dark);
+  text-transform: uppercase;
+}
+
+.stock-list__sector--tech {
+  background-color: var(--sector-tech);
+}
+
+.stock-list__sector--finance {
+  background-color: var(--sector-finance);
+}
+
+.stock-list__sector--industrial {
+  background-color: var(--sector-industrial);
+}
+
+.stock-list__sector--commodities {
+  background-color: var(--sector-commodities);
 }
 
 /* ==========================================================================
@@ -118,51 +200,73 @@
 
 .stock-list__trend-bar--neutral {
   height: 6px;
-  background: var(--text-disabled);
+  background: var(--color-muted);
 }
 
 /* ==========================================================================
    TABLET LANDSCAPE (min-width: 769px)
-   Two-column stock list layout
+   Flexbox multi-column layout with automatic wrapping
    ========================================================================== */
 
 @media (min-width: 769px) {
+  .stock-list__sort-bar {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
   .stock-list__table {
-    column-count: 2;
-    column-gap: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .stock-list__header {
-    display: none; /* Header passt nicht gut bei Spalten */
+    display: none; /* Header doesn't work well with multi-column */
   }
 
   .stock-list__row {
-    break-inside: avoid;
-    width: fit-content;
+    margin-bottom: 0;
   }
 }
 
 /* ==========================================================================
    DESKTOP (min-width: 1201px)
-   Single column, larger grid
+   Single column with header
    ========================================================================== */
 
 @media (min-width: 1201px) {
+  .stock-list__sort-bar {
+    display: none; /* Header is visible, no need for sort bar */
+  }
+
   .stock-list__table {
-    column-count: 1;
+    display: block;
     font-size: 0.9rem;
     width: auto;
   }
 
   .stock-list__header {
     display: grid;
+    margin-bottom: 0.25rem;
   }
 
   .stock-list__header,
   .stock-list__row {
-    grid-template-columns: 55px 75px 55px 55px 50px;
+    grid-template-columns: 55px 75px 55px 50px 32px;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
     width: auto;
+  }
+
+  .stock-list__row {
+    margin-bottom: 0.5rem;
+  }
+
+  .stock-list__sector {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
   }
 }

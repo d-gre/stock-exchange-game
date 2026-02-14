@@ -5,7 +5,9 @@
     "close": "閉じる",
     "max": "最大",
     "edit": "編集",
-    "delete": "削除"
+    "delete": "削除",
+    "insufficientFunds": "資金不足",
+    "invalidAmount": "無効な金額"
   },
   "settings": {
     "title": "設定",
@@ -13,35 +15,47 @@
     "appearance": "外観",
     "dark": "ダーク",
     "light": "ライト",
-    "updateInterval": "更新間隔（秒）",
+    "updateInterval": "取引サイクルの長さ",
+    "seconds": "秒",
+    "marketCap": "${{value}}B 時価総額",
     "virtualPlayers": "仮想プレイヤー数（0〜{{max}}）",
-    "settings": "設定"
+    "settings": "設定",
+    "gameControls": "セーブデータ",
+    "saveGame": "ゲームを保存",
+    "loadGame": "ゲームを読み込む",
+    "saveGameSuccess": "ゲームを保存しました",
+    "saveGameError": "保存エラー",
+    "loadGameSuccess": "ゲームを読み込みました",
+    "loadGameError": "読み込みエラー",
+    "resetGame": "新しいゲームを開始",
+    "resetGameConfirm": "新しいゲームを開始しますか？すべての進行状況が失われます。"
   },
   "game": {
     "start": "ゲーム開始",
+    "newGame": "新しいゲーム",
+    "continueGame": "ゲームを続ける",
     "startingCapital": "初期資金",
     "preparingMarket": "マーケットを準備中...",
     "nextCycle": "次の取引サイクル：",
+    "currentCycle": "次の更新",
+    "remainingTime": "残りラウンド",
     "resume": "再開",
     "pause": "一時停止",
-    "speed": "速度：{{speed}}倍（クリックで{{next}}倍）",
-    "trades": "{{count}}件の取引",
-    "players": "{{count}}人",
-    "showPlayers": "仮想プレイヤーを表示",
-    "hidePlayers": "仮想プレイヤーを非表示"
+    "speed": "速度：{{speed}}倍",
+    "trades": "市場概要 – {{count}}件の取引",
+    "players": "市場概要 – {{count}}人",
+    "marketOverview": "市場概要",
+    "showPlayers": "市場概要を表示",
+    "hidePlayers": "市場概要を非表示"
   },
   "gameModes": {
     "realLife": {
       "name": "リアルライフ",
-      "description": "現実的な市場条件"
+      "description": "通常の市場条件"
     },
     "hardLife": {
       "name": "ハードライフ",
-      "description": "追加の課題がある難易度モード"
-    },
-    "sandbox": {
-      "name": "サンドボックス",
-      "description": "制限なしの自由プレイ"
+      "description": "高コストの取引、市場と競合の情報なし"
     }
   },
   "orderTypes": {
@@ -90,8 +104,27 @@
     "stopHintSell": "価格 ≤ 逆指値で発動",
     "limitHintBuy": "価格 ≤ 指値の時のみ買い",
     "limitHintSell": "価格 ≥ 指値の時のみ売り",
-    "invalidStopBuyLimit": "無効な価格設定：逆指値買い（指値）では、指値価格（${{limit}}）が逆指値価格（${{stop}}）より高くなければなりません。そうでないと注文は執行されません。",
-    "invalidStopLossLimit": "無効な価格設定：逆指値売り（指値）では、指値価格（${{limit}}）が逆指値価格（${{stop}}）より低くなければなりません。そうでないと注文は執行されません。"
+    "invalidStopBuyLimit": "無効な価格設定：逆指値買い（指値）では、指値価格が逆指値価格より高くなければなりません。",
+    "invalidStopLossLimit": "無効な価格設定：逆指値売り（指値）では、指値価格が逆指値価格より低くなければなりません。",
+    "triggerAt": "発動価格",
+    "limitBuyHint": "価格 ≤ 指値の時のみ執行されます。",
+    "limitSellHint": "価格 ≥ 指値の時のみ執行されます。",
+    "stopBuyHint": "価格 ≥ 逆指値で発動し、成行で執行されます。",
+    "stopSellHint": "価格 ≤ 逆指値で発動し、成行で執行されます。",
+    "stopBuyLimitHint": "価格 ≥ 逆指値で発動し、価格 ≤ 指値の時のみ執行されます。",
+    "stopSellLimitHint": "価格 ≤ 逆指値で発動し、価格 ≥ 指値の時のみ執行されます。",
+    "availableCredit": "利用可能クレジット",
+    "loanRequired": "融資が必要",
+    "loanAmount": "融資額",
+    "interestRate": "金利",
+    "originationFee": "事務手数料",
+    "buyWithLoan": "融資を受けて購入",
+    "exceedsMaxBuy": "最大: {{max}}株（利用可能: {{cash}}）",
+    "exceedsMaxSell": "最大: {{max}}株利用可能",
+    "exceedsMaxSellShortMargin": "最大: {{max}}株 - 残りはショートポジションの担保として必要",
+    "sellBlockedByShortCollateral": "売却不可 - 全ての株式がショートポジションの担保として必要です",
+    "sellLimitedByShortCollateral": "{{max}}株のみ売却可能 - 残りはショートポジションの担保として必要",
+    "sharesAutoCorrected": "数量を{{max}}に調整しました（最大利用可能: {{cash}}）"
   },
   "errors": {
     "invalidQuantity": "有効な数量を入力してください。",
@@ -113,29 +146,48 @@
     "noOrders": "未決済注文なし",
     "buy": "買",
     "sell": "売",
+    "shortSell": "空売",
+    "buyToCover": "買戻",
     "editOrder": "注文を編集",
     "cancelOrder": "注文をキャンセル",
+    "orderLocked": "注文は執行中のため変更できません",
+    "executing": "執行中",
     "nextCycle": "次サイクル",
+    "created": "(作成)",
+    "createdCycles": "(作成) {{count}}サイクル",
     "tradingCycles": "{{count}}サイクル",
+    "executionFailed": "執行失敗",
     "remainingCycles": "執行までの残りサイクル",
     "symbol": "銘柄",
     "qty": "数量",
     "buyPrice": "購入",
     "current": "現在",
-    "pl": "損益"
+    "pl": "損益",
+    "withLoan": "融資: ${{amount}} @ {{rate}}%"
   },
   "stockList": {
     "title": "取引所",
     "symbol": "銘柄",
     "price": "価格",
     "change": "変動",
-    "marketCap": "時価総額",
-    "trend": "トレンド"
+    "trend": "トレンド",
+    "sector": "分類",
+    "sectors": {
+      "tech": "テクノロジー",
+      "techShort": "技",
+      "finance": "金融",
+      "financeShort": "金",
+      "industrial": "産業",
+      "industrialShort": "産",
+      "commodities": "コモディティ",
+      "commoditiesShort": "商"
+    }
   },
   "chart": {
-    "marketIndex": "市場指数",
+    "marketIndex": "市況",
+    "sectorIndices": "セクター指数",
     "orderHistory": "注文履歴",
-    "assets": "資産（{{count}}）",
+    "assets": "資産",
     "stock": "株式",
     "stockNotFound": "銘柄が見つかりません",
     "pendingOrder": "未決済注文あり",
@@ -153,29 +205,69 @@
     "buyOrderFailed": {
       "title": "買い注文が実行されませんでした",
       "message": "{{shares}}x {{symbol}}を購入できませんでした。必要額: ${{required}}、利用可能: ${{available}}"
+    },
+    "sellOrderFailed": {
+      "title": "売り注文が実行されませんでした",
+      "message": "{{shares}}x {{symbol}}を売却できませんでした。必要: {{required}}株、利用可能: {{available}}株"
+    },
+    "buyToCoverFailed": {
+      "title": "買い戻し失敗",
+      "message": "{{shares}}x {{symbol}}を買い戻せませんでした。利用可能: {{available}}空売株",
+      "insufficientFunds": "買い戻し資金不足。必要額: ${{required}}、利用可能: ${{available}}"
+    },
+    "partialCover": {
+      "title": "部分買い戻し実行",
+      "message": "{{symbol}}の{{total}}株中{{executed}}株を買い戻しました。{{remaining}}株が未決済注文として残ります。"
+    },
+    "coverComplete": {
+      "title": "ショートポジション決済完了",
+      "message": "{{symbol}}の{{shares}}株を全て買い戻しました。ショートポジションを決済しました。"
+    },
+    "orderExpired": {
+      "title": "注文が期限切れになりました",
+      "message": "{{type}} {{shares}}x {{symbol}}は期限切れになりました。{{reason}}",
+      "reasons": {
+        "limitBuyNotReached": "指値${{limit}}に達しませんでした（現在: ${{current}}）",
+        "limitSellNotReached": "指値${{limit}}に達しませんでした（現在: ${{current}}）",
+        "stopBuyNotTriggered": "逆指値${{stop}}がトリガーされませんでした（現在: ${{current}}）",
+        "stopLossNotTriggered": "ストップロス${{stop}}がトリガーされませんでした（現在: ${{current}}）",
+        "stopTriggeredLimitBuyNotReached": "逆指値はトリガーされましたが、指値${{limit}}に達しませんでした（現在: ${{current}}）",
+        "stopTriggeredLimitSellNotReached": "ストップはトリガーされましたが、指値${{limit}}に達しませんでした（現在: ${{current}}）",
+        "generic": "価格条件が満たされませんでした"
+      }
     }
   },
   "tradeHistory": {
     "title": "注文履歴",
     "recentTrades": "最近の取引",
     "noTrades": "取引履歴なし",
+    "expired": "期限切れ",
     "buys": "{{count}}件の買い",
     "sells": "{{count}}件の売り",
     "buy": "買",
     "sell": "売",
+    "shortSell": "空売",
+    "buyToCover": "買戻",
     "failed": "失敗",
     "time": "時間",
+    "cycle": "ラウンド",
     "type": "種類",
     "symbol": "銘柄",
     "shares": "数量",
     "price": "価格",
     "total": "合計",
     "pl": "損益",
+    "plPercent": "%",
     "failureReasons": {
       "insufficient_funds": "残高不足",
       "insufficient_shares": "株数不足",
       "expired": "注文期限切れ",
       "unknown": "不明な理由"
+    },
+    "failureDetails": {
+      "insufficientFunds": "必要額: ${{required}}、利用可能: ${{available}}",
+      "insufficientShares": "必要: {{required}}株、利用可能: {{available}}株",
+      "insufficientShortShares": "必要: {{required}}空売株、利用可能: {{available}}空売株"
     },
     "chart": {
       "noTrades": "まだ取引がありません",
@@ -200,7 +292,41 @@
       "aggressiveDesc": "大きなポジション、高い取引頻度、損失でも保有継続"
     }
   },
+  "sectors": {
+    "tech": "テック",
+    "finance": "金融",
+    "industrial": "産業",
+    "commodities": "商品"
+  },
+  "market": {
+    "crashTitle": "{{sector}}クラッシュ！",
+    "crashMessage": "{{sector}}セクターが暴落しました！約{{impact}}%の価格下落。"
+  },
+  "economicClimate": {
+    "title": "経済情勢",
+    "fearGreedIndex": "恐怖・強欲指数",
+    "fearGreedDescription": "市場心理を測定：低い = 恐怖（慎重な投資家）、高い = 強欲（リスク志向の投資家）。",
+    "globalPhase": "グローバルフェーズ",
+    "sectorPhases": "セクターフェーズ",
+    "phases": {
+      "prosperity": "繁栄",
+      "boom": "バブル",
+      "consolidation": "整理",
+      "panic": "パニック",
+      "recession": "景気後退",
+      "recovery": "回復"
+    },
+    "fearLevels": {
+      "extremeFear": "極度の恐怖",
+      "fear": "恐怖",
+      "neutral": "中立",
+      "greed": "強欲",
+      "extremeGreed": "極度の強欲"
+    }
+  },
   "virtualPlayers": {
+    "title": "仮想プレイヤー",
+    "tradesCount": "{{count}}件の取引",
     "transactions": "取引",
     "noTransactions": "取引履歴なし",
     "decisionFactors": "判断要因",
@@ -213,6 +339,7 @@
     "sellScore": "売却スコア",
     "sellThreshold": "（≥40 = 売却）",
     "cash": "現金",
+    "debt": "負債",
     "clickDetails": "クリックで詳細表示",
     "risk": {
       "averse": "リスク回避型",
@@ -245,67 +372,388 @@
       "sell": "売"
     }
   },
+  "marketMaker": {
+    "title": "マーケットメイカー在庫",
+    "inventory": "在庫",
+    "spread": "スプレッド",
+    "lowInventory": "在庫不足",
+    "highInventory": "在庫過多",
+    "normalInventory": "通常在庫",
+    "barTooltip": "在庫: {{percent}}% – 緑 (80-120%): 通常、黄 (50-80%): 低、赤 (<50%): 危機、青 (>120%): 過剰",
+    "spreadTooltip": "スプレッド加算: {{percent}}% – 在庫が少ないと高く、在庫が多いと低くなります"
+  },
   "help": {
     "linkText": "ゲームの遊び方",
     "title": "D-GRE証券取引所へようこそ",
-    "understood": "了解、始めましょう！",
-    "intro": {
-      "title": "これは何？",
-      "text": "D-GRE証券取引所は、仮想通貨で本格的な取引戦略を試せるリアルな株式市場ゲームです。14社の有名企業の株を売買し、リアルタイムで価格変動を観察し、ポートフォリオを増やしましょう。仮想プレイヤーも取引に参加し、価格に影響を与えます。まるで本物の株式市場のように。"
-    },
-    "howToPlay": {
-      "title": "遊び方",
-      "step1": {
-        "title": "市場を観察する",
-        "text": "右側にすべての銘柄が表示されます。現在の価格とトレンドを確認できます。銘柄をクリックすると詳細チャートが表示されます。"
+    "understood": "閉じる",
+    "sections": {
+      "gameMechanics": {
+        "title": "ゲームの仕組み",
+        "intro": "D-GRE証券取引所では、ゲーム時間や速度をカスタマイズして、自分のペースで取引を楽しめます。",
+        "durationTitle": "ゲーム時間",
+        "durationIntro": "ゲーム開始時に5つの時間設定から選べます。",
+        "duration30min": "360ラウンド（約30分） -- じっくり遊びたい方に",
+        "duration20min": "240ラウンド（約20分） -- バランスの良いスタンダードモード",
+        "duration10min": "120ラウンド（約10分） -- サクッと1ゲーム",
+        "duration5min": "60ラウンド（約5分） -- 超スピードバトル",
+        "durationUnlimited": "無制限 -- 時間を気にせず自由にプレイ",
+        "speedTitle": "ゲーム速度",
+        "speedIntro": "取引サイクルの速度を3段階で調整できます。",
+        "speed1x": "1倍速 -- 通常のテンポ。初心者におすすめです",
+        "speed2x": "2倍速 -- サクサク進みたいときに",
+        "speed3x": "3倍速 -- 上級者向けのハイスピードモード",
+        "autoPauseName": "オートポーズ",
+        "autoPause": "取引ダイアログやローン画面を開くと、ゲームが自動的に一時停止します。落ち着いて注文内容を確認できます。",
+        "endScreenName": "エンドスクリーン",
+        "endScreen": "制限時間付きのゲームでは、終了時に仮想プレイヤーとのランキングが表示されます。純資産で順位が決まります。",
+        "previewHotkey": "Alt+Rキーで、ゲーム中いつでもエンドスクリーンのプレビューを確認できます。"
       },
-      "step2": {
-        "title": "株を買う",
-        "text": "銘柄の「買う」ボタンをクリックします。数量と注文タイプ（成行は即時購入、指値は特定価格で）を選択してください。"
+      "loans": {
+        "title": "ローン（融資）",
+        "intro": "資金が足りないときはローンを借りて購入力をアップできます。ただし利息がかかるので計画的に利用しましょう。",
+        "creditLineName": "与信枠",
+        "creditLine": "与信枠は保有株式の価値に基づいて計算されます。大型株（時価総額2,000億ドル以上）は70%、中小型株は50%の評価です。現金は担保として認められません。",
+        "durationName": "ローン期間",
+        "duration": "ローンの期間は{{minLoanDuration}}〜{{maxLoanDuration}}サイクルの間で選べます。長期のローンほど金利が優遇されます。",
+        "interestName": "利息",
+        "interest": "基本金利は{{baseInterestRate}}%で、{{interestChargeCycles}}サイクルごとに請求されます。与信利用率が高い場合（50%で+1%、75%で+3%）や積極的な取引スタイル（+2%）で金利が上がります。保守的なトレーダーは1%の割引を受けられます。",
+        "feesName": "手数料",
+        "fees": "ローン実行時に{{originationFee}}%の事務手数料がかかります。満期前に繰上返済する場合は{{earlyRepaymentFee}}%の早期返済手数料が発生します。",
+        "creditScoreName": "クレジットスコア",
+        "creditScore": "クレジットスコアは0〜100の範囲で、将来のローン金利に影響します。期限内の返済でスコアが上がり、延滞すると下がります。",
+        "multipleLoansName": "複数ローン",
+        "multipleLoans": "同時に最大{{maxLoans}}件までローンを借りられます。ただし、追加のローンごとに金利が1%ずつ上昇します（1件目はペナルティなし、2件目+1%、3件目+2%）。"
       },
-      "step3": {
-        "title": "ポートフォリオを管理する",
-        "text": "左側にポートフォリオが表示されます。購入した株、利用可能な現金、未決済注文が確認できます。総資産を常にチェック！"
+      "trading": {
+        "title": "取引の仕組み",
+        "intro": "さまざまな注文タイプを使い分けて、賢く取引しましょう。",
+        "orderTypesTitle": "注文タイプ",
+        "marketOrderName": "成行注文",
+        "marketOrder": "現在の市場価格ですぐに売買します。注文は1サイクル後に約定します。シンプルですぐに取引したいときに最適です。",
+        "limitOrderName": "指値注文",
+        "limitOrder": "指定した価格に達したときのみ約定します。有効期限は自分で設定できます（デフォルト: {{orderValidity}}サイクル）。「この価格なら買いたい（売りたい）」というときに使います。",
+        "stopBuyName": "逆指値買い（ストップバイ）",
+        "stopBuy": "価格が指定値以上に上昇したときに発動し、成行注文として執行されます。上昇トレンドに乗りたいときに便利です。",
+        "stopLossName": "逆指値売り（ストップロス）",
+        "stopLoss": "価格が指定値以下に下落したときに発動し、成行注文として執行されます。損失を限定するための重要なツールです。",
+        "stopBuyLimitName": "逆指値買い・指値付き",
+        "stopBuyLimit": "2段階の注文です。まず価格が逆指値以上に上昇すると発動し、次に指値以下でのみ約定します。買い値の上限を設定できます。",
+        "stopLossLimitName": "逆指値売り・指値付き",
+        "stopLossLimit": "2段階の注文です。まず価格が逆指値以下に下落すると発動し、次に指値以上でのみ約定します。安売りを防ぎたいときに使います。",
+        "shortSellingTitle": "空売り",
+        "shortSellingIntro": "空売りは、株価の下落に賭ける上級者向けの取引手法です。",
+        "shortHowItWorksName": "仕組み",
+        "shortHowItWorks": "空売りでは、株式を借りて売却し、後で買い戻して返却します。株価が下がれば差額が利益になりますが、上がれば損失になります。",
+        "shortMarginName": "証拠金",
+        "shortMargin": "空売りを行うには{{initialMargin}}%の初期証拠金が必要です。証拠金が{{maintenanceMargin}}%を下回ると追証（マージンコール）が発生します。",
+        "shortBorrowFeesName": "貸株料",
+        "shortBorrowFees": "借りた株式には毎サイクル{{baseBorrowFee}}%の貸株料がかかります。借りにくい銘柄は{{hardToBorrowMultiplier}}倍の料率になります。",
+        "shortMarginCallName": "追証（マージンコール）",
+        "shortMarginCall": "証拠金が維持水準を下回ると追証が発生します。{{marginCallGraceCycles}}サイクル以内に証拠金を追加するか、ポジションを決済してください。期限を過ぎると強制決済されます。",
+        "buyToCoverName": "買い戻し",
+        "buyToCover": "空売りポジションを決済するには、同数の株式を買い戻します。買い戻し価格がエントリー価格より低ければ利益、高ければ損失になります。"
       },
-      "step4": {
-        "title": "利益を得て売却する",
-        "text": "価格が上がったら、株を売って利益を確定させましょう。または、ストップロス注文で損失を限定しましょう。"
+      "economy": {
+        "title": "経済とマーケット",
+        "intro": "ゲーム内の市場は、現実の経済メカニズムをシミュレートしています。",
+        "indicesTitle": "市場指数",
+        "mainIndexName": "D-GREX Prime",
+        "mainIndex": "全銘柄の加重パフォーマンスを反映するメイン指数です。10,000ポイントからスタートし、時価総額の大きい企業ほど指数への影響が大きくなります。",
+        "sectorIndicesName": "セクター指数",
+        "sectorIndices": "4つのセクター指数（D-GREX Tek、Fin、Ind、Raw）で、テクノロジー・金融・産業・コモディティの各業界の動向を確認できます。",
+        "sectorDynamicsTitle": "セクターダイナミクス",
+        "sectorDynamicsIntro": "同じ業界の銘柄は互いに影響し合います。これは現実の株式市場と同じです。",
+        "correlationName": "セクター相関",
+        "correlation": "同じセクターの銘柄は共通のトレンドを共有します。テック株が上がると、他のテック銘柄も連動して上昇する傾向があります。",
+        "interSectorName": "セクター間の影響",
+        "interSector": "セクター同士も影響し合います。強い金融株はテックと産業を支え、産業の成長はコモディティ需要を増やします。ただし、コモディティ高騰は産業の負担になります。",
+        "marketMakerTitle": "マーケットメイカー",
+        "marketMakerIntro": "すべての取引の相手方として、マーケットメイカーが機能しています。",
+        "inventoryName": "在庫システム",
+        "inventory": "マーケットメイカーは各銘柄の在庫を管理しています。在庫レベルによって取引条件が変わります（緑=通常、黄=低、赤=危機的、青=過剰）。",
+        "dynamicSpreadName": "動的スプレッド",
+        "dynamicSpread": "在庫が少ないとスプレッドが最大+200%まで上昇し、在庫が多いと-50%まで低下します。",
+        "rebalancingName": "自動回復",
+        "rebalancing": "毎サイクル、在庫は1%ずつ通常レベルに戻ります。青バー（低スプレッド）での買いと、赤バー（高スプレッド）での売りが有利です。",
+        "spreadSlippageTitle": "スプレッドとスリッページ",
+        "spreadName": "スプレッド",
+        "spread": "買値と売値の差額です。基本スプレッドは{{spreadPercent}}%で、これが取引の隠れたコストになります。購入時は表示価格より少し高く、売却時は少し安くなります。",
+        "slippageName": "スリッページ",
+        "slippage": "注文が予想と異なる価格で約定する現象です。成行注文やボラティリティが高い時に発生しやすくなります。取引手数料は{{feePercent}}%です。",
+        "fearGreedTitle": "恐怖・強欲指数",
+        "fearGreed": "市場心理を0〜100で表す指標です。低い値は恐怖（投資家が慎重）、高い値は強欲（投資家がリスクを取る傾向）を示します。この指数が市場全体の動きに影響します。",
+        "marketPhasesTitle": "景気サイクル",
+        "marketPhasesIntro": "市場は6つのフェーズを循環します。それぞれのフェーズが株価に異なる影響を与えます。",
+        "phaseProsperity": "繁栄 -- 安定した成長期。多くの銘柄が緩やかに上昇します。",
+        "phaseBoom": "バブル -- 急激な上昇期。大きな利益のチャンスですが、反転リスクも高まります。",
+        "phaseConsolidation": "整理 -- 市場が一服する時期。方向感が定まらず、様子見のタイミングです。",
+        "phasePanic": "パニック -- 急落期。恐怖が市場を支配し、価格が大きく下がります。",
+        "phaseRecession": "景気後退 -- 低迷期。株価は底値圏で推移します。割安株を探すチャンスかもしれません。",
+        "phaseRecovery": "回復 -- 底打ちから反転する時期。早めに動いた投資家が利益を得やすいフェーズです。"
+      },
+      "tips": {
+        "title": "初心者へのアドバイス",
+        "tip1": "分散投資を心がけましょう。一つの銘柄に全資金を投じるのはリスクが高いです。",
+        "tip2": "購入前にチャートでトレンドを必ず確認しましょう。上昇トレンドの銘柄を狙うのが基本です。",
+        "tip3": "ストップロス注文を活用して、大きな損失を未然に防ぎましょう。",
+        "tip4": "最初は少額から取引を始めて、市場の動きに慣れてから本格的に投資しましょう。",
+        "tip5": "セクター指数のモメンタムに注目しましょう。あるセクターが勢いづいているときは、同セクターの他の銘柄も追随する傾向があります。"
+      }
+    }
+  },
+  "loans": {
+    "title": "ローン",
+    "liabilities": "負債",
+    "totalDebt": "総負債",
+    "noLoans": "借入なし",
+    "repay": "返済",
+    "repayNoFee": "返済（手数料なし）",
+    "fee": "手数料",
+    "cannotRepayInsufficientFunds": "返済に必要な資金が不足しています",
+    "newLoan": "新規借入",
+    "takeLoan": "借入する",
+    "remaining": "残り{{count}}件",
+    "creditLine": "与信枠",
+    "recommendedCreditLine": "推奨与信枠",
+    "maxCreditLine": "最大与信枠",
+    "recommendedCredit": "推奨与信",
+    "recommendedCreditHint": "= 担保、$1,000単位で切り捨て",
+    "maxCredit": "最大与信",
+    "currentDebt": "現在の負債",
+    "availableCredit": "利用可能与信",
+    "utilization": "利用率",
+    "collateral": "担保",
+    "collateralLargeCap": "大型株 (70%)",
+    "collateralSmallCap": "中小型株 (50%)",
+    "collateralTotal": "担保合計",
+    "recommendedCreditFormula": "推奨与信 = 担保（$1,000単位で切り捨て）",
+    "maxCreditFormula": "最大与信 = 推奨与信 × {{multiplier}}",
+    "amount": "借入金額",
+    "duration": "期間",
+    "cycles": "サイクル",
+    "cyclesRemaining": "残り{{cycles}}サイクル",
+    "dueIn": "返済まで: {{cycles}}サイクル",
+    "loanAbbreviation": "借",
+    "dueNow": "返済期限！",
+    "overdue": "延滞",
+    "overdueFor": "{{cycles}}サイクル延滞中",
+    "overdueTooltip": "ローンが延滞中！毎サイクルクレジットスコアが低下します。",
+    "interestRate": "金利",
+    "baseRate": "基準金利",
+    "riskProfileAdjustment": "リスクプロファイル",
+    "riskProfileHint": "（保守的=割引、積極的=加算）",
+    "profitHistoryAdjustment": "取引履歴",
+    "profitHistoryHint": "（高い実現損失時に加算）",
+    "utilizationSurcharge": "利用率加算",
+    "utilizationHint": "（負債/最大与信: ≥50% +1%, ≥75% +3%, 100% +6%）",
+    "loanCountPenalty": "複数ローンペナルティ",
+    "additionalLoanSurcharge": "追加ローン加算",
+    "additionalLoanHint": "（追加ローンごとに+1%）",
+    "creditScoreAdjustment": "クレジットスコア",
+    "durationDiscount": "期間割引",
+    "durationDiscountHint": "（長期=低金利）",
+    "effectiveRate": "実効金利",
+    "originationFee": "手数料",
+    "netDisbursement": "実際の受取額",
+    "maxAvailable": "利用可能上限",
+    "conditions": "ローン条件",
+    "interestBreakdownTitle": "金利内訳",
+    "interestChargeNote": "利息は{{cycles}}取引サイクルごとに請求されます。",
+    "creditLineTitle": "与信枠の計算",
+    "ofValue": "の価値",
+    "creditLineNote": "株式のみが担保となります。現金は含まれません。",
+    "repaymentFeeInfo": "早期返済時{{percent}}%の手数料",
+    "blockedByTradePanel": "取引パネルが開いている間はローンを借りることができません",
+    "loanCount": "{{max}}件中{{current}}件のローン",
+    "maxLoansReached": "ローン上限に達しました",
+    "slotsAvailable": "{{count}}件利用可能",
+    "confirmLoan": "借入を確定",
+    "principal": "元本",
+    "balance": "残高",
+    "interestPaid": "支払利息",
+    "interest": "利息",
+    "perCycles": "{{cycles}}サイクルごと",
+    "interestCycleInfo": "利息は{{cycles}}取引サイクルごとに計算されます",
+    "noCollateral": "借入不可 - 株式担保がありません",
+    "creditScore": {
+      "title": "クレジットスコア",
+      "baseValue": "基本値",
+      "description": "クレジットスコアは将来のローン金利に影響します。期限内の返済で向上し、延滞で低下します。",
+      "excellent": "優秀",
+      "good": "良好",
+      "fair": "普通",
+      "poor": "不良",
+      "recentEvents": "最近のイベント",
+      "events": {
+        "repaidEarly": "早期返済",
+        "repaidOnTime": "期限内返済",
+        "autoRepaid": "自動返済",
+        "overdue": "延滞",
+        "overdueMultiple": "延滞",
+        "defaultPenalty": "債務不履行"
+      },
+      "delinquency": {
+        "title": "延滞",
+        "totalLoans": "延滞ローン（合計）",
+        "totalCycles": "延滞サイクル（合計）",
+        "maxOverdue": "最長延滞期間",
+        "avgOverdue": "平均延滞期間"
       }
     },
-    "rules": {
-      "title": "ゲームルール",
-      "rule1": "カスタマイズ可能な初期資金でスタート（デフォルト：$100,000）。",
-      "rule2": "価格は数秒ごとに更新されます。設定で速度を調整できます。",
-      "rule3": "各銘柄につき、1取引サイクルで1注文のみ実行可能です。",
-      "rule4": "本物の株式市場と同様に、取引手数料とスプレッドがあります。",
-      "rule5": "さまざまな戦略を持つ仮想プレイヤーも価格に影響を与えます。",
-      "rule6": "目標：賢い投資判断で初期資金を増やしましょう！"
-    },
-    "orderTypes": {
-      "title": "注文タイプの説明",
-      "marketName": "成行注文",
-      "limitName": "指値注文",
-      "stopName": "逆指値注文",
-      "market": "現在の市場価格で即時売買。",
-      "limit": "希望価格に達した時のみ実行。",
-      "stop": "特定の価格でトリガー。ブレイクアウトやストップロスに最適。"
-    },
-    "marketMechanics": {
-      "title": "スプレッド＆スリッページ",
-      "spreadName": "スプレッド",
-      "slippageName": "スリッページ",
-      "spread": "スプレッドとは、株式の買値（売り気配）と売値（買い気配）の差です。購入時は表示価格よりやや高く、売却時はやや安くなります。この差が隠れた取引コストであり、マーケットメイカーの利益となります。",
-      "slippage": "スリッページとは、注文が予想と異なる価格で約定することです。特に成行注文やボラティリティが高い時に発生します。実際の市場では、大口注文が価格を動かすこともあります。表示される実効価格には潜在的なスリッページが含まれており、実際のコストを把握できます。"
-    },
-    "tips": {
-      "title": "初心者へのアドバイス",
-      "tip1": "分散投資！一つの会社に全資金を投じないこと。",
-      "tip2": "購入前にチャートでトレンドを確認しましょう。",
-      "tip3": "大きな損失を避けるためにストップロス注文を活用しましょう。"
-    },
-    "virtualPlayers": {
-      "title": "仮想プレイヤー",
-      "text": "フッターバーに「仮想プレイヤーを表示」ボタンがあります。これをクリックすると、すべてのAIプレイヤーを表示するパネルが開きます。彼らのポートフォリオ、現金残高、取引判断を確認できます。保守的なものからリスク選好型まで、さまざまな戦略を観察し、市場でどのようなアプローチが機能するかを学びましょう。"
+    "notifications": {
+      "dueSoonTitle": "ローン返済期限間近",
+      "dueSoonMessage": "{{loanName}}（${{amount}}）が{{cycles}}サイクル後に返済期限を迎えます。",
+      "repaidTitle": "ローン返済完了",
+      "repaidMessage": "{{loanName}}が自動返済されました: ${{amount}}",
+      "overdueTitle": "ローン延滞！",
+      "overdueMessage": "{{loanName}}: 返済に必要な現金が不足しています。残債: ${{amount}}。"
     }
+  },
+  "shorts": {
+    "title": "空売り",
+    "shortSell": "空売り",
+    "buyToCover": "買い戻し",
+    "position": "ショートポジション",
+    "positions": "ショートポジション",
+    "noPositions": "ショートポジションなし",
+    "entryPrice": "エントリー価格",
+    "currentPrice": "現在価格",
+    "shares": "株数",
+    "unrealizedPL": "未実現損益",
+    "collateral": "担保",
+    "totalExposure": "総エクスポージャー",
+    "lockedCollateral": "ロック済み担保",
+    "profitLoss": "損益",
+    "marginCallGrace": "サイクル残り",
+    "borrowFee": "貸株料",
+    "borrowFeePerCycle": "サイクルあたり貸株料",
+    "totalBorrowFees": "支払済み貸株料",
+    "marginRequired": "必要証拠金",
+    "marginAvailable": "利用可能証拠金",
+    "marginUtilization": "証拠金利用率",
+    "easyToBorrow": "借りやすい",
+    "hardToBorrow": "借りにくい",
+    "easyToBorrowHint": "通常の貸株料 - 十分な株式が借入可能",
+    "hardToBorrowHint": "割増の貸株料 - この株式の借入需要が高い",
+    "cycle": "サイクル",
+    "shortInterest": "空売り残高",
+    "maxShortable": "空売り可能上限",
+    "cover": "買い戻す",
+    "coverAll": "全て買い戻す",
+    "addMargin": "証拠金追加",
+    "addMarginPrompt": "{{symbol}}にいくらの証拠金を追加しますか？（利用可能: ${{available}}）",
+    "addMarginAmount": "金額",
+    "marginAdded": "{{symbol}}に{{amount}}の証拠金を追加しました",
+    "currentCollateral": "現在の担保",
+    "addingMargin": "追加額",
+    "newCollateral": "新しい担保",
+    "marginCall": "追証",
+    "marginCallWarning": "注: 証拠金が{{percent}}%を下回ると追証が発生します。",
+    "atRisk": "リスクあり",
+    "coverBlockedMaxLoans": "決済不可: ローン上限到達 (3/3)",
+    "coverBlockedNoCollateral": "決済不可: ローン用担保なし",
+    "coverBlockedInsufficientFunds": "決済不可: 資金不足",
+    "coverLimitedByFunds": "{{total}}株中{{max}}株のみ決済可能（利用可能資金による制限）",
+    "addMarginBlockedNoCash": "証拠金追加不可: 現金なし",
+    "notifications": {
+      "marginCallTitle": "追証発生！",
+      "marginCallMessage": "ショートポジション{{symbol}}が維持証拠金を下回りました。{{cycles}}サイクル以内に証拠金を追加するか買い戻してください。",
+      "forcedCoverWarningTitle": "強制決済警告",
+      "forcedCoverWarningMessage": "ショートポジション{{symbol}}は次のサイクルで強制決済されます。",
+      "forcedCoverTitle": "強制決済実行",
+      "forcedCoverMessage": "ショートポジション{{symbol}}が強制決済されました: {{shares}}株、実現損益: ${{pl}}",
+      "borrowFeeCharged": "貸株料を差し引きました: ${{amount}}"
+    },
+    "help": {
+      "title": "空売りとは？",
+      "description": "空売りでは、所有していない株式を借りて売却します。株価が下落することに賭け、後で安く買い戻すことで利益を得ます。",
+      "margin": "与信枠から担保（証拠金）を差し入れる必要があります。",
+      "risk": "注意: 株価は理論上無限に上昇する可能性があるため、損失リスクも無限大です。",
+      "fees": "借りた株式には毎サイクル貸株料がかかります。"
+    },
+    "errors": {
+      "shortSellingDisabled": "空売りは利用できません",
+      "insufficientCollateral": "担保が不足しています",
+      "exceedsMaxShort": "この銘柄の空売り上限を超えています",
+      "noSharesAvailable": "借入可能な株式がありません",
+      "insufficientMargin": "ポジションを開くための証拠金が不足しています",
+      "positionNotFound": "ショートポジションが見つかりません"
+    }
+  },
+  "gameStart": {
+    "duration": "ゲーム時間",
+    "duration5min": "60ラウンド（約5分）",
+    "duration10min": "120ラウンド（約10分）",
+    "duration20min": "240ラウンド（約20分）",
+    "duration30min": "360ラウンド（約30分）",
+    "durationUnlimited": "無制限"
+  },
+  "gameEnd": {
+    "title": "ゲーム終了",
+    "yourResult": "あなたの結果",
+    "ranking": "順位",
+    "netWorth": "純資産",
+    "profit": "損益",
+    "riskProfile": "リスクプロファイル",
+    "rankingTitle": "D-GREXランキング",
+    "rank": "順位",
+    "player": "プレイヤー",
+    "you": "あなた",
+    "playAgain": "もう一度プレイ",
+    "loadLastSave": "前回のセーブをロード",
+    "continueGame": "ゲームを続ける",
+    "newGame": "新しいゲーム",
+    "riskLevel": {
+      "conservative": "保守的",
+      "moderate": "中立的",
+      "aggressive": "積極的"
+    },
+    "gameSummary": "ゲームサマリー",
+    "duration": "期間",
+    "cycles": "{{count}}ラウンド",
+    "averageClimate": "平均的な経済状況",
+    "dominantPhase": "主要な局面",
+    "climate": {
+      "veryPositive": "非常に好調",
+      "positive": "好調",
+      "neutral": "中立",
+      "negative": "不調",
+      "veryNegative": "非常に不調"
+    },
+    "chartLegend": {
+      "phase": "経済局面",
+      "fearGreed": "Fear & Greed"
+    },
+    "netWorthBreakdown": "資産内訳",
+    "cashBalance": "現金",
+    "stocksValue": "株式価値",
+    "liabilities": "負債",
+    "creditScoreLabel": "信用スコア",
+    "creditScoreCalculation": "計算",
+    "totalInterestPaid": "支払利息",
+    "bestTrade": "ベスト取引",
+    "worstTrade": "ワースト取引",
+    "bestShort": "ベスト空売り",
+    "worstShort": "ワースト空売り",
+    "bestHolding": "最良のポジション",
+    "worstHolding": "最悪のポジション",
+    "tradeProfit": "利益",
+    "tradeLoss": "損失",
+    "sharesAt": "{{shares}}株 @ {{price}}",
+    "holdingDetail": "{{shares}}株 @ {{avgPrice}} → {{currentPrice}}",
+    "economicClimate": "経済状況",
+    "creditEvents": {
+      "base": "基準: {{value}}",
+      "repaidEarly": "早期返済",
+      "repaidOnTime": "期日返済",
+      "autoRepaid": "自動返済",
+      "overdue": "延滞",
+      "defaultPenalty": "債務不履行"
+    }
+  },
+  "debug": {
+    "title": "デバッグ出力",
+    "copy": "コピー",
+    "copied": "コピー完了！"
   }
 }

@@ -1,0 +1,74 @@
+/* ==========================================================================
+   PORTFOLIO LIST ITEM (BEM)
+   Block: portfolio
+   Element: list-item
+   Shared base styles for portfolio list items
+   Used by: portfolio-orders__row, portfolio-shorts__item, loans-list__item
+   ========================================================================== */
+
+.portfolio__list-item {
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   MODIFIER: Positive/Negative border (left)
+   ========================================================================== */
+
+.portfolio__list-item--border-positive {
+  border-left: 3px solid var(--color-positive);
+}
+
+.portfolio__list-item--border-negative {
+  border-left: 3px solid var(--color-negative);
+}
+
+.portfolio__list-item--border-muted {
+  border-left: 3px solid var(--color-muted);
+}
+
+/* ==========================================================================
+   MODIFIER: Status states
+   ========================================================================== */
+
+.portfolio__list-item--warning {
+  background: var(--alpha-warning);
+  border-color: var(--color-warning);
+}
+
+.portfolio__list-item--danger {
+  background: var(--alpha-negative);
+  border-color: var(--color-negative);
+}
+
+/* ==========================================================================
+   MODIFIER: Interactive
+   ========================================================================== */
+
+.portfolio__list-item--interactive {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.portfolio__list-item--interactive:hover {
+  background: var(--bg-hover);
+}
+
+/* ==========================================================================
+   MODIFIER: Selected
+   ========================================================================== */
+
+.portfolio__list-item--selected {
+  border: 1px solid var(--accent-primary);
+  background: var(--bg-accent-subtle);
+}
+
+/* ==========================================================================
+   MEDIEVAL THEME OVERRIDE
+   ========================================================================== */
+
+[data-theme="medieval"] .portfolio__list-item {
+  background: var(--bg-row-alpha);
+}

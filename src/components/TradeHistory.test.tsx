@@ -7,17 +7,35 @@ import {
   selectPortfolioValueHistory,
   selectRiskProfile,
 } from '../store/tradeHistorySlice';
+import {
+  selectCreditScore,
+  selectCreditHistory,
+  selectDelinquencyStats,
+} from '../store/loansSlice';
+import type { CreditScoreEvent } from '../types';
 
 // Mock data
 let mockTrades: CompletedTrade[] = [];
 let mockPortfolioHistory: Array<{ timestamp: number; value: number; realizedProfitLoss: number }> = [];
 let mockRiskProfile: RiskProfileAnalysis | null = null;
+let mockCreditScore = 50;
+let mockCreditHistory: CreditScoreEvent[] = [];
+let mockDelinquencyStats = {
+  totalDelinquentLoans: 0,
+  activeDelinquencies: 0,
+  totalOverdueCycles: 0,
+  maxSingleOverdue: 0,
+  avgOverdueCycles: 0,
+};
 
 vi.mock('../store/hooks', () => ({
   useAppSelector: (selector: unknown) => {
     if (selector === selectAllTrades) return mockTrades;
     if (selector === selectPortfolioValueHistory) return mockPortfolioHistory;
     if (selector === selectRiskProfile) return mockRiskProfile;
+    if (selector === selectCreditScore) return mockCreditScore;
+    if (selector === selectCreditHistory) return mockCreditHistory;
+    if (selector === selectDelinquencyStats) return mockDelinquencyStats;
     return null;
   },
 }));
@@ -70,6 +88,15 @@ describe('TradeHistory', () => {
     mockTrades = [];
     mockPortfolioHistory = [];
     mockRiskProfile = null;
+    mockCreditScore = 50;
+    mockCreditHistory = [];
+    mockDelinquencyStats = {
+      totalDelinquentLoans: 0,
+      activeDelinquencies: 0,
+      totalOverdueCycles: 0,
+      maxSingleOverdue: 0,
+      avgOverdueCycles: 0,
+    };
   });
 
   describe('header', () => {
@@ -165,9 +192,9 @@ describe('TradeHistory', () => {
 
       expect(screen.getByText('Trades')).toBeInTheDocument();
       expect(screen.getByText('15')).toBeInTheDocument();
-      expect(screen.getByText('Avg. Position')).toBeInTheDocument();
+      expect(screen.getByText('Ø Position')).toBeInTheDocument();
       expect(screen.getByText('20.5%')).toBeInTheDocument();
-      expect(screen.getByText('Win/Loss')).toBeInTheDocument();
+      expect(screen.getByText('G/V-Verhältnis')).toBeInTheDocument();
       expect(screen.getByText('2.00')).toBeInTheDocument();
     });
 
@@ -184,7 +211,7 @@ describe('TradeHistory', () => {
 
       const { container } = render(<TradeHistory />);
 
-      const plElement = container.querySelector('.trade-history__total-pl.trade-history__total-pl--positive');
+      const plElement = container.querySelector('.trade-history__total-profit-loss.trade-history__total-profit-loss--positive');
       expect(plElement).toBeInTheDocument();
     });
 
@@ -193,7 +220,7 @@ describe('TradeHistory', () => {
 
       const { container } = render(<TradeHistory />);
 
-      const plElement = container.querySelector('.trade-history__total-pl.trade-history__total-pl--negative');
+      const plElement = container.querySelector('.trade-history__total-profit-loss.trade-history__total-profit-loss--negative');
       expect(plElement).toBeInTheDocument();
     });
   });
@@ -212,7 +239,7 @@ describe('TradeHistory', () => {
 
       render(<TradeHistory />);
 
-      expect(screen.getByText('Zeit')).toBeInTheDocument();
+      expect(screen.getByText('Runde')).toBeInTheDocument();
       expect(screen.getByText('Typ')).toBeInTheDocument();
       expect(screen.getByText('Symbol')).toBeInTheDocument();
       expect(screen.getByText('Stk.')).toBeInTheDocument();
@@ -249,7 +276,8 @@ describe('TradeHistory', () => {
 
       render(<TradeHistory />);
 
-      expect(screen.getByText(/\+\$150,50/)).toBeInTheDocument();
+      // Format is "$X,XX" with German locale (no space between $ and number)
+      expect(screen.getByText(/\$150,50/)).toBeInTheDocument();
     });
 
     it('should show negative P/L correctly', () => {
@@ -300,18 +328,171 @@ describe('TradeHistory', () => {
       expect(screen.getByText('$1.234,56')).toBeInTheDocument();
     });
 
-    it('should format time correctly', () => {
-      const fixedTime = new Date('2024-01-15T14:30:45').getTime();
-      mockTrades = [createMockTrade({ timestamp: fixedTime })];
+    it('should display cycle number instead of time', () => {
+      mockTrades = [createMockTrade({ cycle: 42 })];
 
       render(<TradeHistory />);
 
-      expect(screen.getByText('14:30:45')).toBeInTheDocument();
+      // Cycle column should show the cycle number
+      expect(screen.getByText('42')).toBeInTheDocument();
+    });
+
+    it('should display dash when cycle is not set', () => {
+      mockTrades = [createMockTrade({ cycle: undefined })];
+
+      render(<TradeHistory />);
+
+      // Should show dash for missing cycle
+      const rows = screen.getAllByText('-');
+      expect(rows.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('credit score card', () => {
+    it('should display credit score gauge', () => {
+      mockCreditScore = 75;
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Credit Score')).toBeInTheDocument();
+      expect(screen.getByText('75')).toBeInTheDocument();
+    });
+
+    it('should show excellent category for high score', () => {
+      mockCreditScore = 85;
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Ausgezeichnet')).toBeInTheDocument();
+    });
+
+    it('should show good category for good score', () => {
+      mockCreditScore = 70;
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Gut')).toBeInTheDocument();
+    });
+
+    it('should show fair category for fair score', () => {
+      mockCreditScore = 40; // 25-49 = fair
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Neutral')).toBeInTheDocument();
+    });
+
+    it('should show poor category for low score', () => {
+      mockCreditScore = 15; // < 25 = poor
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Schlecht')).toBeInTheDocument();
+    });
+
+    it('should display credit history events', () => {
+      mockCreditScore = 60;
+      mockCreditHistory = [
+        { type: 'repaid_early', change: 5, timestamp: Date.now() },
+        { type: 'repaid_on_time', change: 2, timestamp: Date.now() },
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Vorzeitig getilgt')).toBeInTheDocument();
+      expect(screen.getByText('Pünktlich getilgt')).toBeInTheDocument();
+    });
+
+    it('should display auto-repaid event', () => {
+      mockCreditHistory = [
+        { type: 'auto_repaid', change: 1, timestamp: Date.now() },
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Automatisch getilgt')).toBeInTheDocument();
+    });
+
+    it('should display overdue event', () => {
+      mockCreditHistory = [
+        { type: 'overdue', change: -10, timestamp: Date.now() },
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Überfällig')).toBeInTheDocument();
+    });
+
+    it('should display multiple overdue events with plural label', () => {
+      mockCreditHistory = [
+        { type: 'overdue', change: -10, timestamp: Date.now() },
+        { type: 'overdue', change: -10, timestamp: Date.now() + 1000 },
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Überfälligkeiten')).toBeInTheDocument();
+    });
+
+    it('should display default penalty event', () => {
+      mockCreditHistory = [
+        { type: 'default_penalty', change: -20, timestamp: Date.now() },
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Zahlungsausfall')).toBeInTheDocument();
+    });
+
+    it('should summarize multiple events of same type', () => {
+      mockCreditHistory = [
+        { type: 'repaid_early', change: 5, timestamp: Date.now() },
+        { type: 'repaid_early', change: 5, timestamp: Date.now() + 1000 },
+      ];
+
+      render(<TradeHistory />);
+
+      // Should show total change of +10
+      expect(screen.getByText('+10')).toBeInTheDocument();
+    });
+  });
+
+  describe('delinquency stats', () => {
+    it('should not show delinquency stats when no delinquent loans', () => {
+      mockDelinquencyStats = {
+        totalDelinquentLoans: 0,
+        activeDelinquencies: 0,
+        totalOverdueCycles: 0,
+        maxSingleOverdue: 0,
+        avgOverdueCycles: 0,
+      };
+
+      render(<TradeHistory />);
+
+      expect(screen.queryByText('Überfälligkeiten')).not.toBeInTheDocument();
+    });
+
+    it('should show delinquency stats when there are delinquent loans', () => {
+      mockDelinquencyStats = {
+        totalDelinquentLoans: 2,
+        activeDelinquencies: 1,
+        totalOverdueCycles: 10,
+        maxSingleOverdue: 6,
+        avgOverdueCycles: 5,
+      };
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText('Überfälligkeiten')).toBeInTheDocument();
+      expect(screen.getByText('2')).toBeInTheDocument(); // total loans
+      expect(screen.getByText('10')).toBeInTheDocument(); // total cycles
+      expect(screen.getByText('6')).toBeInTheDocument(); // max overdue
+      expect(screen.getByText('5.0')).toBeInTheDocument(); // avg overdue
     });
   });
 
   describe('failed trades', () => {
-    it('should display failed trade with FEHLGESCHLAGEN label', () => {
+    it('should display failed trade with failure reason', () => {
       mockTrades = [
         createMockTrade({
           type: 'buy',
@@ -325,10 +506,10 @@ describe('TradeHistory', () => {
 
       expect(screen.getByText('KAUF')).toBeInTheDocument();
       expect(screen.getByText('AAPL')).toBeInTheDocument();
-      expect(screen.getByText('FEHLGESCHLAGEN')).toBeInTheDocument();
+      expect(screen.getByText(/Verfallen.*Nicht genug Guthaben/)).toBeInTheDocument();
     });
 
-    it('should show failure reason in tooltip', () => {
+    it('should show failure reason in tooltip and text', () => {
       mockTrades = [
         createMockTrade({
           status: 'failed',
@@ -338,8 +519,23 @@ describe('TradeHistory', () => {
 
       render(<TradeHistory />);
 
-      const failedLabel = screen.getByText('FEHLGESCHLAGEN');
+      const failedLabel = screen.getByText(/Verfallen.*Nicht genug Guthaben/);
       expect(failedLabel).toHaveAttribute('title', 'Nicht genug Guthaben');
+    });
+
+    it('should display detailed failure reason when available', () => {
+      mockTrades = [
+        createMockTrade({
+          status: 'failed',
+          failureReason: 'expired',
+          failureDetails: 'Limit von $80,00 nicht erreicht (aktuell: $100,00)',
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      // Should show "Verfallen (detailed reason)"
+      expect(screen.getByText(/Verfallen.*Limit von \$80,00 nicht erreicht/)).toBeInTheDocument();
     });
 
     it('should apply failed CSS class to row', () => {
@@ -352,8 +548,103 @@ describe('TradeHistory', () => {
 
       render(<TradeHistory />);
 
-      const row = screen.getByText('FEHLGESCHLAGEN').closest('.trade-history__list-row');
+      const row = screen.getByText(/Verfallen.*Nicht genug Guthaben/).closest('.trade-history__list-row');
       expect(row).toHaveClass('trade-history__list-row--failed');
+    });
+
+    it('should show insufficient_shares failure reason', () => {
+      mockTrades = [
+        createMockTrade({
+          type: 'sell',
+          status: 'failed',
+          failureReason: 'insufficient_shares',
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText(/Verfallen.*Nicht genug Aktien/)).toBeInTheDocument();
+    });
+
+    it('should show expired failure reason', () => {
+      mockTrades = [
+        createMockTrade({
+          status: 'failed',
+          failureReason: 'expired',
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText(/Verfallen.*Order verfallen/)).toBeInTheDocument();
+    });
+
+    it('should show unknown failure reason as fallback', () => {
+      mockTrades = [
+        createMockTrade({
+          status: 'failed',
+          // No failureReason specified
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      expect(screen.getByText(/Verfallen.*Unbekannter Grund/)).toBeInTheDocument();
+    });
+  });
+
+  describe('profit/loss percentage', () => {
+    it('should show profit percentage for sell trades', () => {
+      mockTrades = [
+        createMockTrade({
+          type: 'sell',
+          shares: 10,
+          pricePerShare: 110,
+          totalAmount: 1100,
+          realizedProfitLoss: 100,
+          avgBuyPrice: 100, // Bought at $100, sold at $110 = 10% profit
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      // Should show P/L with percentage
+      expect(screen.getByText(/\$100,00.*\(.*10.*%\)/)).toBeInTheDocument();
+    });
+
+    it('should show loss percentage for sell trades', () => {
+      mockTrades = [
+        createMockTrade({
+          type: 'sell',
+          shares: 10,
+          pricePerShare: 90,
+          totalAmount: 900,
+          realizedProfitLoss: -100,
+          avgBuyPrice: 100, // Bought at $100, sold at $90 = -10% loss
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      // Should show negative P/L with percentage
+      expect(screen.getByText(/\$-100,00.*\(.*-10.*%\)/)).toBeInTheDocument();
+    });
+
+    it('should not show percentage when avgBuyPrice is missing', () => {
+      mockTrades = [
+        createMockTrade({
+          type: 'sell',
+          shares: 10,
+          realizedProfitLoss: 100,
+          // No avgBuyPrice
+        }),
+      ];
+
+      render(<TradeHistory />);
+
+      // Should show P/L without percentage
+      const plElement = screen.getByText(/\$100,00/);
+      expect(plElement.textContent).not.toMatch(/\(/);
     });
   });
 });

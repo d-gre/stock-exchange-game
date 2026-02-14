@@ -1,0 +1,294 @@
+/* ==========================================================================
+   HELP (BEM: help)
+   ========================================================================== */
+
+/* Block: help (overlay) */
+.help {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--alpha-overlay);
+  z-index: 2100;
+  backdrop-filter: blur(4px);
+  animation: help--fade-in 0.2s ease-out;
+}
+
+@keyframes help--fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Element: modal */
+.help__modal {
+  position: relative;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: help--slide-up 0.25s ease-out;
+}
+
+@keyframes help--slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Element: close button */
+.help__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1.75rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding-top: 1px;
+
+  transition: all 0.15s;
+  z-index: 10;
+}
+
+.help__close:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+  color: var(--text-emphasis);
+}
+
+/* Element: content */
+.help__content {
+  padding: 2rem;
+  overflow-y: auto;
+  max-height: 85vh;
+}
+
+/* Element: title */
+.help__title {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* -----------------------------------------------------------------------
+   Accordion
+   ----------------------------------------------------------------------- */
+
+.help__accordion {
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.help__accordion:last-of-type {
+  border-bottom: none;
+}
+
+/* Accordion header (clickable toggle) */
+.help__accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: color 0.15s;
+}
+
+.help__accordion-header:hover {
+  color: var(--accent-primary);
+}
+
+.help__accordion-header:hover .help__accordion-title {
+  color: var(--accent-secondary);
+}
+
+/* Accordion title */
+.help__accordion-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  text-align: left;
+  transition: color 0.15s;
+}
+
+/* Accordion chevron icon */
+.help__accordion-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.25s ease-out;
+}
+
+.help__accordion--open .help__accordion-icon {
+  transform: rotate(180deg);
+}
+
+/* Accordion body (animated with grid) */
+.help__accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease-out;
+}
+
+.help__accordion--open .help__accordion-body {
+  grid-template-rows: 1fr;
+}
+
+/* Accordion inner content */
+.help__accordion-content {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.help__accordion-content > :first-child {
+  padding-top: 0.25rem;
+}
+
+.help__accordion-content > :last-child {
+  padding-bottom: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Content elements (reused across sections)
+   ----------------------------------------------------------------------- */
+
+/* Subsection titles (h3 within accordion panels) */
+.help__subsection-title {
+  margin: 1.25rem 0 0.75rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.help__accordion-content > .help__subsection-title:first-child {
+  margin-top: 0;
+}
+
+/* Text */
+.help__text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.help__text--intro {
+  margin-bottom: 1rem;
+}
+
+/* Element: list */
+.help__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style: none;
+}
+
+.help__list li {
+  position: relative;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Modifier: tips list */
+.help__list--tips li::before {
+  content: '💡';
+  position: absolute;
+  left: -1.25rem;
+  font-size: 0.8rem;
+}
+
+/* Element: info cards */
+.help__order-types {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.help__order-type {
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+}
+
+.help__order-type-name {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.help__order-type-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Element: button */
+.help__button {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: var(--btn-game-bg);
+  border: 1px solid var(--btn-game-border-color);
+  border-radius: var(--radius-md);
+  color: var(--btn-game-text-color);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.help__button:hover {
+  background: var(--btn-game-bg-hover);
+  color: var(--btn-game-text-hover);
+  border-color: var(--border-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .help__modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .help__content {
+    padding: 1.5rem;
+    max-height: 90vh;
+  }
+
+  .help__title {
+    font-size: 1.4rem;
+  }
+
+  .help__accordion-title {
+    font-size: 1rem;
+  }
+}

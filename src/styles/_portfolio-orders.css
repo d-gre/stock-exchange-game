@@ -1,0 +1,144 @@
+/* ==========================================================================
+   PORTFOLIO ORDERS (BEM)
+   Block: portfolio-orders
+   ========================================================================== */
+
+.portfolio-orders {
+  margin-top: 1.5rem;
+}
+
+.portfolio-orders__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: var(--accent-primary);
+}
+
+.portfolio-orders__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Extends .portfolio__list-item */
+.portfolio-orders__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.portfolio-orders__row--failed {
+  border-left-color: var(--color-warning);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 20%, var(--bg-card)) 0%, var(--bg-card) 100%);
+}
+
+/* Content container for the 3-line layout */
+.portfolio-orders__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.85rem;
+}
+
+.portfolio-orders__line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.portfolio-orders__line--values {
+  gap: 1rem;
+}
+
+.portfolio-orders__type {
+  font-weight: bold;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.portfolio-orders__type--buy {
+  background: var(--alpha-positive);
+  color: var(--color-positive);
+}
+
+.portfolio-orders__type--sell {
+  background: var(--alpha-negative);
+  color: var(--color-negative);
+}
+
+.portfolio-orders__kind {
+  font-weight: bold;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--text-secondary);
+  color: var(--text-secondary);
+  box-sizing: content-box;
+}
+
+.portfolio-orders__symbol {
+  font-weight: bold;
+  color: var(--accent-primary);
+}
+
+.portfolio-orders__details {
+  color: var(--text-muted);
+}
+
+.portfolio-orders__total {
+  color: var(--text-emphasis);
+  font-weight: bold;
+}
+
+.portfolio-orders__cycles {
+  color: var(--color-warning);
+  font-size: 0.75rem;
+}
+
+.portfolio-orders__cycles--executing {
+  font-style: italic;
+}
+
+.portfolio-orders__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.portfolio-orders__edit-btn:hover {
+  background: var(--alpha-info);
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.portfolio-orders__cancel-btn:hover {
+  background: var(--alpha-negative);
+  border-color: var(--color-negative);
+  color: var(--color-negative);
+}
+
+.portfolio-orders__empty {
+  color: var(--text-disabled);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Loan info line */
+.portfolio-orders__line--loan {
+  margin-top: 0.15rem;
+}
+
+.portfolio-orders__loan-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-warning);
+  background: var(--alpha-warning);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+}

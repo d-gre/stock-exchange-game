@@ -5,7 +5,9 @@
     "close": "Claude",
     "max": "Max",
     "edit": "Muta",
-    "delete": "Dele"
+    "delete": "Dele",
+    "insufficientFunds": "Pecunia non sufficit",
+    "invalidAmount": "Quantitas invalida"
   },
   "settings": {
     "title": "Dispositiones",
@@ -13,35 +15,47 @@
     "appearance": "Aspectus",
     "dark": "Obscurum",
     "light": "Lucidum",
-    "updateInterval": "Intervallum renovationis (secundae)",
+    "updateInterval": "Spatium cycli mercaturae",
+    "seconds": "sec.",
+    "marketCap": "${{value}}B MCap",
     "virtualPlayers": "Numerus lusorum fictorum (0-{{max}})",
-    "settings": "Dispositiones"
+    "settings": "Dispositiones",
+    "gameControls": "Status Ludi",
+    "saveGame": "Serva Ludum",
+    "loadGame": "Onera Ludum",
+    "saveGameSuccess": "Ludus servatus est",
+    "saveGameError": "Error in servando",
+    "loadGameSuccess": "Ludus oneratus est",
+    "loadGameError": "Error in onerando",
+    "resetGame": "Novum Ludum Incipe",
+    "resetGameConfirm": "Certusne es te novum ludum incipere velle? Omnis progressus amittetur."
   },
   "game": {
     "start": "Incipe Ludum",
+    "newGame": "Ludus Novus",
+    "continueGame": "Perge Ludum",
     "startingCapital": "Pecunia Initialis",
     "preparingMarket": "Mercatus paratur...",
     "nextCycle": "Proximus cyclus:",
+    "currentCycle": "Proxima Renovatio",
+    "remainingTime": "Circuitus Reliqui",
     "resume": "Perge",
     "pause": "Siste",
-    "speed": "Celeritas: {{speed}}x (clicca pro {{next}}x)",
-    "trades": "{{count}} Negotia",
-    "players": "{{count}} Lusores",
-    "showPlayers": "Monstra lusores fictos",
-    "hidePlayers": "Absconde lusores fictos"
+    "speed": "Celeritas: {{speed}}x",
+    "trades": "Conspectus Mercatus – {{count}} Negotia",
+    "players": "Conspectus Mercatus – {{count}} Lusores",
+    "marketOverview": "Conspectus Mercatus",
+    "showPlayers": "Monstra conspectum mercatus",
+    "hidePlayers": "Absconde conspectum mercatus"
   },
   "gameModes": {
     "realLife": {
       "name": "Vita Vera",
-      "description": "Condiciones mercatus reales"
+      "description": "Condiciones mercatus normales"
     },
     "hardLife": {
       "name": "Vita Dura",
-      "description": "Modus difficilis cum provocationibus"
-    },
-    "sandbox": {
-      "name": "Arena",
-      "description": "Ludus liber sine restrictionibus"
+      "description": "Negotia cara, sine prospectu mercatus et concurrentium"
     }
   },
   "orderTypes": {
@@ -90,8 +104,27 @@
     "stopHintSell": "Mandatum activatur cum pretium ≤ signum",
     "limitHintBuy": "Eme solum cum pretium ≤ fixum",
     "limitHintSell": "Vende solum cum pretium ≥ fixum",
-    "invalidStopBuyLimit": "Combinatio pretii invalida: Pretium fixum (${{limit}}) debet esse maius quam pretium signi (${{stop}}).",
-    "invalidStopLossLimit": "Combinatio pretii invalida: Pretium fixum (${{limit}}) debet esse minus quam pretium signi (${{stop}})."
+    "invalidStopBuyLimit": "Combinatio pretii invalida: Pretium fixum debet esse maius quam pretium signi.",
+    "invalidStopLossLimit": "Combinatio pretii invalida: Pretium fixum debet esse minus quam pretium signi.",
+    "triggerAt": "Activatur ad",
+    "limitBuyHint": "Exequitur solum cum pretium ≤ fixum.",
+    "limitSellHint": "Exequitur solum cum pretium ≥ fixum.",
+    "stopBuyHint": "Activatur cum pretium ≥ signum, tum pretio mercatus exequitur.",
+    "stopSellHint": "Activatur cum pretium ≤ signum, tum pretio mercatus exequitur.",
+    "stopBuyLimitHint": "Activatur cum pretium ≥ signum, exequitur solum cum pretium ≤ fixum.",
+    "stopSellLimitHint": "Activatur cum pretium ≤ signum, exequitur solum cum pretium ≥ fixum.",
+    "availableCredit": "Creditum Praesto",
+    "loanRequired": "Mutuum Necessarium",
+    "loanAmount": "Summa Mutui",
+    "interestRate": "Faenus",
+    "originationFee": "Vectigal Originis",
+    "buyWithLoan": "Mutuum Accipe et Eme",
+    "exceedsMaxBuy": "Maximum: {{max}} actiones (praesto: {{cash}})",
+    "exceedsMaxSell": "Maximum: {{max}} actiones praesto",
+    "exceedsMaxSellShortMargin": "Maximum: {{max}} actiones - reliquum pro pignus positionum vacuarum",
+    "sellBlockedByShortCollateral": "Venditio non possibilis - omnes actiones pro pignus positionum vacuarum",
+    "sellLimitedByShortCollateral": "Solum {{max}} actiones vendibiles - reliquum pro pignus positionum vacuarum",
+    "sharesAutoCorrected": "Quantitas ad {{max}} mutata (maximum praesto: {{cash}})"
   },
   "errors": {
     "invalidQuantity": "Quantitatem validam inscribe.",
@@ -101,7 +134,7 @@
     "invalidStopPrice": "Pretium signi validum inscribe."
   },
   "portfolio": {
-    "title": "Patrimonium Tuum",
+    "title": "Patrimonium",
     "available": "Praesto",
     "reserved": "Reservatum",
     "stockValue": "Valor Partium",
@@ -113,29 +146,50 @@
     "noOrders": "nulla mandata pendentia",
     "buy": "EME",
     "sell": "VENDE",
+    "shortSell": "BREVIS",
+    "buyToCover": "REDIME",
     "editOrder": "Muta mandatum",
     "cancelOrder": "Abroga mandatum",
+    "orderLocked": "Mandatum exsequitur et mutari non potest",
+    "executing": "exsequitur",
     "nextCycle": "Proximus Cyclus",
-    "tradingCycles": "{{count}} cycli",
+    "created": "(creatum)",
+    "createdCycles_one": "(creatum) {{count}} cyclus",
+    "createdCycles_other": "(creatum) {{count}} cycli",
+    "tradingCycles_one": "{{count}} cyclus",
+    "tradingCycles_other": "{{count}} cycli",
+    "executionFailed": "executio defecit",
     "remainingCycles": "Cycli residui ante executionem",
     "symbol": "Signum",
     "qty": "Quant.",
     "buyPrice": "Emptio",
     "current": "Praesens",
-    "pl": "L/D"
+    "pl": "L/D",
+    "withLoan": "Mutuum: ${{amount}} @ {{rate}}%"
   },
   "stockList": {
     "title": "Forum Nummarium",
     "symbol": "Signum",
     "price": "Pretium",
     "change": "Mut.",
-    "marketCap": "Valor",
-    "trend": "Cursus"
+    "trend": "Cursus",
+    "sector": "Grex",
+    "sectors": {
+      "tech": "Technologia",
+      "techShort": "T",
+      "finance": "Pecunia",
+      "financeShort": "P",
+      "industrial": "Industria",
+      "industrialShort": "I",
+      "commodities": "Merces",
+      "commoditiesShort": "M"
+    }
   },
   "chart": {
-    "marketIndex": "Index Mercatus",
+    "marketIndex": "Status Mercatus",
+    "sectorIndices": "Indices Sectorum",
     "orderHistory": "Historia Mandatorum",
-    "assets": "Bona ({{count}})",
+    "assets": "Bona",
     "stock": "Partes",
     "stockNotFound": "Pars non inventa",
     "pendingOrder": "Mandatum pendens",
@@ -153,29 +207,63 @@
     "buyOrderFailed": {
       "title": "Mandatum emptionis non executum",
       "message": "{{shares}}x {{symbol}} emi non potuit. Requiritur: ${{required}}, Praesto: ${{available}}"
+    },
+    "sellOrderFailed": {
+      "title": "Mandatum venditionis non executum",
+      "message": "{{shares}}x {{symbol}} vendi non potuit. Requiruntur: {{required}} partes, Praesto: {{available}} partes"
+    },
+    "orderExpired": {
+      "title": "Mandatum exspiravit",
+      "message": "{{type}} {{shares}}x {{symbol}} exspiravit. {{reason}}",
+      "reasons": {
+        "limitBuyNotReached": "Limes ${{limit}} non attingitur (nunc: ${{current}})",
+        "limitSellNotReached": "Limes ${{limit}} non attingitur (nunc: ${{current}})",
+        "stopBuyNotTriggered": "Statio ad ${{stop}} non excitata (nunc: ${{current}})",
+        "stopLossNotTriggered": "Statio ad ${{stop}} non excitata (nunc: ${{current}})",
+        "stopTriggeredLimitBuyNotReached": "Statio excitata, sed limes ${{limit}} non attingitur (nunc: ${{current}})",
+        "stopTriggeredLimitSellNotReached": "Statio excitata, sed limes ${{limit}} non attingitur (nunc: ${{current}})",
+        "generic": "Conditio pretii non impleta"
+      }
+    },
+    "partialCover": {
+      "title": "Tectio partialis executum",
+      "message": "{{executed}} ex {{total}} partibus {{symbol}} tectae. {{remaining}} partes ut mandatum pendens manent."
+    },
+    "coverComplete": {
+      "title": "Positio brevis tecta",
+      "message": "{{shares}} partes {{symbol}} plene tectae. Positio brevis clausa."
     }
   },
   "tradeHistory": {
     "title": "Historia Mandatorum",
     "recentTrades": "Negotia Recentia",
     "noTrades": "Nulla negotia adhuc",
+    "expired": "Exspiravit",
     "buys": "{{count}} Emptiones",
     "sells": "{{count}} Venditiones",
     "buy": "EME",
     "sell": "VENDE",
+    "shortSell": "VENDE VAC",
+    "buyToCover": "REDIME",
     "failed": "FRUSTRA",
     "time": "Tempus",
+    "cycle": "Circulus",
     "type": "Genus",
     "symbol": "Signum",
     "shares": "Quant.",
     "price": "Pretium",
     "total": "Summa",
     "pl": "L/D",
+    "plPercent": "%",
     "failureReasons": {
       "insufficient_funds": "Pecunia non sufficit",
       "insufficient_shares": "Partes non sufficiunt",
       "expired": "Mandatum exspiravit",
       "unknown": "Causa ignota"
+    },
+    "failureDetails": {
+      "insufficientFunds": "Requiritur: ${{required}}, Praesto: ${{available}}",
+      "insufficientShares": "Requiruntur: {{required}} part., Praesto: {{available}} part."
     },
     "chart": {
       "noTrades": "Nulla negotia perfecta",
@@ -200,7 +288,41 @@
       "aggressiveDesc": "Positiones magnae, frequentia alta, tenet etiam in damnis"
     }
   },
+  "sectors": {
+    "tech": "Technologia",
+    "finance": "Pecunia",
+    "industrial": "Industria",
+    "commodities": "Merces"
+  },
+  "market": {
+    "crashTitle": "{{sector}} Ruina!",
+    "crashMessage": "Sector {{sector}} cecidit! Pretium circa {{impact}}% deminuitur."
+  },
+  "economicClimate": {
+    "title": "Clima Oeconomicum",
+    "fearGreedIndex": "Index Timoris et Avaritiae",
+    "fearGreedDescription": "Metitur animum mercatus: Humilis = Timor (investores cauti), Altus = Avaritia (investores audaces).",
+    "globalPhase": "Phase Globalis",
+    "sectorPhases": "Phases Sectorum",
+    "phases": {
+      "prosperity": "Prosperitas",
+      "boom": "Florescentia",
+      "consolidation": "Consolidatio",
+      "panic": "Pavor",
+      "recession": "Recessio",
+      "recovery": "Recuperatio"
+    },
+    "fearLevels": {
+      "extremeFear": "Timor Extremus",
+      "fear": "Timor",
+      "neutral": "Neutralis",
+      "greed": "Avaritia",
+      "extremeGreed": "Avaritia Extrema"
+    }
+  },
   "virtualPlayers": {
+    "title": "Lusores Virtuales",
+    "tradesCount": "{{count}} Negotia",
     "transactions": "Transactiones",
     "noTransactions": "Nullae transactiones adhuc",
     "decisionFactors": "Factores Decisionis",
@@ -213,6 +335,7 @@
     "sellScore": "Puncta Venditionis",
     "sellThreshold": "(≥40 = vende)",
     "cash": "Pecunia",
+    "debt": "Debitum",
     "clickDetails": "Clicca pro detaliis",
     "risk": {
       "averse": "Cautus",
@@ -245,67 +368,393 @@
       "sell": "VENDE"
     }
   },
+  "marketMaker": {
+    "title": "Suppellex Mercatoris",
+    "inventory": "Suppellex",
+    "spread": "Discrimen",
+    "lowInventory": "Suppellex parva",
+    "highInventory": "Suppellex magna",
+    "normalInventory": "Suppellex normalis",
+    "barTooltip": "Suppellex: {{percent}}% – Viridis (80-120%): normalis, Flavus (50-80%): parvus, Ruber (<50%): criticus, Caeruleus (>120%): excessus",
+    "spreadTooltip": "Additamentum discriminis: {{percent}}% – Maius cum suppellex parva, minus cum suppellex magna"
+  },
   "help": {
     "linkText": "Quomodo ludus operatur?",
     "title": "Salve ad Forum Nummarium D-GRE",
-    "understood": "Intellexi, eamus!",
-    "intro": {
-      "title": "Quid est hoc?",
-      "text": "Forum Nummarium D-GRE est ludus bursae realisticus ubi strategias negotiandi veras cum pecunia virtuali experiri potes. Partes a 14 societatibus notis eme et vende, pretia in tempore reali observa, et patrimonium tuum augere conare. Lusores virtuales etiam negotiantur et pretia afficiunt – sicut in bursa vera."
-    },
-    "howToPlay": {
-      "title": "Quomodo Ludere",
-      "step1": {
-        "title": "Mercatum Observa",
-        "text": "A dextra omnes partes praesto vides cum pretiis et cursibus currentibus. Clicca partem ut chartam detailiatam videas."
+    "understood": "Claude",
+    "sections": {
+      "gameMechanics": {
+        "title": "Mechanica Ludi",
+        "intro": "In Foro Nummario D-GRE tempus et celeritatem ludi ad arbitrium tuum constituere potes.",
+        "durationTitle": "Duratio Ludi",
+        "durationIntro": "Initio ludi quinque optiones temporis electioni sunt.",
+        "duration30min": "CCCLX circuitus (circa XXX minuta) -- pro ludo longo et deliberato",
+        "duration20min": "CCXL circuitus (circa XX minuta) -- modus aequilibratus",
+        "duration10min": "CXX circuitus (circa X minuta) -- ludus brevis",
+        "duration5min": "LX circuitus (circa V minuta) -- certamen velocissimum",
+        "durationUnlimited": "Infinitum -- sine limite temporis lude",
+        "speedTitle": "Celeritas Ludi",
+        "speedIntro": "Celeritatem cyclorum negotiandi tribus gradibus mutare potes.",
+        "speed1x": "I× -- celeritas normalis, incipientibus commendatur",
+        "speed2x": "II× -- celeritas moderata pro lusoribus exercitatis",
+        "speed3x": "III× -- celeritas maxima pro peritis",
+        "autoPauseName": "Pausa Automatica",
+        "autoPause": "Cum dialogum negotiandi vel mutuorum aperis, ludus automatice sistitur. Ita mandata tua tranquille considerare potes.",
+        "endScreenName": "Tabula Finis",
+        "endScreen": "In ludis cum limite temporis, tabula finis ordinem inter te et lusores virtuales ostendit. Ordo secundum divitias netas determinatur.",
+        "previewHotkey": "Preme Alt+R ad praevisum tabulae finis quovis tempore videndum."
       },
-      "step2": {
-        "title": "Partes Eme",
-        "text": "Clicca bullam Emere in quavis parte. Quantitatem et genus mandati elige (Pretio Fori pro emptione immediata, Pretio Fixo pro pretio specifico)."
+      "loans": {
+        "title": "Mutua",
+        "intro": "Mutua sumere potes ad potentiam emendi augendam. Sed cave: mutua usuras requirunt et prudenter administranda sunt.",
+        "creditLineName": "Linea Crediti",
+        "creditLine": "Linea crediti in valore partium tuarum fundatur. Partes magnae (capitalisatio mercatus supra $200B) ad 70% numerantur, partes parvae et mediae ad 50%. Pecunia NON ut pignus acceptatur.",
+        "durationName": "Duratio Mutui",
+        "duration": "Tempus mutui inter {{minLoanDuration}} et {{maxLoanDuration}} cyclos eligere potes. Mutua longiora fenore reducto gaudent.",
+        "interestName": "Usurae",
+        "interest": "Fenus fundamentale est {{baseInterestRate}}% quoque {{interestChargeCycles}} cyclos. Rata crescit cum alta utilisatione crediti (ad 50% +1%, ad 75% +3%) et cum stylo negotiandi audaci (+2%). Negotiatores cauti 1% reductionis accipiunt.",
+        "feesName": "Vectigalia",
+        "fees": "Vectigal originis {{originationFee}}% ad initium mutui applicatur. Pro solutione praematura vectigal {{earlyRepaymentFee}}% debitur.",
+        "creditScoreName": "Fides Crediti",
+        "creditScore": "Fides crediti inter 0 et 100 metitur et fenora futurorum mutuorum afficit. Solutiones tempestivae fidem augent, morae eam minuunt.",
+        "multipleLoansName": "Mutua Plura",
+        "multipleLoans": "Usque ad {{maxLoans}} mutua simul habere potes. Quodque mutuum additum fenus per 1% auget (primum sine poena, secundum +1%, tertium +2%)."
       },
-      "step3": {
-        "title": "Patrimonium Tuum Administra",
-        "text": "A sinistra patrimonium tuum vides cum omnibus partibus emptis, pecunia praesto, et mandatis apertis. Valorem totalem observa!"
+      "trading": {
+        "title": "Ars Negotiandi",
+        "intro": "Diversis generibus mandatorum utere ad negotia sapienter gerenda.",
+        "orderTypesTitle": "Genera Mandatorum",
+        "marketOrderName": "Mandatum Fori",
+        "marketOrder": "Emptio vel venditio immediata ad pretium fori currentem. Mandatum post unum cyclum exsequitur. Simplicissimum genus pro negotiis celeribus.",
+        "limitOrderName": "Mandatum Pretii Fixi",
+        "limitOrder": "Exsequitur solum cum pretium ad gradum designatum pervenit. Validitatem ipse eligis (praefinitum: {{orderValidity}} cycli). Utile cum pretium specificum exspectas.",
+        "stopBuyName": "Stop Buy",
+        "stopBuy": "Activatur cum pretium supra gradum designatum ascendit, tum ut mandatum fori exsequitur. Utile ad cursus ascendentes captandos.",
+        "stopLossName": "Stop Loss",
+        "stopLoss": "Activatur cum pretium infra gradum designatum descendit, tum ut mandatum fori exsequitur. Instrumentum essentiale ad damna limitanda.",
+        "stopBuyLimitName": "Stop Buy cum Pretio Fixo",
+        "stopBuyLimit": "Mandatum duorum graduum: Primum activatur cum pretium supra signum ascendit, deinde exsequitur solum ad pretium fixum vel infra. Sic pretium maximum emptionis definis.",
+        "stopLossLimitName": "Stop Loss cum Pretio Fixo",
+        "stopLossLimit": "Mandatum duorum graduum: Primum activatur cum pretium infra signum descendit, deinde exsequitur solum ad pretium fixum vel supra. Sic venditionem nimis vilem evitas.",
+        "shortSellingTitle": "Venditiones Vacuae",
+        "shortSellingIntro": "Venditio vacua est ars provecta qua de pretio decrescente lucrum capere potes.",
+        "shortHowItWorksName": "Quomodo Operatur",
+        "shortHowItWorks": "In venditione vacua partes mutuatas vendis et postea ad pretium (ut speras) inferiorem redimis. Si pretium cadit, differentia lucrum tuum est; si ascendit, damnum pateris.",
+        "shortMarginName": "Margo",
+        "shortMargin": "Ad venditionem vacuam aperiendam, margo initialis {{initialMargin}}% requiritur. Si margo infra {{maintenanceMargin}}% cadit, vocatio marginis fit.",
+        "shortBorrowFeesName": "Vectigalia Mutuandi",
+        "shortBorrowFees": "Pro partibus mutuatis, vectigal {{baseBorrowFee}}% per cyclum solvitur. Partes difficiles mutuatu multiplicatorem {{hardToBorrowMultiplier}}× habent.",
+        "shortMarginCallName": "Vocatio Marginis",
+        "shortMarginCall": "Cum margo infra gradum sustentationis cadit, vocatio marginis evenit. {{marginCallGraceCycles}} cyclos habes ad marginem addendam vel positionem claudendam. Post hoc tempus, positio coacte clauditur.",
+        "buyToCoverName": "Emptio ad Tegendum",
+        "buyToCover": "Ad positionem vacuam claudendam, parem numerum partium redimere debes. Si pretium redemptionis infra pretium introitus est, lucrum habes; si supra, damnum."
       },
-      "step4": {
-        "title": "Cum Lucro Vende",
-        "text": "Cum pretium ascendit, partes tuas cum lucro vende. Vel utere mandatis Stop-Loss ad damna limitanda."
+      "economy": {
+        "title": "Oeconomia et Mercatus",
+        "intro": "Mercatus in ludo mechanismos oeconomicos reales simulat.",
+        "indicesTitle": "Indices Mercatus",
+        "mainIndexName": "D-GREX Prime",
+        "mainIndex": "Index principalis progressionem ponderatam omnium partium refert. Ad 10,000 puncta incipit. Societates magnae (capitalisatio mercatus alta) maiorem influentiam habent.",
+        "sectorIndicesName": "Indices Sectorum",
+        "sectorIndices": "Quattuor indices sectorum (D-GREX Tek, Fin, Ind, Raw) progressionem Technologiae, Pecuniae, Industriae, et Mercium ostendunt.",
+        "sectorDynamicsTitle": "Dynamica Sectorum",
+        "sectorDynamicsIntro": "Partes in eadem industria se mutuo afficiunt -- sicut in mercatibus veris.",
+        "correlationName": "Correlatio Sectorum",
+        "correlation": "Partes in eodem sectore cursum communem participant. Cum partes technologiae ascendunt, ceterae partes technologicae saepe beneficium capiunt.",
+        "interSectorName": "Effectus Inter Sectores",
+        "interSector": "Sectores etiam inter se connectuntur: Pecunia fortis technologiam et industriam sustinet. Industria crescens mercium demandationem auget. Sed merces carae industriam onerant.",
+        "marketMakerTitle": "Fabricator Mercatus",
+        "marketMakerIntro": "Fabricator mercatus ut pars adversa omnium negotiorum fungit.",
+        "inventoryName": "Systema Inventarii",
+        "inventory": "Fabricator mercatus inventarium cuiusque partis administrat. Gradus inventarii conditiones negotiandi mutat (viridis = normalis, flavus = parvus, ruber = criticus, caeruleus = nimius).",
+        "dynamicSpreadName": "Differentia Dynamica",
+        "dynamicSpread": "Inventarium parvum differentiam usque ad +200% auget; inventarium magnum eam ad -50% reducit.",
+        "rebalancingName": "Recuperatio Automatica",
+        "rebalancing": "Quoque cyclo inventarium 1% versus normalem movetur. Eme cum virgula caerulea (differentia parva), vende cum rubra (differentia magna).",
+        "spreadSlippageTitle": "Differentia et Lapsus",
+        "spreadName": "Differentia",
+        "spread": "Discrimen inter pretium emptionis et venditionis. Differentia fundamentalis est {{spreadPercent}}%, quae sumptum negotiandi occultum constituit. Emens paulo plus solvit, vendens paulo minus accipit.",
+        "slippageName": "Lapsus",
+        "slippage": "Lapsus fit cum mandatum ad pretium diversum quam exspectatum exsequitur. Praecipue cum mandatis fori et in alta volatilitate accidit. Vectigal negotiandi {{feePercent}}% est.",
+        "fearGreedTitle": "Index Timoris et Avaritiae",
+        "fearGreed": "Animum mercatus inter 0 et 100 metitur. Valor humilis timorem significat (investores cauti), valor altus avaritiam (investores periculum quaerentes). Hic index motus totius mercatus afficit.",
+        "marketPhasesTitle": "Phases Mercatus",
+        "marketPhasesIntro": "Mercatus per sex phases circulat. Quaeque phase pretia diverso modo afficit.",
+        "phaseProsperity": "Prosperitas -- periodus stabilis crescendi. Plurimae partes leniter ascendunt.",
+        "phaseBoom": "Florescentia -- ascensus rapidus. Magnae opportunitates lucri, sed periculum reversionis crescit.",
+        "phaseConsolidation": "Consolidatio -- mercatus quiescit. Directio incerta, tempus observandi.",
+        "phasePanic": "Pavor -- descensus rapidus. Timor mercatum dominatur et pretia valde cadunt.",
+        "phaseRecession": "Recessio -- periodus languoris. Pretia in imo versantur. Fortasse tempus ad partes viles quaerendas.",
+        "phaseRecovery": "Recuperatio -- reversio ab imo. Investores celeres in hac phase lucrum capere possunt."
+      },
+      "tips": {
+        "title": "Consilia pro Incipientibus",
+        "tip1": "Diversifica! Noli omnem pecuniam in una societate ponere. Per plures sectores investi.",
+        "tip2": "Chartam et cursus semper observa antequam emas. Partes cum cursu ascendenti praeferre convenit.",
+        "tip3": "Mandatis Stop-Loss utere ad damna magna evitanda. Hoc instrumentum essentiale est.",
+        "tip4": "Parvis summis incipe et mercatum cognoscere prius quam magna negotia facias.",
+        "tip5": "Impetum sectorum observa. Cum sector momentum aedificat, aliae partes eiusdem sectoris saepe sequuntur."
+      }
+    }
+  },
+  "loans": {
+    "title": "Mutua",
+    "liabilities": "Debita",
+    "totalDebt": "Summa Debitorum",
+    "noLoans": "nulla mutua activa",
+    "repay": "Solve",
+    "repayNoFee": "Solve (sine vectigali)",
+    "fee": "vectigal",
+    "cannotRepayInsufficientFunds": "Pecunia non sufficit ad solvendum",
+    "newLoan": "Novum Mutuum",
+    "takeLoan": "Accipe Mutuum",
+    "remaining": "{{count}} reliqua",
+    "creditLine": "Linea Crediti",
+    "recommendedCreditLine": "Linea Crediti Commendata",
+    "maxCreditLine": "Linea Crediti Maxima",
+    "recommendedCredit": "Creditum Commendatum",
+    "recommendedCreditHint": "= Pignora, ad $1.000 rotundata",
+    "maxCredit": "Creditum Maximum",
+    "currentDebt": "Debitum Praesens",
+    "availableCredit": "Creditum Praesto",
+    "utilization": "Usus",
+    "collateral": "Pignora",
+    "collateralLargeCap": "Partes Magnae (70%)",
+    "collateralSmallCap": "Partes Parvae (50%)",
+    "collateralTotal": "Summa Pignorum",
+    "recommendedCreditFormula": "Creditum Comm. = Pignora (ad $1.000 rotundata)",
+    "maxCreditFormula": "Creditum Max. = Creditum Comm. × {{multiplier}}",
+    "amount": "Summa Mutui",
+    "duration": "Tempus",
+    "cycles": "cycli",
+    "cyclesRemaining": "{{cycles}} cycli reliqui",
+    "dueIn": "debetur in: {{cycles}} cyclis",
+    "loanAbbreviation": "M",
+    "dueNow": "Nunc debetur!",
+    "overdue": "Praeteritus",
+    "overdueFor": "Praeteritus per {{cycles}} cyclos",
+    "overdueTooltip": "Mutuum praeteritum est! Fides quoque cyclo minuitur.",
+    "interestRate": "Fenus",
+    "baseRate": "Fenus Basis",
+    "riskProfileAdjustment": "Profil Periculi",
+    "riskProfileHint": "(conservativus = bonus, audax = additamentum)",
+    "profitHistoryAdjustment": "Historia Negotiandi",
+    "profitHistoryHint": "(additamentum pro magnis damnis)",
+    "utilizationSurcharge": "Additamentum Usus",
+    "utilizationHint": "(Debitum / Max. Credit: ≥50% +1%, ≥75% +3%, 100% +6%)",
+    "loanCountPenalty": "Poena Mutuorum Plurium",
+    "additionalLoanSurcharge": "Additamentum Mutui Additi",
+    "additionalLoanHint": "(+1% per mutuum additum)",
+    "creditScoreAdjustment": "Fides Crediti",
+    "durationDiscount": "Reductio Temporis",
+    "durationDiscountHint": "(longior tempus = minus fenus)",
+    "effectiveRate": "Fenus Effectivum",
+    "originationFee": "Vectigal Originis",
+    "netDisbursement": "Solutio Neta",
+    "maxAvailable": "Maximum praesto",
+    "conditions": "Conditiones Mutui",
+    "interestBreakdownTitle": "Compositio Fenoris",
+    "interestChargeNote": "Fenus quoque {{cycles}} cyclos solvendum est.",
+    "creditLineTitle": "Computatio Lineae Crediti",
+    "ofValue": "valoris",
+    "creditLineNote": "Solum actiones pro pignore serviunt. Pecunia non numeratur.",
+    "repaymentFeeInfo": "{{percent}}% vectigal solutionis praematurae",
+    "blockedByTradePanel": "Mutuum sumi non potest dum tabula negotiandi aperta est",
+    "loanCount": "{{current}} ex {{max}} mutuis",
+    "maxLoansReached": "Numerus maximus mutuorum attingitur",
+    "slotsAvailable": "{{count}} praesto",
+    "confirmLoan": "Confirma Mutuum",
+    "principal": "Sors",
+    "balance": "Residuum",
+    "interestPaid": "Fenus Solutum",
+    "interest": "Fenus",
+    "perCycles": "quoque {{cycles}} cycli",
+    "interestCycleInfo": "Fenus quoque {{cycles}} cyclos negotiandi computatur",
+    "noCollateral": "Mutuum non praesto - nulla pignora partium",
+    "creditScore": {
+      "title": "Fides Crediti",
+      "baseValue": "Valor Fundamentalis",
+      "description": "Fides crediti fenus futurorum mutuorum afficit. Solutiones tempestivae eam meliorem faciunt, praeteritus deteriorem.",
+      "excellent": "Praeclarus",
+      "good": "Bonus",
+      "fair": "Aequus",
+      "poor": "Malus",
+      "recentEvents": "Eventus Recentes",
+      "events": {
+        "repaidEarly": "Praemature solutum",
+        "repaidOnTime": "Tempestive solutum",
+        "autoRepaid": "Auto solutum",
+        "overdue": "Praeteritum",
+        "overdueMultiple": "Morae",
+        "defaultPenalty": "Poena defectionis"
+      },
+      "delinquency": {
+        "title": "Morae",
+        "totalLoans": "Mutua Praeterita (totum)",
+        "totalCycles": "Cycli Praeteriti (totum)",
+        "maxOverdue": "Longissima Mora",
+        "avgOverdue": "Media Mora"
       }
     },
-    "rules": {
-      "title": "Regulae Ludi",
-      "rule1": "Incipis cum pecunia initiali electiva (defaltum: $100,000).",
-      "rule2": "Pretia renovantur quibusque secundis – celeritatem in dispositionibus mutare potes.",
-      "rule3": "Solum unum mandatum per partem per cyclum negotiandi exequi potes.",
-      "rule4": "Sunt vectigalia negotiandi et differentiae sicut in bursa vera.",
-      "rule5": "Lusores virtuales cum strategiis diversis etiam pretia afficiunt.",
-      "rule6": "Scopus: Auge pecuniam initialem per decisiones investitionis sapientes!"
-    },
-    "orderTypes": {
-      "title": "Genera Mandatorum Explicata",
-      "marketName": "Mandatum Fori",
-      "limitName": "Mandatum Pretii Fixi",
-      "stopName": "Stop Buy / Stop Loss",
-      "market": "Emptio/venditio immediata ad pretium fori currentem.",
-      "limit": "Exequitur solum cum pretium ad gradum desideratum pervenit.",
-      "stop": "Trigger automaticus ad pretium specificum – ideale pro breakouts vel stop-loss."
-    },
-    "marketMechanics": {
-      "title": "Differentia & Lapsus",
-      "spreadName": "Differentia (Spread)",
-      "slippageName": "Lapsus (Slippage)",
-      "spread": "Differentia est discrepantia inter pretium emptionis et pretium venditionis partis. Cum emis, paulo plus solvis quam pretium ostensum; cum vendis, paulo minus accipis. Haec differentia sumptus negotiandi occultus est et lucrum fabricatorum mercatus.",
-      "slippage": "Lapsus fit cum mandatum tuum ad pretium diversum quam exspectatum exequitur. Hoc praecipue fit cum mandatis fori et in alta volatilitate. In mercatibus veris, mandata magna etiam pretium movere possunt. Pretium effectivum ostensum includit lapsum potentialem ut sumptus tuos veros cognoscas."
-    },
-    "tips": {
-      "title": "Consilia pro Incipientibus",
-      "tip1": "Diversifica! Noli omnem pecuniam in una societate ponere.",
-      "tip2": "Cursus in charta observa antequam emas.",
-      "tip3": "Utere mandatis Stop-Loss ad damna magna vitanda."
-    },
-    "virtualPlayers": {
-      "title": "Lusores Ficti",
-      "text": "In fascia inferiore invenies bullam 'Monstra lusores fictos'. Hac aperies tabulam quae omnes lusores ab intelligentia artificiali gubernatos ostendit. Videre potes eorum patrimonia, pecuniam, et decisiones negotiandi. Observa eorum strategias – a cautis ad audaces – et disce quomodo diversi modi in mercatu operentur."
+    "notifications": {
+      "dueSoonTitle": "Mutuum Mox Debetur",
+      "dueSoonMessage": "{{loanName}} (${{amount}}) in {{cycles}} cyclis debetur.",
+      "repaidTitle": "Mutuum Solutum",
+      "repaidMessage": "{{loanName}} automatice solutum est: ${{amount}}",
+      "overdueTitle": "Mutuum Praeteritum!",
+      "overdueMessage": "{{loanName}}: Pecunia non sufficit ad solutionem. Debitum residuum: ${{amount}}."
     }
+  },
+  "gameStart": {
+    "duration": "Tempus Ludi",
+    "duration5min": "LX Ludi (ca. V min)",
+    "duration10min": "CXX Ludi (ca. X min)",
+    "duration20min": "CCXL Ludi (ca. XX min)",
+    "duration30min": "CCCLX Ludi (ca. XXX min)",
+    "durationUnlimited": "Infinitum"
+  },
+  "gameEnd": {
+    "title": "Finis Ludi",
+    "yourResult": "Eventus Tuus",
+    "ranking": "Ordo",
+    "netWorth": "Divitiae Netae",
+    "profit": "Lucrum/Damnum",
+    "riskProfile": "Profil Periculi",
+    "rankingTitle": "D-GREX Ordo",
+    "rank": "Ordo",
+    "player": "Lusor",
+    "you": "Tu",
+    "playAgain": "Iterum Lude",
+    "loadLastSave": "Salva Recentem Onerare",
+    "continueGame": "Ludum Continuare",
+    "newGame": "Novum Ludum",
+    "riskLevel": {
+      "conservative": "Conservativus",
+      "moderate": "Moderatus",
+      "aggressive": "Acer"
+    },
+    "gameSummary": "Summa Ludi",
+    "duration": "Duratio",
+    "cycles": "{{count}} Ludi",
+    "averageClimate": "Clima Medium",
+    "dominantPhase": "Phasma Dominans",
+    "climate": {
+      "veryPositive": "Valde Prosperum",
+      "positive": "Prosperum",
+      "neutral": "Neutrale",
+      "negative": "Adversum",
+      "veryNegative": "Valde Adversum"
+    },
+    "chartLegend": {
+      "phase": "Phasma Oeconomicum",
+      "fearGreed": "Timor & Avaritia"
+    },
+    "netWorthBreakdown": "Divisio Divitiarum",
+    "cashBalance": "Pecunia",
+    "stocksValue": "Valor Actionum",
+    "liabilities": "Debita",
+    "creditScoreLabel": "Gradus Fidei",
+    "creditScoreCalculation": "Computatio",
+    "totalInterestPaid": "Usura Soluta",
+    "bestTrade": "Optima Negotiatio",
+    "worstTrade": "Pessima Negotiatio",
+    "bestShort": "Optima Venditio Vacua",
+    "worstShort": "Pessima Venditio Vacua",
+    "bestHolding": "Optima Positio",
+    "worstHolding": "Pessima Positio",
+    "tradeProfit": "Lucrum",
+    "tradeLoss": "Damnum",
+    "sharesAt": "{{shares}} partes @ {{price}}",
+    "holdingDetail": "{{shares}} partes @ {{avgPrice}} → {{currentPrice}}",
+    "economicClimate": "Clima Oeconomicum",
+    "creditEvents": {
+      "base": "Basis: {{value}}",
+      "repaidEarly": "solutio praematura",
+      "repaidOnTime": "solutio tempestiva",
+      "autoRepaid": "solutio automatica",
+      "overdue": "mora",
+      "defaultPenalty": "poena defectionis"
+    }
+  },
+  "shorts": {
+    "title": "Venditiones Vacuae",
+    "position": "Positio Vacua",
+    "positions": "Positiones Vacuae",
+    "noPositions": "Nullae positiones vacuae",
+    "openShort": "Aperi Vacuam",
+    "closeShort": "Claude Vacuam",
+    "shortSell": "Vende Vacue",
+    "buyToCover": "Eme ad Tegendum",
+    "entryPrice": "Pretium Introitus",
+    "currentPrice": "Pretium Praesens",
+    "shares": "Partes",
+    "collateral": "Pignus",
+    "borrowFee": "Vectigal Mutui",
+    "totalBorrowFees": "Vectigalia Mutui Totalia",
+    "profitLoss": "Lucrum/Damnum",
+    "marginRequired": "Margo Requisita",
+    "marginLevel": "Gradus Marginis",
+    "initialMargin": "Margo Initialis",
+    "maintenanceMargin": "Margo Sustentationis",
+    "marginCall": "Vocatio Marginis",
+    "marginCallWarning": "Nota: Vocatio marginis fit si margo sub {{percent}}% cadit.",
+    "coverBlockedMaxLoans": "Tegere non potest: Limitem creditorum attigit (3/3)",
+    "coverBlockedNoCollateral": "Tegere non potest: Nullum pignus pro credito",
+    "coverBlockedInsufficientFunds": "Tegere non potest: Pecunia insufficiens",
+    "coverLimitedByFunds": "Solum {{max}} ex {{total}} partibus redimendae (pecunia limitata)",
+    "addMarginBlockedNoCash": "Marginem addere non potest: Nulla pecunia praesto",
+    "marginCallGrace": "Spatia Gratiae Reliqua",
+    "addMargin": "Adde Marginem",
+    "addMarginPrompt": "Quantum marginis ad {{symbol}} addere vis? (Praesto: ${{available}})",
+    "addMarginAmount": "Quantitas",
+    "marginAdded": "{{amount}} marginis ad {{symbol}} addita",
+    "currentCollateral": "Pignus Praesens",
+    "addingMargin": "Addens",
+    "newCollateral": "Pignus Novum",
+    "forcedCover": "Tectio Coacta",
+    "hardToBorrow": "Difficilis Mutuari",
+    "easyToBorrow": "Facilis Mutuari",
+    "easyToBorrowHint": "Vectigal normale - satis actionum ad mutuandum praesto sunt",
+    "hardToBorrowHint": "Vectigal auctum - magna postulatio pro hac actione mutuanda",
+    "cycle": "cyclus",
+    "borrowStatus": "Status Mutui",
+    "shortInterest": "Interest Vacuum",
+    "floatShorted": "Float Vacuata",
+    "maxShortable": "Maximum Vacuabile",
+    "borrowRate": "Rata Mutui",
+    "dailyBorrowFee": "Vectigal Mutui Quotidianum",
+    "totalExposure": "Expositio Totalis",
+    "lockedCollateral": "Pignus Clausum",
+    "statistics": {
+      "title": "Statistica Vacua",
+      "totalPositions": "Positiones Totales",
+      "totalExposure": "Expositio Totalis",
+      "totalCollateral": "Pignus Totale",
+      "totalProfitLoss": "Lucrum/Damnum Totale",
+      "marginCallsReceived": "Vocationes Marginis Acceptae",
+      "forcedCoversExecuted": "Tectiones Coactae Executae",
+      "totalBorrowFeesPaid": "Vectigalia Mutui Totalia Soluta"
+    },
+    "notifications": {
+      "marginCallTitle": "Vocatio Marginis",
+      "marginCallMessage": "{{symbol}}: Margo sub {{percent}}%. {{cycles}} cycli ad pecuniam addendam.",
+      "forcedCoverTitle": "Tectio Coacta",
+      "forcedCoverMessage": "{{symbol}}: Positio vacua coacte tecta propter defectum marginis.",
+      "borrowFeeTitle": "Vectigal Mutui Solutum",
+      "borrowFeeMessage": "Vectigalia mutui cycli: ${{amount}}"
+    },
+    "errors": {
+      "shortSellingDisabled": "Venditio vacua non praesto est",
+      "insufficientCollateral": "Pignus non sufficit",
+      "exceedsMaxShort": "Excedit maximum vacuabile pro hac parte",
+      "noSharesAvailable": "Nullae partes ad mutuandum praesto",
+      "insufficientMargin": "Margo insufficiens ad aperiendum",
+      "positionNotFound": "Positio vacua non inventa"
+    }
+  },
+  "debug": {
+    "title": "Scriptum Scrutationis",
+    "copy": "Transcribe",
+    "copied": "Transcriptum!"
   }
 }

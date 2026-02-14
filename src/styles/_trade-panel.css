@@ -5,6 +5,23 @@
    ========================================================================== */
 
 /* ==========================================================================
+   CONTAINER: trade-panel-container
+   Wrapper for the trade panel in the center panel
+   ========================================================================== */
+
+.trade-panel-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Desktop: max-width 500px */
+@media (min-width: 1201px) {
+  .trade-panel-container {
+    max-width: 500px;
+  }
+}
+
+/* ==========================================================================
    BLOCK: trade-panel
    ========================================================================== */
 
@@ -116,6 +133,13 @@
   font-size: 0.85rem;
 }
 
+.trade-panel__collateral-warning {
+  color: var(--color-yellow);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+}
+
 /* ==========================================================================
    ELEMENT: Input Group
    ========================================================================== */
@@ -158,6 +182,11 @@
   gap: 0.5rem;
 }
 
+/* Price input inside input-with-btn should take full width like regular input */
+.trade-panel__input-with-btn .trade-panel__price-input {
+  flex: 1;
+}
+
 .trade-panel__input-with-btn input {
   flex: 1;
   padding: 0.5rem 0.75rem;
@@ -185,9 +214,35 @@
 }
 
 .trade-panel__max-btn:hover {
-  background: var(--accent-primary);
-  color: var(--text-white);
-  border-color: var(--accent-primary);
+  background:  var(--color-warning);
+  color: var(--text-on-dark);
+  border-color: var(--color-warning);
+}
+
+/* Input exceeded state */
+.trade-panel__input--exceeded {
+  border-color: var(--color-negative) !important;
+  background: color-mix(in srgb, var(--color-negative) 10%, var(--bg-card));
+}
+
+/* Auto-corrected warning message (orange) - shown when shares were auto-adjusted */
+.trade-panel__input-group > .trade-panel__auto-corrected-warning {
+  flex-basis: 100%;
+  padding-left: calc(5rem + 0.75rem);
+  margin-top: -0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-warning);
+  font-weight: 500;
+}
+
+/* Max warning message below input - aligned with input field */
+.trade-panel__input-group > .trade-panel__max-warning {
+  flex-basis: 100%;
+  padding-left: calc(5rem + 0.75rem);
+  margin-top: -0.25rem;
+  font-size: 0.75rem;
+  color: var(--color-negative);
+  font-weight: 500;
 }
 
 /* ==========================================================================
@@ -239,7 +294,7 @@
   right: 0;
   background: var(--bg-panel);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 -4px 24px var(--shadow-lg);
   z-index: 100;
@@ -277,7 +332,7 @@
 }
 
 .trade-panel__order-type-option--active {
-  background: var(--gradient-accent);
+  background: var(--bg-accent-subtle);
   border-left-color: var(--accent-primary);
   color: var(--accent-primary);
 }
@@ -371,16 +426,25 @@
   color: var(--color-warning);
 }
 
+[data-theme="light"] .trade-panel__stop-limit-warning {
+  color: var(--color-warning-dark);
+}
+
 /* ==========================================================================
    ELEMENT: Breakdown
    ========================================================================== */
 
 .trade-panel__breakdown {
   background: var(--bg-panel);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   padding: 0.75rem;
   margin-top: 1rem;
   border: 1px solid var(--border-primary);
+}
+
+.trade-panel__breakdown--exceeded {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .trade-panel__breakdown-row {
@@ -404,6 +468,11 @@
   font-size: 1rem;
 }
 
+.trade-panel__breakdown-row--secondary {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .trade-panel__breakdown-details {
   background: var(--bg-card);
   border-radius: 6px;
@@ -421,6 +490,10 @@
 
 .trade-panel__breakdown-fee {
   color: var(--color-warning-light);
+}
+
+[data-theme="light"] .trade-panel__breakdown-fee {
+  color: var(--color-warning-dark);
 }
 
 .trade-panel__breakdown-hint {
@@ -465,7 +538,7 @@
   padding: 0.75rem;
   background: var(--bg-hover);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   color: var(--text-secondary);
   font-size: 0.9rem;
   cursor: pointer;
@@ -481,7 +554,7 @@
   flex: 2;
   padding: 0.75rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -509,4 +582,219 @@
 .trade-panel__confirm-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.trade-panel__confirm-btn--with-loan {
+  background: var(--color-warning) !important;
+  color: var(--text-on-colored) !important;
+}
+
+.trade-panel__confirm-btn--with-loan:hover:not(:disabled) {
+  background: var(--color-warning-dark) !important;
+  border: 1px solid var(--border-secondary);
+}
+
+/* ==========================================================================
+   ELEMENT: Credit Info
+   ========================================================================== */
+
+.trade-panel__credit-info {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   ELEMENT: Loan Section (when order requires credit)
+   ========================================================================== */
+
+.trade-panel__loan-section {
+  background: var(--alpha-warning);
+  border: 1px solid var(--alpha-warning-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.trade-panel__loan-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-warning);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.trade-panel__loan-header svg {
+  color: var(--color-warning);
+}
+
+/* Loan Rows */
+.trade-panel__loan-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+  font-size: 0.85rem;
+}
+
+.trade-panel__loan-label {
+  color: var(--text-secondary);
+}
+
+.trade-panel__loan-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Duration Buttons */
+.trade-panel__loan-duration {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.trade-panel__loan-duration-options {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.trade-panel__loan-duration-btn {
+  padding: 0.3rem 0.6rem;
+  background: var(--alpha-warning-subtle);
+  border: 1px solid var(--alpha-warning-border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 36px;
+  text-align: center;
+}
+
+.trade-panel__loan-duration-btn:hover {
+  border-color: var(--color-warning);
+  color: var(--text-emphasis);
+}
+
+.trade-panel__loan-duration-btn--selected {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: var(--text-on-colored);
+  font-weight: 500;
+}
+
+.trade-panel__loan-duration-unit {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   SHORT SELLING SUPPORT
+   ========================================================================== */
+
+/* Short Sell panel styling */
+.trade-panel--shortSell {
+  border-color: var(--color-warning);
+}
+
+.trade-panel--shortSell .trade-panel__header h3 {
+  color: var(--color-warning);
+}
+
+.trade-panel__confirm-btn--shortSell {
+  background: var(--color-warning);
+  color: var(--text-on-colored);
+}
+
+.trade-panel__confirm-btn--shortSell:hover:not(:disabled) {
+  background: var(--color-warning-dark);
+}
+
+/* Buy to Cover panel styling */
+.trade-panel--buyToCover {
+  border-color: var(--accent-primary);
+}
+
+.trade-panel--buyToCover .trade-panel__header h3 {
+  color: var(--accent-primary);
+}
+
+.trade-panel__confirm-btn--buyToCover {
+  background: var(--color-positive);
+  color: white;
+}
+
+.trade-panel__confirm-btn--buyToCover:hover:not(:disabled) {
+  background: var(--color-positive-hover);
+}
+
+/* Add Margin panel styling - same as Buy to Cover */
+.trade-panel--addMargin {
+  border-color: var(--accent-primary);
+}
+
+.trade-panel--addMargin .trade-panel__header h3 {
+  color: var(--accent-primary);
+}
+
+.trade-panel__confirm-btn--addMargin {
+  background: var(--color-positive);
+  color: white;
+}
+
+.trade-panel__confirm-btn--addMargin:hover:not(:disabled) {
+  background: var(--color-positive-hover);
+}
+
+/* Borrow status indicators */
+.trade-panel__borrow-status {
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 0.8rem;
+}
+
+.trade-panel__borrow-status--easy {
+  background: var(--alpha-positive);
+  color: var(--color-positive);
+}
+
+.trade-panel__borrow-status--hard {
+  background: var(--alpha-warning);
+  color: var(--color-warning);
+}
+
+/* Profit/Loss indicators in trade info */
+.trade-panel__profit {
+  color: var(--color-positive);
+  font-weight: 500;
+}
+
+.trade-panel__loss {
+  color: var(--color-negative);
+  font-weight: 500;
+}
+
+/* Short breakdown styling */
+.trade-panel__breakdown--short {
+  border-color: var(--color-warning);
+}
+
+.trade-panel__breakdown--cover {
+  border-color: var(--accent-primary);
+}
+
+/* Profit/Loss row styling in breakdown */
+.trade-panel__breakdown-row--profit span:last-child {
+  color: var(--color-positive);
+}
+
+.trade-panel__breakdown-row--loss span:last-child {
+  color: var(--color-negative);
 }

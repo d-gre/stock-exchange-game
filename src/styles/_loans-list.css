@@ -1,0 +1,163 @@
+/* ==========================================================================
+   LOANS LIST (BEM)
+   Block: loans-list
+   Loan list in portfolio panel
+   ========================================================================== */
+
+.loans-list {
+  margin-top: 1.5rem;
+}
+
+.loans-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.loans-list__title {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--accent-primary);
+}
+
+.loans-list__remaining {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--text-disabled);
+  margin-left: 0.35rem;
+}
+
+.loans-list__add-btn {
+  margin-right: 0.5rem;
+}
+
+.loans-list__add-btn--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: var(--text-muted);
+}
+
+.loans-list__add-btn--disabled:hover {
+  background: transparent;
+  border-color: var(--border-secondary);
+  color: var(--text-muted);
+}
+
+.loans-list__add-btn:hover,
+.loans-list__repay-btn:hover:not(:disabled) {
+  background: var(--alpha-positive);
+  border-color: var(--color-positive);
+  color: var(--color-positive);
+}
+
+.loans-list__repay-btn--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  color: var(--text-disabled);
+}
+
+.loans-list__repay-btn--disabled:hover {
+  background: transparent;
+  border-color: var(--border-secondary);
+  color: var(--text-disabled);
+}
+
+.loans-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Extends .portfolio__list-item */
+.loans-list__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+}
+
+/* --overdue handled by .portfolio__list-item--danger */
+/* --due-soon handled by .portfolio__list-item--warning */
+
+.loans-list__item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.loans-list__item-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loans-list__item-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.loans-list__item-amount {
+  color: var(--text-muted);
+}
+
+/* Highlighted state when toast is clicked */
+.loans-list__item--highlighted .loans-list__item-name,
+.loans-list__item--highlighted .loans-list__item-amount {
+  font-weight: 700;
+}
+
+.loans-list__item-details {
+  display: flex;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.loans-list__item-rate {
+  color: var(--color-warning);
+}
+
+.loans-list__item-interest {
+  color: var(--color-negative);
+}
+
+.loans-list__item-duration {
+  color: var(--text-secondary);
+}
+
+.loans-list__item-overdue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.35rem;
+  background: var(--color-negative);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.loans-list__item-overdue-cycles {
+  color: var(--color-negative);
+  font-weight: 500;
+}
+
+.loans-list__item-due-now {
+  color: var(--color-negative);
+  font-weight: 600;
+}
+
+.loans-list__item-due-soon-text {
+  color: var(--color-warning);
+  font-weight: 500;
+}
+
+.loans-list__empty {
+  color: var(--text-disabled);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0;
+}

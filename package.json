@@ -8,9 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:run": "vitest run",
+    "test:watch": "vitest",
     "deploy": "npm run test:run && npm run build && tsx scripts/deploy.ts"
   },
   "dependencies": {

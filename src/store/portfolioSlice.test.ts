@@ -40,7 +40,10 @@ describe('portfolioSlice', () => {
       expect(newState.holdings[0].avgBuyPrice).toBe(150); // (5*100 + 5*200) / 10
     });
 
-    it('should not buy if not enough cash', () => {
+    it('should execute buy even with insufficient cash (validation is in thunk)', () => {
+      // Note: Cash validation is handled by executePendingOrders thunk,
+      // which properly accounts for loans. The reducer always executes
+      // to allow loan-funded purchases to work correctly.
       const initialState = {
         cash: 100,
         holdings: [],
@@ -51,8 +54,10 @@ describe('portfolioSlice', () => {
         buyStock({ symbol: 'AAPL', shares: 5, price: 100 })
       );
 
-      expect(newState.cash).toBe(100);
-      expect(newState.holdings).toHaveLength(0);
+      // Cash can go negative - validation happens before dispatch
+      expect(newState.cash).toBe(-400);
+      expect(newState.holdings).toHaveLength(1);
+      expect(newState.holdings[0].shares).toBe(5);
     });
   });
 

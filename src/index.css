@@ -1,5 +1,8 @@
 @import './variables.css';
 
+/* Medieval Theme Fonts (Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Uncial+Antiqua&display=swap');
+
 :root {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
@@ -37,3 +40,158 @@ button {
 input {
   font-family: inherit;
 }
+
+/* Medieval Theme Styles */
+[data-theme="medieval"] {
+  font-family: 'Pirata One', 'Segoe UI', system-ui, sans-serif;
+}
+
+[data-theme="medieval"] .app {
+  background-image: url('/assets/img/paper_background.jpg');
+  background-size: contain;
+  background-attachment: fixed;
+  background-color: transparent;
+}
+
+[data-theme="medieval"] input {
+  font-family: 'Pirata One', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Uncial Antiqua for headings, buttons, sector badges, and logo */
+[data-theme="medieval"] h1,
+[data-theme="medieval"] h2,
+[data-theme="medieval"] h3,
+[data-theme="medieval"] h4,
+[data-theme="medieval"] h5,
+[data-theme="medieval"] h6,
+[data-theme="medieval"] button,
+[data-theme="medieval"] .stock-list__sector,
+[data-theme="medieval"] .game-start__logo {
+  font-family: 'Uncial Antiqua', 'Segoe UI', system-ui, sans-serif;
+}
+
+[data-theme="medieval"] h2 {
+  color: var(--text-primary);
+}
+
+/* Panel backgrounds - transparent to show image layer */
+[data-theme="medieval"] .left-panel,
+[data-theme="medieval"] .right-panel,
+[data-theme="medieval"] .center-panel {
+  background-color: transparent;
+  position: relative;
+}
+
+/* Panel background image layer */
+.panel-bg {
+  position: absolute;
+  top: 275px;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 400px;
+  object-fit: contain;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 0;
+}
+
+/* Tablet landscape: smaller height for right panel background */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .right-panel > .panel-bg {
+    height: 350px;
+    object-position: right center;
+  }
+}
+
+/* Ensure panel content is above the background image */
+[data-theme="medieval"] .left-panel > *:not(.panel-bg),
+[data-theme="medieval"] .right-panel > *:not(.panel-bg),
+[data-theme="medieval"] .center-panel > *:not(.panel-bg):not(.center-panel__trade-overlay) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Row backgrounds with alpha */
+[data-theme="medieval"] .stock-list__row {
+  background: var(--bg-row-alpha);
+}
+
+[data-theme="medieval"] .stock-list__row:hover {
+  background: var(--bg-row-hover);
+}
+
+[data-theme="medieval"] .stock-list__row--selected {
+  background: var(--bg-row-selected);
+}
+
+/* Header and summary backgrounds (no hover) */
+[data-theme="medieval"] .stock-list__header,
+[data-theme="medieval"] .portfolio-summary__item,
+[data-theme="medieval"] .portfolio-summary__item--total,
+[data-theme="medieval"] .portfolio-summary__item--reserved {
+  background: var(--bg-row-alpha);
+  border: 1px solid var(--border-secondary);
+}
+
+/* Portfolio assets rows */
+[data-theme="medieval"] .portfolio-assets__row {
+  background: var(--bg-row-alpha);
+}
+
+[data-theme="medieval"] .portfolio-assets__row:hover {
+  background: var(--bg-row-hover);
+}
+
+/* Lightweight Charts backgrounds */
+[data-theme="medieval"] .chart-panel__market-index,
+[data-theme="medieval"] .chart-panel__sector-index-chart,
+[data-theme="medieval"] .multi-stock-chart__card,
+[data-theme="medieval"] .multi-stock-chart__card-header,
+[data-theme="medieval"] .trade-history__risk-card,
+[data-theme="medieval"] .trade-history__credit-card {
+  background: var(--bg-row-alpha);
+}
+
+/* Portfolio orders, assets and loans list */
+
+[data-theme="medieval"] .portfolio-orders,
+[data-theme="medieval"] .portfolio-assets,
+[data-theme="medieval"] .loans-list,
+[data-theme="medieval"] .portfolio-shorts {
+  background: var(--bg-row-alpha);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-secondary);
+  padding: 0.5rem;
+}
+
+/* Portfolio shorts selected (gradient override) */
+[data-theme="medieval"] .portfolio__list-item--selected {
+  background: var(--bg-hover);
+}
+
+/* Trade panel */
+[data-theme="medieval"] .trade-panel {
+  background: var(--bg-row-alpha);
+}
+
+/* Chart panel tabs - active state like selected row but without alpha */
+[data-theme="medieval"] .chart-panel__tab--active {
+  background: var(--bg-row-hover);
+  border: 1px solid var(--accent-primary);
+}
+
+/* Borders for rows */
+[data-theme="medieval"] .stock-list__row,
+[data-theme="medieval"] .portfolio-assets__row {
+  border: 1px solid var(--border-primary);
+}
+
+/* Settings sidebar background */
+[data-theme="medieval"] .settings-sidebar {
+  background-image: url('/assets/img/paper_background.jpg');
+  background-size: contain;
+  background-color: var(--bg-panel);
+}
+

@@ -1,27 +1,44 @@
-import type { Stock, CandleData } from '../types';
+import type { Stock, CandleData, Sector } from '../types';
+import { CONFIG, FLOAT_CONFIG } from '../config';
 
 /**
- * Initial stocks with base price, market capitalization, and volatility.
- * - volatility: Typical fluctuation range (0.015 = stable, 0.04 = volatile)
+ * Initial stock definition with sector assignment.
  */
-export const INITIAL_STOCKS = [
-  // Technology
-  { symbol: 'AAPL', name: 'Apple Inc.', basePrice: 175, marketCapBillions: 3000, volatility: 0.018 },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', basePrice: 140, marketCapBillions: 2000, volatility: 0.020 },
-  { symbol: 'MSFT', name: 'Microsoft Corp.', basePrice: 380, marketCapBillions: 3000, volatility: 0.015 },
-  { symbol: 'AMZN', name: 'Amazon.com Inc.', basePrice: 185, marketCapBillions: 1900, volatility: 0.022 },
-  { symbol: 'TSLA', name: 'Tesla Inc.', basePrice: 250, marketCapBillions: 800, volatility: 0.040 },
-  { symbol: 'META', name: 'Meta Platforms', basePrice: 500, marketCapBillions: 1400, volatility: 0.025 },
-  { symbol: 'NVDA', name: 'NVIDIA Corp.', basePrice: 480, marketCapBillions: 3000, volatility: 0.035 },
-  // Finance
-  { symbol: 'JPM', name: 'JPMorgan Chase', basePrice: 200, marketCapBillions: 600, volatility: 0.018 },
-  { symbol: 'BAC', name: 'Bank of America', basePrice: 35, marketCapBillions: 280, volatility: 0.020 },
-  { symbol: 'V', name: 'Visa Inc.', basePrice: 280, marketCapBillions: 580, volatility: 0.015 },
-  { symbol: 'GS', name: 'Goldman Sachs', basePrice: 400, marketCapBillions: 130, volatility: 0.022 },
-  // Industrial
-  { symbol: 'CAT', name: 'Caterpillar Inc.', basePrice: 300, marketCapBillions: 150, volatility: 0.020 },
-  { symbol: 'BA', name: 'Boeing Co.', basePrice: 250, marketCapBillions: 150, volatility: 0.032 },
-  { symbol: 'HON', name: 'Honeywell Intl.', basePrice: 200, marketCapBillions: 130, volatility: 0.016 },
+interface InitialStockDef {
+  symbol: string;
+  name: string;
+  sector: Sector;
+  basePrice: number;
+  marketCapBillions: number;
+  volatility: number;
+}
+
+/**
+ * Initial stocks with base price, market capitalization, sector, and volatility.
+ * - volatility: Typical fluctuation range (0.015 = stable, 0.04 = volatile)
+ * - 16 stocks: 4 per sector (Tech, Finance, Industrial, Commodities)
+ */
+export const INITIAL_STOCKS: InitialStockDef[] = [
+  // Technology (4) - all Large Cap
+  { symbol: 'AAPL', name: 'Apple Inc.', sector: 'tech', basePrice: 175, marketCapBillions: 3700, volatility: 0.018 },
+  { symbol: 'MSFT', name: 'Microsoft Corp.', sector: 'tech', basePrice: 380, marketCapBillions: 3100, volatility: 0.015 },
+  { symbol: 'NVDA', name: 'NVIDIA Corp.', sector: 'tech', basePrice: 480, marketCapBillions: 3300, volatility: 0.035 },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.', sector: 'tech', basePrice: 140, marketCapBillions: 2100, volatility: 0.020 },
+  // Finance (4) - 2 Large Cap, 2 Small/Mid Cap
+  { symbol: 'V', name: 'Visa Inc.', sector: 'finance', basePrice: 280, marketCapBillions: 600, volatility: 0.015 },
+  { symbol: 'BAC', name: 'Bank of America', sector: 'finance', basePrice: 35, marketCapBillions: 180, volatility: 0.020 },
+  { symbol: 'JPM', name: 'JPMorgan Chase', sector: 'finance', basePrice: 200, marketCapBillions: 700, volatility: 0.018 },
+  { symbol: 'GS', name: 'Goldman Sachs', sector: 'finance', basePrice: 400, marketCapBillions: 185, volatility: 0.022 },
+  // Industrial (4) - 1 Large Cap, 3 Small/Mid Cap
+  { symbol: 'BAY', name: 'Bayer AG', sector: 'industrial', basePrice: 20, marketCapBillions: 25, volatility: 0.030 },
+  { symbol: 'EADSY', name: 'Airbus SE', sector: 'industrial', basePrice: 160, marketCapBillions: 135, volatility: 0.028 },
+  { symbol: 'TSLA', name: 'Tesla Inc.', sector: 'industrial', basePrice: 250, marketCapBillions: 1300, volatility: 0.040 },
+  { symbol: 'HON', name: 'Honeywell Intl.', sector: 'industrial', basePrice: 200, marketCapBillions: 145, volatility: 0.016 },
+  // Commodities (4) - 1 Large Cap, 3 Small/Mid Cap
+  { symbol: 'XOM', name: 'Exxon Mobil', sector: 'commodities', basePrice: 110, marketCapBillions: 475, volatility: 0.022 },
+  { symbol: 'BHP', name: 'BHP Group', sector: 'commodities', basePrice: 60, marketCapBillions: 130, volatility: 0.025 },
+  { symbol: 'RIO', name: 'Rio Tinto', sector: 'commodities', basePrice: 65, marketCapBillions: 100, volatility: 0.024 },
+  { symbol: 'NEM', name: 'Newmont Corp.', sector: 'commodities', basePrice: 45, marketCapBillions: 50, volatility: 0.030 },
 ];
 
 /**
@@ -81,22 +98,78 @@ const generateInitialHistory = (
   return history;
 };
 
-export const initializeStocks = (): Stock[] => {
-  return INITIAL_STOCKS.map(({ symbol, name, basePrice, marketCapBillions, volatility }) => {
+/**
+ * Randomly selects stocks from each sector.
+ * @param stocksPerSector - Number of stocks to select per sector (default from config)
+ * @returns Array of selected stock definitions
+ */
+const selectRandomStocksPerSector = (stocksPerSector: number = CONFIG.stocksPerSector): InitialStockDef[] => {
+  const sectors: Sector[] = ['tech', 'finance', 'industrial', 'commodities'];
+  const selectedStocks: InitialStockDef[] = [];
+
+  for (const sector of sectors) {
+    // Get all stocks for this sector
+    const sectorStocks = INITIAL_STOCKS.filter(s => s.sector === sector);
+
+    // Shuffle using Fisher-Yates algorithm
+    const shuffled = [...sectorStocks];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Take the first n stocks (up to available)
+    const count = Math.min(stocksPerSector, shuffled.length);
+    selectedStocks.push(...shuffled.slice(0, count));
+  }
+
+  return selectedStocks;
+};
+
+/**
+ * Initializes stocks with random selection per sector.
+ * @param stocksPerSector - Optional override for stocks per sector (uses config default)
+ */
+/**
+ * Calculates the float shares for a stock.
+ * Float = (marketCap / price) * floatPercentage / scaleFactor
+ */
+export const calculateFloatShares = (
+  marketCapBillions: number,
+  currentPrice: number
+): number => {
+  const totalShares = (marketCapBillions * 1e9) / currentPrice;
+  const floatShares = totalShares * FLOAT_CONFIG.floatPercentage;
+  return Math.floor(floatShares / FLOAT_CONFIG.scaleFactor);
+};
+
+export const initializeStocks = (stocksPerSector?: number): Stock[] => {
+  const selectedStockDefs = selectRandomStocksPerSector(stocksPerSector);
+
+  return selectedStockDefs.map(({ symbol, name, sector, basePrice, marketCapBillions, volatility }) => {
     const history = generateInitialHistory(basePrice, volatility);
     const lastCandle = history[history.length - 1];
     const prevCandle = history[history.length - 2];
     const change = lastCandle.close - prevCandle.close;
     const changePercent = (change / prevCandle.close) * 100;
 
+    // Calculate float shares based on market cap and current price
+    const floatShares = calculateFloatShares(marketCapBillions, lastCandle.close);
+
+    // Fair value starts at current price (fundamentalists will use this)
+    const fairValue = lastCandle.close;
+
     return {
       symbol,
       name,
+      sector,
       currentPrice: lastCandle.close,
       priceHistory: history,
       change: parseFloat(change.toFixed(2)),
       changePercent: parseFloat(changePercent.toFixed(2)),
       marketCapBillions,
+      floatShares,
+      fairValue,
     };
   });
 };
@@ -105,10 +178,15 @@ export const applyTradeImpact = (stock: Stock, type: 'buy' | 'sell', shares: num
   // Simulate market impact: Buys push the price up, sells push it down
   const impactFactor = type === 'buy' ? 1 : -1;
 
-  // Larger orders have more impact (0.1% - 0.5% per share, with upper limit)
-  const baseImpact = 0.001 + Math.random() * 0.004;
-  const volumeMultiplier = Math.min(shares, 50); // Maximum 50 shares for the effect
-  const priceChange = stock.currentPrice * baseImpact * volumeMultiplier * impactFactor;
+  // Reduced impact: 0.01% - 0.05% per share (was 0.1% - 0.5%)
+  const baseImpact = 0.0001 + Math.random() * 0.0004;
+  // Reduced volume multiplier cap (was 50)
+  const volumeMultiplier = Math.min(shares, 20);
+  const rawPriceChange = stock.currentPrice * baseImpact * volumeMultiplier * impactFactor;
+
+  // Circuit breaker: max ±2% price change per trade
+  const maxChange = stock.currentPrice * 0.02;
+  const priceChange = Math.max(-maxChange, Math.min(maxChange, rawPriceChange));
 
   const newPrice = Math.max(0.5, stock.currentPrice + priceChange);
   const lastCandle = stock.priceHistory[stock.priceHistory.length - 1];
@@ -134,10 +212,25 @@ export const applyTradeImpact = (stock: Stock, type: 'buy' | 'sell', shares: num
   };
 };
 
-export const generateNewCandle = (stock: Stock): Stock => {
+/**
+ * Generates a new candle for a stock with optional sector influence.
+ * @param stock - The stock to generate a new candle for
+ * @param sectorInfluence - Optional sector influence (-0.03 to +0.03, default 0)
+ * @param volatilityMultiplier - Market phase volatility multiplier (default 1.0)
+ */
+export const generateNewCandle = (
+  stock: Stock,
+  sectorInfluence: number = 0,
+  volatilityMultiplier: number = 1.0
+): Stock => {
   const lastCandle = stock.priceHistory[stock.priceHistory.length - 1];
-  const volatility = stock.currentPrice * 0.025;
-  const trend = (Math.random() - 0.48) * volatility;
+  const baseVolatility = stock.currentPrice * 0.025;
+  const volatility = baseVolatility * volatilityMultiplier;
+
+  // Base trend with sector influence (0.50 = neutral, no up/down bias)
+  const baseTrend = (Math.random() - 0.50) * volatility;
+  const sectorBias = sectorInfluence * stock.currentPrice;
+  const trend = baseTrend + sectorBias;
 
   const open = lastCandle.close;
   const close = Math.max(1, open + trend);

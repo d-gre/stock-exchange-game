@@ -1,0 +1,474 @@
+/* ==========================================================================
+   VIRTUAL PLAYERS LIST (BEM)
+   Block: virtual-players-list
+   Displays virtual players with their portfolios and transactions
+   ========================================================================== */
+
+.virtual-players-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   PLAYER CARD
+   ========================================================================== */
+
+.virtual-players-list__player {
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-secondary);
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.virtual-players-list__player:hover {
+  border-color: var(--border-hover);
+}
+
+.virtual-players-list__player--expanded {
+  border-color: var(--accent-primary);
+}
+
+.virtual-players-list__player--flash {
+  animation: virtualPlayersListFlash 0.8s ease-out;
+}
+
+@keyframes virtualPlayersListFlash {
+  0% {
+    background: var(--color-subtle);
+    border-color: var(--border-secondary);
+  }
+  100% {
+    background: var(--bg-card);
+    box-shadow: none;
+  }
+}
+
+/* ==========================================================================
+   PLAYER HEADER
+   ========================================================================== */
+
+.virtual-players-list__player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.75rem;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: background 0.2s;
+}
+
+.virtual-players-list__player-header:hover {
+  background: var(--bg-hover);
+}
+
+.virtual-players-list__player-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.virtual-players-list__player-name {
+  font-weight: bold;
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+}
+
+.virtual-players-list__player-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.virtual-players-list__player-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
+.virtual-players-list__player-value {
+  color: var(--color-positive);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.virtual-players-list__expand-icon {
+  color: var(--text-disabled);
+  font-size: 0.7rem;
+}
+
+/* ==========================================================================
+   RISK BADGE
+   ========================================================================== */
+
+.virtual-players-list__risk-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+.virtual-players-list__risk-badge--averse {
+  background: var(--alpha-info);
+  color: var(--color-info-light);
+}
+
+.virtual-players-list__risk-badge--neutral {
+  background: var(--alpha-neutral);
+  color: var(--color-neutral);
+}
+
+.virtual-players-list__risk-badge--seeking {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--color-warning-light);
+}
+
+[data-theme="light"] .virtual-players-list__risk-badge--averse {
+  color: var(--color-info-dark);
+}
+
+[data-theme="light"] .virtual-players-list__risk-badge--neutral {
+  color: var(--text-faint);
+}
+
+[data-theme="light"] .virtual-players-list__risk-badge--seeking {
+  color: var(--color-warning-dark);
+}
+
+/* ==========================================================================
+   PLAYER DETAILS
+   ========================================================================== */
+
+.virtual-players-list__player-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  border-top: 1px solid var(--border-secondary);
+  padding-top: 0.5rem;
+}
+
+.virtual-players-list__cash {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.virtual-players-list__debt {
+  font-size: 0.75rem;
+  color: var(--color-warning);
+}
+
+.virtual-players-list__holdings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.virtual-players-list__holding {
+  background: var(--bg-panel);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   TRANSACTIONS
+   ========================================================================== */
+
+.virtual-players-list__transactions {
+  border-top: 1px solid var(--border-secondary);
+  background: var(--bg-card-alt);
+}
+
+.virtual-players-list__tx-header {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.virtual-players-list__tx-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.virtual-players-list__no-transactions {
+  color: var(--text-disabled);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+.virtual-players-list__tx-wrapper {
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.virtual-players-list__tx-wrapper:last-child {
+  border-bottom: none;
+}
+
+.virtual-players-list__tx-wrapper--expanded {
+  background: var(--bg-panel);
+}
+
+.virtual-players-list__tx-wrapper--expanded .virtual-players-list__tx {
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.virtual-players-list__tx {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.virtual-players-list__tx:last-child {
+  border-bottom: none;
+}
+
+.virtual-players-list__tx--buy {
+  border-left: 3px solid var(--color-positive);
+}
+
+.virtual-players-list__tx--sell {
+  border-left: 3px solid var(--color-negative);
+}
+
+.virtual-players-list__tx--clickable {
+  cursor: pointer;
+}
+
+.virtual-players-list__tx--clickable:hover {
+  background: var(--bg-hover);
+}
+
+.virtual-players-list__tx-type {
+  font-weight: bold;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  min-width: 38px;
+  text-align: center;
+}
+
+.virtual-players-list__tx-type--buy {
+  background: var(--alpha-positive);
+  color: var(--color-positive);
+}
+
+.virtual-players-list__tx-type--sell {
+  background: var(--alpha-negative);
+  color: var(--color-negative);
+}
+
+.virtual-players-list__tx-symbol {
+  color: var(--text-emphasis);
+  font-weight: bold;
+  min-width: 45px;
+}
+
+.virtual-players-list__tx-shares {
+  color: var(--text-muted);
+  min-width: 30px;
+}
+
+.virtual-players-list__tx-price {
+  color: var(--text-secondary);
+  flex: 1;
+  text-align: right;
+}
+
+.virtual-players-list__tx-time {
+  color: var(--text-disabled);
+  font-size: 0.65rem;
+}
+
+.virtual-players-list__tx-expand-icon {
+  color: var(--text-disabled);
+  font-size: 0.6rem;
+  margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   TRANSACTION DETAILS
+   ========================================================================== */
+
+.virtual-players-list__tx-details {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  background: var(--bg-card-alt);
+}
+
+.virtual-players-list__tx-details-header {
+  color: var(--accent-primary);
+  font-weight: bold;
+  font-size: 0.7rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.virtual-players-list__tx-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.virtual-players-list__tx-detail-row:last-of-type {
+  border-bottom: none;
+}
+
+.virtual-players-list__tx-detail-label {
+  color: var(--text-muted);
+}
+
+.virtual-players-list__tx-detail-value {
+  color: var(--text-emphasis);
+  font-weight: 500;
+}
+
+/* Volatility Modifiers */
+.virtual-players-list__tx-detail-value--volatility-low {
+  color: var(--color-positive);
+}
+
+.virtual-players-list__tx-detail-value--volatility-medium {
+  color: var(--color-warning-light);
+}
+
+.virtual-players-list__tx-detail-value--volatility-high {
+  color: var(--color-negative);
+}
+
+/* Trend Modifiers */
+.virtual-players-list__tx-detail-value--trend-up {
+  color: var(--color-positive);
+}
+
+.virtual-players-list__tx-detail-value--trend-down {
+  color: var(--color-negative);
+}
+
+/* Profit/Loss Modifiers */
+.virtual-players-list__tx-detail-value--profit {
+  color: var(--color-positive);
+}
+
+.virtual-players-list__tx-detail-value--loss {
+  color: var(--color-negative);
+}
+
+/* Risk Modifiers in Details */
+.virtual-players-list__tx-detail-value--risk-averse {
+  color: var(--color-info-light);
+}
+
+.virtual-players-list__tx-detail-value--risk-neutral {
+  color: var(--color-neutral);
+}
+
+.virtual-players-list__tx-detail-value--risk-seeking {
+  color: var(--color-warning-light);
+}
+
+[data-theme="light"] .virtual-players-list__tx-detail-value--risk-averse {
+  color: var(--color-info-dark);
+}
+
+[data-theme="light"] .virtual-players-list__tx-detail-value--risk-seeking {
+  color: var(--color-warning-dark);
+}
+
+[data-theme="light"] .virtual-players-list__tx-detail-value--volatility-medium {
+  color: var(--color-warning-dark);
+}
+
+/* Reasoning */
+.virtual-players-list__tx-reasoning {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--border-secondary);
+  color: var(--color-purple-light);
+  font-style: italic;
+  font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   VIRTUAL PLAYERS PANEL (Collapsible Container)
+   Block: virtual-players-panel
+   Wrapper for VirtualPlayersList with collapsible header
+   ========================================================================== */
+
+.virtual-players-panel {
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-secondary);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.virtual-players-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  cursor: pointer;
+  background: var(--bg-section);
+  border-bottom: 1px solid var(--border-secondary);
+  transition: background 0.2s;
+}
+
+.virtual-players-panel__header:hover {
+  background: var(--bg-hover);
+}
+
+.virtual-players-panel__title {
+  font-weight: bold;
+  color: var(--accent-primary);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.virtual-players-panel__count {
+  font-weight: normal;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.virtual-players-panel__toggle {
+  color: var(--text-disabled);
+  font-size: 0.7rem;
+  transition: transform 0.2s ease-out;
+}
+
+.virtual-players-panel--expanded .virtual-players-panel__toggle {
+  transform: rotate(180deg);
+}
+
+.virtual-players-panel__content-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease-out;
+}
+
+.virtual-players-panel--expanded .virtual-players-panel__content-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.virtual-players-panel__content {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.virtual-players-panel__content-inner {
+  padding: 0.75rem;
+}

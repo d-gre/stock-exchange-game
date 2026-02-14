@@ -17,12 +17,12 @@
 
 .notification-toast {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   padding: 1rem;
   background: var(--bg-card);
   border-radius: 10px;
-  border-left: 4px solid var(--text-muted);
+  border-left: 4px solid var(--color-muted);
   box-shadow: 0 8px 32px var(--shadow-lg);
   animation: notification-toast-slide-in 0.3s ease-out;
 }
@@ -48,6 +48,7 @@
 }
 
 .notification-toast--warning .notification-toast__icon {
+  margin-top: 0.2rem;
   color: var(--color-warning);
 }
 
@@ -76,6 +77,7 @@
 
 .notification-toast--info .notification-toast__icon {
   color: var(--accent-primary);
+  display: flex;
 }
 
 /* ==========================================================================
@@ -94,8 +96,7 @@
 
 .notification-toast__title {
   font-weight: 600;
-  color: var(--text-white);
-  margin-bottom: 0.25rem;
+  color: var(--text-emphasis);
 }
 
 .notification-toast__message {
@@ -113,11 +114,13 @@
   padding: 0.25rem;
   border-radius: 4px;
   transition: all 0.2s;
+  display: flex;
+  margin-top: 2px;
 }
 
 .notification-toast__close:hover {
-  background: var(--alpha-white);
-  color: var(--text-white);
+  background: var(--alpha-subtle);
+  color: var(--text-emphasis);
 }
 
 /* ==========================================================================
@@ -162,4 +165,18 @@
 
 .notification-toast__action-btn--delete:hover {
   background: rgba(239, 83, 80, 0.3);
+}
+
+/* ==========================================================================
+   CLICKABLE (for loan-related notifications)
+   ========================================================================== */
+
+.notification-toast--clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.notification-toast--clickable:hover {
+  transform: translateX(-4px);
+  box-shadow: 0 8px 40px var(--shadow-lg);
 }

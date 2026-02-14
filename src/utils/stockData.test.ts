@@ -1,34 +1,64 @@
 import { describe, it, expect } from 'vitest';
-import { initializeStocks, generateNewCandle, applyTradeImpact } from './stockData';
+import { initializeStocks, generateNewCandle, applyTradeImpact, INITIAL_STOCKS } from './stockData';
 import type { Stock } from '../types';
+import { CONFIG } from '../config';
 
 describe('stockData', () => {
   describe('initializeStocks', () => {
-    it('should return 14 stocks', () => {
+    it('should return default number of stocks per sector (3 × 4 = 12)', () => {
       const stocks = initializeStocks();
-      expect(stocks).toHaveLength(14);
+      expect(stocks).toHaveLength(CONFIG.stocksPerSector * 4);
     });
 
-    it('should include all expected symbols', () => {
+    it('should return all 16 stocks when stocksPerSector is 4', () => {
+      const stocks = initializeStocks(4);
+      expect(stocks).toHaveLength(16);
+    });
+
+    it('should randomly select stocks from valid symbols per sector', () => {
       const stocks = initializeStocks();
-      const symbols = stocks.map(s => s.symbol);
-      // Tech
-      expect(symbols).toContain('AAPL');
-      expect(symbols).toContain('GOOGL');
-      expect(symbols).toContain('MSFT');
-      expect(symbols).toContain('AMZN');
-      expect(symbols).toContain('TSLA');
-      expect(symbols).toContain('META');
-      expect(symbols).toContain('NVDA');
-      // Finanz
-      expect(symbols).toContain('JPM');
-      expect(symbols).toContain('BAC');
-      expect(symbols).toContain('V');
-      expect(symbols).toContain('GS');
-      // Industrie
-      expect(symbols).toContain('CAT');
-      expect(symbols).toContain('BA');
-      expect(symbols).toContain('HON');
+      const validTechSymbols = INITIAL_STOCKS.filter(s => s.sector === 'tech').map(s => s.symbol);
+      const validFinanceSymbols = INITIAL_STOCKS.filter(s => s.sector === 'finance').map(s => s.symbol);
+      const validIndustrialSymbols = INITIAL_STOCKS.filter(s => s.sector === 'industrial').map(s => s.symbol);
+      const validCommoditiesSymbols = INITIAL_STOCKS.filter(s => s.sector === 'commodities').map(s => s.symbol);
+
+      const techStocks = stocks.filter(s => s.sector === 'tech');
+      const financeStocks = stocks.filter(s => s.sector === 'finance');
+      const industrialStocks = stocks.filter(s => s.sector === 'industrial');
+      const commoditiesStocks = stocks.filter(s => s.sector === 'commodities');
+
+      // All selected stocks should be from valid symbols
+      techStocks.forEach(s => expect(validTechSymbols).toContain(s.symbol));
+      financeStocks.forEach(s => expect(validFinanceSymbols).toContain(s.symbol));
+      industrialStocks.forEach(s => expect(validIndustrialSymbols).toContain(s.symbol));
+      commoditiesStocks.forEach(s => expect(validCommoditiesSymbols).toContain(s.symbol));
+    });
+
+    it('should have correct number of stocks per sector based on config', () => {
+      const stocks = initializeStocks();
+      const sectorCounts = stocks.reduce((acc, s) => {
+        acc[s.sector] = (acc[s.sector] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      expect(sectorCounts.tech).toBe(CONFIG.stocksPerSector);
+      expect(sectorCounts.finance).toBe(CONFIG.stocksPerSector);
+      expect(sectorCounts.industrial).toBe(CONFIG.stocksPerSector);
+      expect(sectorCounts.commodities).toBe(CONFIG.stocksPerSector);
+    });
+
+    it('should respect custom stocksPerSector parameter', () => {
+      const stocks = initializeStocks(2);
+      const sectorCounts = stocks.reduce((acc, s) => {
+        acc[s.sector] = (acc[s.sector] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      expect(sectorCounts.tech).toBe(2);
+      expect(sectorCounts.finance).toBe(2);
+      expect(sectorCounts.industrial).toBe(2);
+      expect(sectorCounts.commodities).toBe(2);
+      expect(stocks).toHaveLength(8);
     });
 
     it('should have valid price history for each stock', () => {
@@ -66,6 +96,7 @@ describe('stockData', () => {
     const createMockStock = (): Stock => ({
       symbol: 'TEST',
       name: 'Test Stock',
+      sector: 'tech',
       currentPrice: 100,
       change: 0,
       changePercent: 0,
@@ -116,6 +147,7 @@ describe('stockData', () => {
       const stock: Stock = {
         symbol: 'TEST',
         name: 'Test Stock',
+        sector: 'tech',
         currentPrice: 1,
         change: 0,
         changePercent: 0,
@@ -136,6 +168,7 @@ describe('stockData', () => {
     const createMockStock = (): Stock => ({
       symbol: 'TEST',
       name: 'Test Stock',
+      sector: 'tech',
       currentPrice: 100,
       change: 0,
       changePercent: 0,
@@ -186,6 +219,7 @@ describe('stockData', () => {
       const stock: Stock = {
         symbol: 'TEST',
         name: 'Test Stock',
+        sector: 'tech',
         currentPrice: 1,
         change: 0,
         changePercent: 0,
@@ -196,6 +230,23 @@ describe('stockData', () => {
       };
       const updated = applyTradeImpact(stock, 'sell', 100);
       expect(updated.currentPrice).toBeGreaterThanOrEqual(0.5);
+    });
+
+    it('should limit price change to max 2% (circuit breaker)', () => {
+      const stock = createMockStock();
+      // Even with a very large trade, price change should be capped at 2%
+      const updated = applyTradeImpact(stock, 'buy', 10000);
+      const priceChange = updated.currentPrice - stock.currentPrice;
+      const maxAllowedChange = stock.currentPrice * 0.02;
+      expect(priceChange).toBeLessThanOrEqual(maxAllowedChange);
+    });
+
+    it('should limit negative price change to max -2% (circuit breaker)', () => {
+      const stock = createMockStock();
+      const updated = applyTradeImpact(stock, 'sell', 10000);
+      const priceChange = stock.currentPrice - updated.currentPrice;
+      const maxAllowedChange = stock.currentPrice * 0.02;
+      expect(priceChange).toBeLessThanOrEqual(maxAllowedChange);
     });
   });
 });

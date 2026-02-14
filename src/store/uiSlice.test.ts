@@ -5,7 +5,13 @@ import uiReducer, {
   closeTradeModal,
   openSettings,
   closeSettings,
+  openHelp,
+  closeHelp,
   setChartTab,
+  openLoanModal,
+  closeLoanModal,
+  highlightLoan,
+  clearLoanHighlight,
 } from './uiSlice';
 
 describe('uiSlice', () => {
@@ -15,6 +21,10 @@ describe('uiSlice', () => {
     settingsOpen: false,
     helpOpen: false,
     chartTab: 'stock' as const,
+    loanModalOpen: false,
+    highlightedLoanId: null as string | null,
+    debugModalOpen: false,
+    debugModalContent: '',
     ...overrides,
   });
 
@@ -69,6 +79,34 @@ describe('uiSlice', () => {
     });
   });
 
+  describe('help', () => {
+    it('should open help', () => {
+      const initialState = createInitialState();
+      const newState = uiReducer(initialState, openHelp());
+      expect(newState.helpOpen).toBe(true);
+    });
+
+    it('should close help', () => {
+      const initialState = createInitialState({ helpOpen: true });
+      const newState = uiReducer(initialState, closeHelp());
+      expect(newState.helpOpen).toBe(false);
+    });
+  });
+
+  describe('loanModal', () => {
+    it('should open loan modal', () => {
+      const initialState = createInitialState();
+      const newState = uiReducer(initialState, openLoanModal());
+      expect(newState.loanModalOpen).toBe(true);
+    });
+
+    it('should close loan modal', () => {
+      const initialState = createInitialState({ loanModalOpen: true });
+      const newState = uiReducer(initialState, closeLoanModal());
+      expect(newState.loanModalOpen).toBe(false);
+    });
+  });
+
   describe('chartTab', () => {
     it('should set chart tab to index', () => {
       const initialState = createInitialState();
@@ -80,6 +118,38 @@ describe('uiSlice', () => {
       const initialState = createInitialState({ chartTab: 'index' as const });
       const newState = uiReducer(initialState, setChartTab('stock'));
       expect(newState.chartTab).toBe('stock');
+    });
+
+    it('should set chart tab to history', () => {
+      const initialState = createInitialState();
+      const newState = uiReducer(initialState, setChartTab('history'));
+      expect(newState.chartTab).toBe('history');
+    });
+  });
+
+  describe('loanHighlight', () => {
+    it('should highlight a loan by id', () => {
+      const initialState = createInitialState();
+      const newState = uiReducer(initialState, highlightLoan('loan-123'));
+      expect(newState.highlightedLoanId).toBe('loan-123');
+    });
+
+    it('should replace existing highlight with new loan id', () => {
+      const initialState = createInitialState({ highlightedLoanId: 'loan-123' });
+      const newState = uiReducer(initialState, highlightLoan('loan-456'));
+      expect(newState.highlightedLoanId).toBe('loan-456');
+    });
+
+    it('should clear loan highlight', () => {
+      const initialState = createInitialState({ highlightedLoanId: 'loan-123' });
+      const newState = uiReducer(initialState, clearLoanHighlight());
+      expect(newState.highlightedLoanId).toBeNull();
+    });
+
+    it('should handle clearing when no highlight is set', () => {
+      const initialState = createInitialState();
+      const newState = uiReducer(initialState, clearLoanHighlight());
+      expect(newState.highlightedLoanId).toBeNull();
     });
   });
 });

@@ -3,6 +3,7 @@ import { createChart, CandlestickSeries, LineSeries, AreaSeries } from 'lightwei
 import type { IChartApi, ISeriesApi, CandlestickData, LineData, AreaData, Time } from 'lightweight-charts';
 import type { CandleData } from '../types';
 import type { Theme } from '../hooks/useTheme';
+import type { FormatLocale } from '../utils/formatting';
 import { getDefaultChartOptions, getChartColors, createResizeHandler, setupResizeListeners } from '../utils/chartUtils';
 
 interface ChartProps {
@@ -14,15 +15,51 @@ interface ChartProps {
   autoHeight?: boolean;
   /** Current theme for color styling */
   theme?: Theme;
+  /** Custom line color for line/area charts (overrides theme default) */
+  lineColor?: string;
+  /** Locale for price formatting on Y-axis */
+  locale?: FormatLocale;
 }
 
-const CandlestickChart = ({ data, type = 'candlestick', height = 400, compact = false, autoHeight = false, theme = 'dark' }: ChartProps) => {
+const CandlestickChart = ({ data, type = 'candlestick', height = 400, compact = false, autoHeight = false, theme = 'dark', lineColor, locale = 'en' }: ChartProps) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const seriesRef = useRef<ISeriesApi<any> | null>(null);
+  // Keep a ref to data for use in the chart creation effect without making data a dependency
+  const dataRef = useRef(data);
+  dataRef.current = data;
 
-  // Create chart and recreate on type/size changes
+  // Helper function to set chart data based on type
+  const setChartData = (series: ISeriesApi<'Candlestick' | 'Line' | 'Area'>, chart: IChartApi, chartData: CandleData[], chartType: string) => {
+    if (chartData.length === 0) return;
+
+    if (chartType === 'line') {
+      const lineData: LineData[] = chartData.map(candle => ({
+        time: candle.time as Time,
+        value: candle.close,
+      }));
+      series.setData(lineData);
+    } else if (chartType === 'area') {
+      const areaData: AreaData[] = chartData.map(candle => ({
+        time: candle.time as Time,
+        value: candle.close,
+      }));
+      series.setData(areaData);
+    } else {
+      const candleData: CandlestickData[] = chartData.map(candle => ({
+        time: candle.time as Time,
+        open: candle.open,
+        high: candle.high,
+        low: candle.low,
+        close: candle.close,
+      }));
+      series.setData(candleData);
+    }
+    chart.timeScale().fitContent();
+  };
+
+  // Create chart and recreate on type/size/theme changes
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
@@ -33,20 +70,26 @@ const CandlestickChart = ({ data, type = 'candlestick', height = 400, compact = 
     const chart = createChart(container, getDefaultChartOptions(
       { width: container.clientWidth, height: chartHeight },
       { timeVisible: !compact, secondsVisible: false },
-      theme
+      theme,
+      locale
     ));
+
+    const effectiveLineColor = lineColor || colors.lineColor;
+    // Generate area gradient colors from line color
+    const areaTopColor = lineColor ? `${lineColor}40` : colors.areaTopColor;
+    const areaBottomColor = lineColor ? `${lineColor}00` : colors.areaBottomColor;
 
     let series;
     if (type === 'line') {
       series = chart.addSeries(LineSeries, {
-        color: colors.lineColor,
+        color: effectiveLineColor,
         lineWidth: 2,
       });
     } else if (type === 'area') {
       series = chart.addSeries(AreaSeries, {
-        topColor: colors.areaTopColor,
-        bottomColor: colors.areaBottomColor,
-        lineColor: colors.lineColor,
+        topColor: areaTopColor,
+        bottomColor: areaBottomColor,
+        lineColor: effectiveLineColor,
         lineWidth: 2,
       });
     } else {
@@ -62,6 +105,9 @@ const CandlestickChart = ({ data, type = 'candlestick', height = 400, compact = 
     chartRef.current = chart;
     seriesRef.current = series;
 
+    // Set initial data using ref (not dependency) to avoid recreating chart on data changes
+    setChartData(series, chart, dataRef.current, type);
+
     const handleResize = createResizeHandler({
       container,
       chart,
@@ -70,33 +116,14 @@ const CandlestickChart = ({ data, type = 'candlestick', height = 400, compact = 
     });
 
     return setupResizeListeners(container, chart, handleResize);
-  }, [type, height, compact, autoHeight, theme]);
+    // Note: data is NOT a dependency here - data updates are handled by the second useEffect
+    // to avoid recreating the entire chart on every price update
+  }, [type, height, compact, autoHeight, theme, lineColor, locale]);
 
+  // Update data when only data changes (chart already exists)
   useEffect(() => {
-    if (seriesRef.current && data.length > 0) {
-      if (type === 'line') {
-        const lineData: LineData[] = data.map(candle => ({
-          time: candle.time as Time,
-          value: candle.close,
-        }));
-        seriesRef.current.setData(lineData);
-      } else if (type === 'area') {
-        const areaData: AreaData[] = data.map(candle => ({
-          time: candle.time as Time,
-          value: candle.close,
-        }));
-        seriesRef.current.setData(areaData);
-      } else {
-        const chartData: CandlestickData[] = data.map(candle => ({
-          time: candle.time as Time,
-          open: candle.open,
-          high: candle.high,
-          low: candle.low,
-          close: candle.close,
-        }));
-        seriesRef.current.setData(chartData);
-      }
-      chartRef.current?.timeScale().fitContent();
+    if (seriesRef.current && chartRef.current && data.length > 0) {
+      setChartData(seriesRef.current, chartRef.current, data, type);
     }
   }, [data, type]);
 

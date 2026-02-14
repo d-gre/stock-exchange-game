@@ -51,7 +51,7 @@
 }
 
 .close-btn:hover {
-  color: var(--text-white);
+  color: var(--text-emphasis);
 }
 
 .modal-body {
@@ -83,7 +83,7 @@
   padding: 1rem;
   background: var(--bg-card);
   border: 2px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -133,7 +133,7 @@
 .trade-info {
   background: var(--bg-card);
   padding: 0.75rem 0;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   margin-bottom: 1rem;
 }
 
@@ -167,8 +167,8 @@
   padding: 0.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
-  color: var(--text-white);
+  border-radius: 0.5rem;
+  color: var(--text-emphasis);
   font-size: 1rem;
 }
 
@@ -193,8 +193,8 @@
   padding: 0.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
-  color: var(--text-white);
+  border-radius: 0.5rem;
+  color: var(--text-emphasis);
   font-size: 1rem;
   cursor: pointer;
   transition: border-color 0.2s;
@@ -222,7 +222,7 @@
   margin-top: 4px;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 4px 12px var(--shadow-lg);
   z-index: 100;
@@ -287,8 +287,8 @@
   padding: 0.75rem;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
-  color: var(--text-white);
+  border-radius: 0.5rem;
+  color: var(--text-emphasis);
   font-size: 1rem;
 }
 
@@ -299,15 +299,15 @@
 
 .max-btn {
   padding: 0.75rem 1rem;
-  background: var(--border-secondary);
+  background: var(--color-subtle);
   border: none;
-  border-radius: 8px;
-  color: var(--text-white);
+  border-radius: 0.5rem;
+  color: var(--text-emphasis);
   cursor: pointer;
 }
 
 .max-btn:hover {
-  background: var(--border-hover);
+  background: var(--color-subtle-hover);
 }
 
 /* Price Input Wrapper */
@@ -316,7 +316,7 @@
   align-items: center;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: 0.5rem;
   overflow: hidden;
 }
 
@@ -336,7 +336,7 @@
   padding: 0.75rem;
   background: transparent;
   border: none;
-  color: var(--text-white);
+  color: var(--text-emphasis);
   font-size: 1rem;
 }
 
@@ -360,8 +360,8 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem;
-  background: var(--gradient-accent);
-  border-radius: 8px;
+  background: var(--bg-accent-subtle);
+  border-radius: 0.5rem;
   font-size: 1.1rem;
 }
 
@@ -379,19 +379,19 @@
   flex: 1;
   padding: 0.75rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .cancel-btn {
-  background: var(--border-secondary);
-  color: var(--text-white);
+  background: var(--color-subtle);
+  color: var(--text-emphasis);
 }
 
 .cancel-btn:hover {
-  background: var(--border-hover);
+  background: var(--color-subtle-hover);
 }
 
 .confirm-btn.buy {

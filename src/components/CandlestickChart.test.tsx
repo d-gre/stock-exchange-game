@@ -257,5 +257,26 @@ describe('CandlestickChart', () => {
         ])
       );
     });
+
+    it('should re-apply data when theme changes (fixes empty chart on theme switch)', () => {
+      const { rerender } = render(<CandlestickChart data={mockData} theme="dark" />);
+
+      // Clear mocks after initial render
+      mockSetData.mockClear();
+
+      // Change theme without changing data
+      rerender(<CandlestickChart data={mockData} theme="medieval" />);
+
+      // Data should be re-applied even though data prop didn't change
+      expect(mockSetData).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            time: 1000,
+            open: 100,
+            close: 105,
+          }),
+        ])
+      );
+    });
   });
 });

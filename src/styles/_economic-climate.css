@@ -1,0 +1,243 @@
+/* ==========================================================================
+   ECONOMIC CLIMATE (BEM)
+   Block: economic-climate
+   Displays the current economic climate: Fear & Greed Index, global phase,
+   and sector-specific phases. NOT collapsible (always visible).
+   ========================================================================== */
+
+.economic-climate {
+  background: var(--bg-card);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-secondary);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.economic-climate__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--bg-section);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.economic-climate__title {
+  font-weight: bold;
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   CONTENT
+   ========================================================================== */
+
+.economic-climate__content {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ==========================================================================
+   FEAR & GREED INDEX
+   ========================================================================== */
+
+.economic-climate__fear-greed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.economic-climate__fear-greed-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.economic-climate__fear-greed-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.economic-climate__fear-greed-description {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: left;
+  flex: 1;
+}
+
+.economic-climate__fear-greed-container {
+  height: 20px;
+  background: var(--bg-card-alt);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.economic-climate__fear-greed-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease, background 0.3s ease;
+}
+
+.economic-climate__fear-greed-bar--extremeFear {
+  background: linear-gradient(90deg, var(--color-negative-dark) 0%, var(--color-negative) 100%);
+}
+
+.economic-climate__fear-greed-bar--fear {
+  background: linear-gradient(90deg, var(--color-warning-dark) 0%, var(--color-warning) 100%);
+}
+
+.economic-climate__fear-greed-bar--neutral {
+  background: linear-gradient(90deg, var(--color-neutral) 0%, var(--color-muted) 100%);
+}
+
+.economic-climate__fear-greed-bar--greed {
+  background: linear-gradient(90deg, var(--color-positive-dark) 0%, var(--color-positive) 100%);
+}
+
+.economic-climate__fear-greed-bar--extremeGreed {
+  background: linear-gradient(90deg, var(--color-positive) 0%, var(--color-info) 100%);
+}
+
+.economic-climate__fear-greed-value {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--text-on-dark);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.economic-climate__fear-greed-level {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   GLOBAL PHASE
+   ========================================================================== */
+
+.economic-climate__global-phase {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--bg-panel);
+  border-radius: 6px;
+  border: 1px solid var(--border-primary);
+}
+
+.economic-climate__section-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   PHASE BADGES
+   ========================================================================== */
+
+.economic-climate__phase-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.economic-climate__phase-badge--small {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+}
+
+/* Phase-specific colors - use --text-on-dark for consistent light text on colored backgrounds */
+.economic-climate__phase-badge--prosperity {
+  background: var(--color-positive);
+  color: var(--text-on-dark);
+}
+
+.economic-climate__phase-badge--boom {
+  background: var(--color-info);
+  color: var(--text-on-dark);
+}
+
+.economic-climate__phase-badge--correction {
+  background: var(--color-warning);
+  color: var(--text-on-colored);
+}
+
+.economic-climate__phase-badge--panic {
+  background: var(--color-negative);
+  color: var(--text-on-dark);
+}
+
+.economic-climate__phase-badge--recession {
+  background: var(--color-neutral);
+  color: var(--text-on-dark);
+}
+
+/* ==========================================================================
+   SECTOR PHASES
+   ========================================================================== */
+
+.economic-climate__sector-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.economic-climate__sector-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.4rem;
+}
+
+.economic-climate__sector-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  background: var(--bg-panel);
+  border-radius: 4px;
+  border: 1px solid var(--border-primary);
+}
+
+.economic-climate__sector-name {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (min-width: 481px) {
+  .economic-climate__sector-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ==========================================================================
+   THEME ADJUSTMENTS
+   ========================================================================== */
+
+/* Fear & Greed bar text needs extra contrast in medieval theme */
+[data-theme="medieval"] .economic-climate__fear-greed-value {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}

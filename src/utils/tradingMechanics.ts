@@ -9,14 +9,16 @@ import type { TradingMechanics, TradeExecution } from '../types';
  * @param basePrice - Current market price
  * @param type - 'buy' or 'sell'
  * @param mechanics - Trading mechanics for the current game mode
+ * @param spreadMultiplier - Market Maker spread multiplier (default 1.0)
  * @returns Spread cost (positive for buyers, negative for sellers)
  */
 export const calculateSpread = (
   basePrice: number,
   type: 'buy' | 'sell',
-  mechanics: TradingMechanics
+  mechanics: TradingMechanics,
+  spreadMultiplier: number = 1.0
 ): number => {
-  const halfSpread = mechanics.spreadPercent / 2;
+  const halfSpread = (mechanics.spreadPercent * spreadMultiplier) / 2;
   const direction = type === 'buy' ? 1 : -1;
   return basePrice * halfSpread * direction;
 };
@@ -86,15 +88,17 @@ export const calculateFee = (
  * @param shares - Number of shares
  * @param type - 'buy' or 'sell'
  * @param mechanics - Trading mechanics for the current game mode
+ * @param spreadMultiplier - Market Maker spread multiplier (default 1.0)
  * @returns Effective price per share
  */
 export const calculateEffectivePrice = (
   basePrice: number,
   shares: number,
   type: 'buy' | 'sell',
-  mechanics: TradingMechanics
+  mechanics: TradingMechanics,
+  spreadMultiplier: number = 1.0
 ): number => {
-  const spreadCost = calculateSpread(basePrice, type, mechanics);
+  const spreadCost = calculateSpread(basePrice, type, mechanics, spreadMultiplier);
   const slippageCost = calculateSlippage(basePrice, shares, type, mechanics);
 
   // Convert total costs to price per share
@@ -110,15 +114,17 @@ export const calculateEffectivePrice = (
  * @param shares - Number of shares
  * @param type - 'buy' or 'sell'
  * @param mechanics - Trading mechanics for the current game mode
+ * @param spreadMultiplier - Market Maker spread multiplier (default 1.0)
  * @returns Complete trade execution with breakdown
  */
 export const calculateTradeExecution = (
   basePrice: number,
   shares: number,
   type: 'buy' | 'sell',
-  mechanics: TradingMechanics
+  mechanics: TradingMechanics,
+  spreadMultiplier: number = 1.0
 ): TradeExecution => {
-  const spreadCost = calculateSpread(basePrice, type, mechanics);
+  const spreadCost = calculateSpread(basePrice, type, mechanics, spreadMultiplier);
   const slippageCost = calculateSlippage(basePrice, shares, type, mechanics);
 
   // Effective price per share
@@ -131,7 +137,7 @@ export const calculateTradeExecution = (
   // Fees
   const fee = parseFloat(calculateFee(subtotal, mechanics).toFixed(2));
 
-  // Total: For buy we add fees, for sell we subtract them
+  // Total: For buy we add fees, for sale we subtract them
   const total = type === 'buy'
     ? parseFloat((subtotal + fee).toFixed(2))
     : parseFloat((subtotal - fee).toFixed(2));
@@ -156,7 +162,7 @@ export const calculateTradeExecution = (
  * @returns true if the player can trade, false otherwise
  */
 export const canPlayerTrade = (params: {
-  tradeType: 'buy' | 'sell';
+  tradeType: 'buy' | 'sell' | 'shortSell' | 'buyToCover';
   symbol: string;
   stockPrice: number;
   cash: number;
@@ -166,6 +172,8 @@ export const canPlayerTrade = (params: {
   reservedCash?: number;
   /** Reserved shares of this symbol for pending sell orders */
   reservedShares?: number;
+  /** Available credit from loans (for buy orders) */
+  availableCredit?: number;
 }): boolean => {
   const {
     tradeType,
@@ -176,6 +184,7 @@ export const canPlayerTrade = (params: {
     tradedSymbolsThisCycle,
     reservedCash = 0,
     reservedShares = 0,
+    availableCredit = 0,
   } = params;
 
   // Already traded in this cycle?
@@ -186,12 +195,20 @@ export const canPlayerTrade = (params: {
   if (tradeType === 'buy') {
     // Available cash = Total cash - Reserved cash for pending orders
     const availableCash = cash - reservedCash;
+    // Total available funds = Cash + Available credit
+    const totalAvailableFunds = availableCash + availableCredit;
     // Can buy at least 1 share?
-    return availableCash >= stockPrice;
-  } else {
+    return totalAvailableFunds >= stockPrice;
+  } else if (tradeType === 'sell') {
     // Available shares = Owned - Reserved shares for pending sell orders
     const availableShares = sharesOwned - reservedShares;
     // Has at least 1 share to sell?
     return availableShares > 0;
+  } else if (tradeType === 'shortSell' || tradeType === 'buyToCover') {
+    // Short selling validation is handled in TradePanel
+    // (checks margin availability, float, existing short positions)
+    return true;
   }
+
+  return false;
 };

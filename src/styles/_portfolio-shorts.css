@@ -1,0 +1,246 @@
+/* ==========================================================================
+   PORTFOLIO SHORTS (BEM)
+   Block: portfolio-shorts
+   Short positions display in the portfolio panel
+   ========================================================================== */
+
+.portfolio-shorts {
+  margin-top: 1.5rem;
+}
+
+.portfolio-shorts__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   ELEMENT: Summary
+   ========================================================================== */
+
+.portfolio-shorts__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: var(--bg-panel);
+  border-radius: 6px;
+}
+
+.portfolio-shorts__summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.portfolio-shorts__summary-label {
+  color: var(--text-muted);
+}
+
+.portfolio-shorts__summary-value {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.portfolio-shorts__summary-value--positive {
+  color: var(--color-positive);
+}
+
+.portfolio-shorts__summary-value--negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   ELEMENT: List
+   ========================================================================== */
+
+.portfolio-shorts__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Extends .portfolio__list-item, .portfolio__list-item--interactive */
+.portfolio-shorts__item {
+  padding: 0.666rem;
+}
+
+/* --selected handled by .portfolio__list-item--selected */
+
+.portfolio-shorts__item--margin-call {
+  border-color: var(--color-negative);
+  background: var(--alpha-negative);
+}
+
+.portfolio-shorts__item--margin-call:hover {
+  background: color-mix(in srgb, var(--color-negative) 15%, var(--bg-card));
+}
+
+/* Buttons in margin call items should be red */
+.portfolio-shorts__item--margin-call .portfolio-shorts__add-margin-btn,
+.portfolio-shorts__item--margin-call .portfolio-shorts__cover-btn {
+  border-color: var(--color-negative);
+  color: var(--color-negative);
+}
+
+.portfolio-shorts__item--margin-call .portfolio-shorts__add-margin-btn:hover:not(:disabled),
+.portfolio-shorts__item--margin-call .portfolio-shorts__cover-btn:hover:not(:disabled) {
+  background: var(--alpha-negative);
+  border-color: var(--color-negative);
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   ELEMENT: Item Top (Header + Cover Button)
+   ========================================================================== */
+
+.portfolio-shorts__item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-shorts__item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.portfolio-shorts__symbol {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.portfolio-shorts__name {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   ELEMENT: Item Details
+   ========================================================================== */
+
+.portfolio-shorts__item-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.portfolio-shorts__detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.portfolio-shorts__detail-label {
+  color: var(--text-muted);
+}
+
+.portfolio-shorts__detail-value {
+  padding-left: 0.25rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.portfolio-shorts__detail-value--positive {
+  color: var(--color-positive);
+}
+
+.portfolio-shorts__detail-value--negative {
+  color: var(--color-negative);
+}
+
+/* ==========================================================================
+   ELEMENT: Margin Call Warning
+   ========================================================================== */
+
+.portfolio-shorts__margin-call-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--alpha-negative);
+  border: 1px solid var(--color-negative);
+  border-radius: 4px;
+  color: var(--color-negative);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.portfolio-shorts__margin-call-warning svg {
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   ELEMENT: Item Actions (Button Group)
+   ========================================================================== */
+
+.portfolio-shorts__item-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+/* ==========================================================================
+   ELEMENT: Add Margin Button (Icon Button)
+   ========================================================================== */
+
+.portfolio-shorts__add-margin-btn:hover:not(:disabled) {
+  background: var(--alpha-info);
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.portfolio-shorts__add-margin-btn--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: var(--text-muted);
+}
+
+.portfolio-shorts__add-margin-btn--disabled:hover {
+  background: transparent;
+  border-color: var(--border-secondary);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   ELEMENT: Cover Button (Icon Button)
+   ========================================================================== */
+
+.portfolio-shorts__cover-btn:hover:not(:disabled) {
+  background: var(--alpha-positive);
+  border-color: var(--color-positive);
+  color: var(--color-positive);
+}
+
+.portfolio-shorts__cover-btn--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: var(--text-muted);
+}
+
+.portfolio-shorts__cover-btn--disabled:hover {
+  background: transparent;
+  border-color: var(--border-secondary);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .portfolio-shorts__item-details {
+    grid-template-columns: 1fr;
+  }
+}

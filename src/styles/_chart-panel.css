@@ -31,7 +31,7 @@
   padding: 0.5rem 1rem;
   background: var(--bg-card);
   border: 1px solid var(--border-secondary);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
@@ -40,11 +40,11 @@
 
 .chart-panel__tab:hover {
   background: var(--bg-hover);
-  color: var(--text-white);
+  color: var(--text-emphasis);
 }
 
 .chart-panel__tab--active {
-  background: var(--gradient-accent);
+  background: var(--bg-accent-subtle);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
 }
@@ -84,13 +84,31 @@
 }
 
 /* ==========================================================================
-   MARKET INDEX
+   INDICES CONTAINER (Main Index + Sector Grid)
+   ========================================================================== */
+
+.chart-panel__indices-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   MARKET INDEX (Main D-GREX Prime)
    ========================================================================== */
 
 .chart-panel__market-index {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex-shrink: 0;
+  min-height: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .chart-panel__market-index-header {
@@ -105,7 +123,7 @@
 .chart-panel__market-index-header h2 {
   margin: 0;
   font-size: 1.25rem;
-  color: var(--text-white);
+  color: var(--index-main-color);
 }
 
 .chart-panel__market-index-value {
@@ -153,7 +171,98 @@
 }
 
 .chart-panel__trend-bar--neutral {
-  background-color: var(--text-muted);
+  background-color: var(--color-muted);
+}
+
+/* ==========================================================================
+   SECTOR INDICES GRID
+   Mobile: Single column, Desktop/Tablet: 2 columns
+   ========================================================================== */
+
+.chart-panel__sector-indices {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.chart-panel__sector-index-chart {
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chart-panel__sector-index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-header) 100%);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.chart-panel__sector-index-header h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.chart-panel__sector-index-header h3.chart-panel__sector-title--tech {
+  color: var(--sector-tech);
+}
+
+.chart-panel__sector-index-header h3.chart-panel__sector-title--finance {
+  color: var(--sector-finance);
+}
+
+.chart-panel__sector-index-header h3.chart-panel__sector-title--industrial {
+  color: var(--sector-industrial);
+}
+
+.chart-panel__sector-index-header h3.chart-panel__sector-title--commodities {
+  color: var(--sector-commodities);
+}
+
+.chart-panel__sector-index-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.chart-panel__sector-index-value--positive {
+  color: var(--color-positive);
+}
+
+.chart-panel__sector-index-value--negative {
+  color: var(--color-negative);
+}
+
+.chart-panel__sector-index-change {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   TABLET LANDSCAPE (min-width: 769px)
+   Sector indices: 2 columns, main index larger
+   ========================================================================== */
+
+@media (min-width: 769px) {
+  .chart-panel__sector-indices {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-panel__market-index {
+    min-height: 250px;
+  }
 }
 
 /* ==========================================================================
@@ -163,5 +272,13 @@
 @media (min-width: 1201px) {
   .chart-panel__wrapper {
     min-height: auto;
+  }
+
+  .chart-panel__sector-indices {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-panel__market-index {
+    min-height: 280px;
   }
 }

@@ -233,4 +233,112 @@ describe('useTheme', () => {
       expect(result.current.theme).toBe('light');
     });
   });
+
+  describe('medieval theme', () => {
+    it('should accept medieval as a valid theme', () => {
+      const { result } = renderHook(() => useTheme());
+
+      act(() => {
+        result.current.setTheme('medieval');
+      });
+
+      expect(result.current.theme).toBe('medieval');
+    });
+
+    it('should apply medieval theme to document', () => {
+      const { result } = renderHook(() => useTheme());
+
+      act(() => {
+        result.current.setTheme('medieval');
+      });
+
+      expect(document.documentElement.setAttribute).toHaveBeenCalledWith(
+        'data-theme',
+        'medieval'
+      );
+    });
+
+    it('should NOT persist medieval theme to localStorage', () => {
+      const { result } = renderHook(() => useTheme());
+
+      // Set a user theme first
+      act(() => {
+        result.current.setTheme('light');
+      });
+
+      // Clear the mock to check only the medieval call
+      vi.mocked(localStorage.setItem).mockClear();
+
+      act(() => {
+        result.current.setTheme('medieval');
+      });
+
+      // localStorage.setItem should NOT be called for medieval
+      expect(localStorage.setItem).not.toHaveBeenCalled();
+    });
+
+    it('should NOT restore medieval theme from localStorage on load', () => {
+      // Simulate medieval being stored (e.g., from an old bug)
+      mockLocalStorage['stock-exchange-theme'] = 'medieval';
+
+      const { result } = renderHook(() => useTheme());
+
+      // Should default to dark, not medieval
+      expect(result.current.theme).toBe('dark');
+    });
+  });
+
+  describe('getUserTheme', () => {
+    it('should return dark when no theme is stored', () => {
+      const { result } = renderHook(() => useTheme());
+
+      expect(result.current.getUserTheme()).toBe('dark');
+    });
+
+    it('should return stored user theme (light)', () => {
+      mockLocalStorage['stock-exchange-user-theme'] = 'light';
+      const { result } = renderHook(() => useTheme());
+
+      expect(result.current.getUserTheme()).toBe('light');
+    });
+
+    it('should return stored user theme (dark)', () => {
+      mockLocalStorage['stock-exchange-user-theme'] = 'dark';
+      const { result } = renderHook(() => useTheme());
+
+      expect(result.current.getUserTheme()).toBe('dark');
+    });
+
+    it('should fall back to stock-exchange-theme if user-theme is not set', () => {
+      mockLocalStorage['stock-exchange-theme'] = 'light';
+      const { result } = renderHook(() => useTheme());
+
+      expect(result.current.getUserTheme()).toBe('light');
+    });
+
+    it('should return user theme even when medieval is active', () => {
+      mockLocalStorage['stock-exchange-user-theme'] = 'light';
+      const { result } = renderHook(() => useTheme());
+
+      act(() => {
+        result.current.setTheme('medieval');
+      });
+
+      expect(result.current.theme).toBe('medieval');
+      expect(result.current.getUserTheme()).toBe('light');
+    });
+
+    it('should save to user-theme when setting dark or light', () => {
+      const { result } = renderHook(() => useTheme());
+
+      act(() => {
+        result.current.setTheme('light');
+      });
+
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'stock-exchange-user-theme',
+        'light'
+      );
+    });
+  });
 });

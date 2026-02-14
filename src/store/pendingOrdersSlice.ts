@@ -1,11 +1,14 @@
 import { createSlice, createSelector, type PayloadAction, type Dispatch } from '@reduxjs/toolkit';
-import type { PendingOrder, Stock, GameMode, OrderType, Portfolio, CompletedTrade } from '../types';
+import type { PendingOrder, Stock, GameMode, OrderType, Portfolio, CompletedTrade, MarketMakerInventory, OrderLoanRequest, Loan, ShortPosition } from '../types';
 import { calculateTradeExecution } from '../utils/tradingMechanics';
-import { TRADING_MECHANICS } from '../config';
-import { buyStock, sellStock } from './portfolioSlice';
+import { TRADING_MECHANICS, LOAN_CONFIG, SHORT_SELLING_CONFIG } from '../config';
+import { buyStock, sellStock, addCash } from './portfolioSlice';
 import { applyTrade } from './stocksSlice';
-import { addNotification } from './notificationsSlice';
+import { addNotification, dismissNotificationsForMarginCall } from './notificationsSlice';
 import { addCompletedTrade } from './tradeHistorySlice';
+import { executeTrade as executeMMTrade } from './marketMakerSlice';
+import { takeLoan, calculateCollateralValue } from './loansSlice';
+import { openShortPosition, closeShortPosition } from './shortPositionsSlice';
 import i18n from '../i18n';
 
 /** Formats currency values in German format */
@@ -25,7 +28,7 @@ const initialState: PendingOrdersState = {
 
 interface AddPendingOrderPayload {
   symbol: string;
-  type: 'buy' | 'sell';
+  type: 'buy' | 'sell' | 'shortSell' | 'buyToCover';
   shares: number;
   orderType: OrderType;
   orderPrice: number;
@@ -33,6 +36,12 @@ interface AddPendingOrderPayload {
   stopPrice?: number;
   /** Validity in cycles (0 = immediate execution for Market Orders) */
   validityCycles: number;
+  /** Is this an edit of an existing order? (won't be marked as new) */
+  isEdit?: boolean;
+  /** Optional loan request - loan will be created when order executes */
+  loanRequest?: OrderLoanRequest;
+  /** Collateral to lock when shortSell order executes */
+  collateralToLock?: number;
 }
 
 const pendingOrdersSlice = createSlice({
@@ -55,6 +64,14 @@ const pendingOrdersSlice = createSlice({
         remainingCycles: action.payload.validityCycles,
         timestamp: Date.now(),
         stopTriggered: false,
+        // New orders get isNew=true (creation cycle doesn't count)
+        // EXCEPT market orders - they execute at the next cycle boundary (after VP trades)
+        // Edited orders don't get isNew (they continue from where they were)
+        isNew: action.payload.orderType === 'market' ? false : !action.payload.isEdit,
+        // Include loan request if provided
+        loanRequest: action.payload.loanRequest,
+        // Include collateral to lock for short sell orders
+        collateralToLock: action.payload.collateralToLock,
       };
       state.orders.push(newOrder);
     },
@@ -78,17 +95,29 @@ const pendingOrdersSlice = createSlice({
 
     /**
      * Decrements validity cycles and removes expired orders
+     * New orders skip the first decrement (creation cycle doesn't count)
      */
     tickOrderCycles: (state) => {
       state.orders = state.orders.filter(order => {
-        // Market Orders have remainingCycles = 0, are executed immediately
-        if (order.orderType === 'market') return true;
+        // New orders: mark as not new, don't decrement (creation cycle doesn't count)
+        if (order.isNew) {
+          order.isNew = false;
+          return true;
+        }
 
-        // Decrement cycles
+        // Market Orders: decrement cycles but never expire (will execute when remainingCycles === 0)
+        if (order.orderType === 'market') {
+          if (order.remainingCycles > 0) {
+            order.remainingCycles -= 1;
+          }
+          return true; // Market orders never expire automatically
+        }
+
+        // Decrement cycles for limit/stop orders
         order.remainingCycles -= 1;
 
-        // Remove if expired (< 0)
-        return order.remainingCycles >= 0;
+        // Remove if expired (<= 0) - order is removed after showing "Next Cycle"
+        return order.remainingCycles > 0;
       });
     },
 
@@ -137,16 +166,6 @@ const pendingOrdersSlice = createSlice({
     },
 
     /**
-     * @deprecated Use tickOrderCycles instead
-     */
-    processPendingOrders: (state) => {
-      state.orders = state.orders.filter(order => order.remainingCycles > 0);
-      state.orders.forEach(order => {
-        order.remainingCycles -= 1;
-      });
-    },
-
-    /**
      * Adjusts all orders for a symbol after a stock split
      */
     applyStockSplit: (state, action: PayloadAction<{ symbol: string; ratio: number }>) => {
@@ -162,6 +181,13 @@ const pendingOrdersSlice = createSlice({
         };
       });
     },
+
+    /**
+     * Restore pending orders from saved game
+     */
+    restorePendingOrders: (_state, action: PayloadAction<PendingOrdersState>) => {
+      return action.payload;
+    },
   },
 });
 
@@ -174,8 +200,8 @@ export const {
   clearAllOrders,
   markSymbolAsTraded,
   resetTradedSymbols,
-  processPendingOrders,
   applyStockSplit: applyStockSplitToOrders,
+  restorePendingOrders,
 } = pendingOrdersSlice.actions;
 
 export default pendingOrdersSlice.reducer;
@@ -188,8 +214,10 @@ export const canExecuteOrder = (order: PendingOrder, currentPrice: number): bool
 
   switch (orderType) {
     case 'market':
-      // Market Orders are always executed immediately
-      return true;
+      // Market Orders execute after delay cycles have passed
+      // Must not be new (creation cycle doesn't count) and remainingCycles must be <= 1
+      // (will be decremented to 0 by tickOrderCycles after execution check)
+      return !order.isNew && order.remainingCycles <= 1;
 
     case 'limit':
       if (type === 'buy') {
@@ -295,20 +323,22 @@ export const selectSymbolsWithPendingOrders = createSelector(
 interface RootStateForThunk {
   pendingOrders: PendingOrdersState;
   stocks: { items: Stock[] };
-  settings: { gameMode: GameMode };
+  settings: { gameMode: GameMode; initialCash: number };
   portfolio: Portfolio;
   notifications: { items: Array<{ failedOrderId?: string }> };
+  marketMaker: { inventory: Record<string, MarketMakerInventory> };
+  loans: { loans: Loan[] };
+  shortPositions: { positions: ShortPosition[] };
+  gameSession: { currentCycle: number };
 }
 
 /**
  * Calculates the available funds for a purchase.
- * Prepared for future credit functionality.
  *
  * @param cash - Current cash
  * @returns Available funds for purchases
  */
-export const getAvailableFunds = (cash: number, _creditLimit?: number): number => {
-  // Future: implement creditLimit
+export const getAvailableFunds = (cash: number): number => {
   return cash;
 };
 
@@ -319,7 +349,7 @@ export interface OrderExecutionResult {
   executedOrderIds: string[];
   failedOrders: Array<{
     order: PendingOrder;
-    reason: 'insufficient_funds' | 'insufficient_shares';
+    reason: 'insufficient_funds' | 'insufficient_shares' | 'expired';
     requiredAmount: number;
     availableAmount: number;
   }>;
@@ -336,6 +366,8 @@ export const executePendingOrders = () => {
     const stocks = state.stocks.items;
     const mechanics = TRADING_MECHANICS[state.settings.gameMode];
     const existingNotifications = state.notifications.items;
+    const mmInventory = state.marketMaker.inventory;
+    const currentCycle = state.gameSession.currentCycle;
 
     // Checks if a failure notification already exists for this order
     const hasExistingNotification = (orderId: string): boolean =>
@@ -344,8 +376,52 @@ export const executePendingOrders = () => {
     // Current cash - updated during execution
     let currentCash = state.portfolio.cash;
 
+    // Track executed sell orders to adjust available shares for subsequent orders
+    const executedSellShares: Record<string, number> = {};
+
     const executedOrderIds: string[] = [];
     const failedOrders: OrderExecutionResult['failedOrders'] = [];
+
+    // --- Shared helpers to reduce duplication between buy and buyToCover ---
+
+    const checkLoanEligibility = (order: PendingOrder) => {
+      const hasLoanRequest = order.loanRequest !== undefined;
+      const loanInterestRate = order.loanRequest?.interestRate ?? 0;
+      const loanDurationCycles = order.loanRequest?.durationCycles ?? LOAN_CONFIG.defaultLoanDurationCycles;
+      const currentLoanCount = state.loans.loans.length;
+      const pendingLoanCount = state.pendingOrders.orders.filter(o => o.loanRequest && o.id !== order.id).length;
+      const canTakeLoan = (currentLoanCount + pendingLoanCount) < LOAN_CONFIG.maxLoans;
+      return { hasLoanRequest, loanInterestRate, loanDurationCycles, canTakeLoan };
+    };
+
+    const recordFailedTrade = (
+      order: PendingOrder,
+      totalAmount: number,
+      failureReason: 'insufficient_funds' | 'insufficient_shares',
+      failureDetails: string,
+    ) => {
+      dispatch(addCompletedTrade({
+        id: `failed-${order.id}`,
+        symbol: order.symbol,
+        type: order.type,
+        shares: order.shares,
+        pricePerShare: order.orderPrice,
+        totalAmount,
+        timestamp: Date.now(),
+        cycle: currentCycle,
+        status: 'failed',
+        failureReason,
+        failureDetails,
+      }));
+    };
+
+    const disburseLoan = (amount: number, interestRate: number, durationCycles: number) => {
+      dispatch(takeLoan({ amount, interestRate, durationCycles }));
+      const originationFee = amount * LOAN_CONFIG.originationFeePercent;
+      const netDisbursement = amount - originationFee;
+      dispatch(addCash(netDisbursement));
+      currentCash += netDisbursement;
+    };
 
     orders.forEach(order => {
       const stock = stocks.find(s => s.symbol === order.symbol);
@@ -365,39 +441,50 @@ export const executePendingOrders = () => {
         return;
       }
 
-      // Calculate effective price
-      const execution = calculateTradeExecution(currentPrice, order.shares, order.type, mechanics);
+      // Get Market Maker spread multiplier for this stock
+      const spreadMultiplier = mmInventory[order.symbol]?.spreadMultiplier ?? 1.0;
+
+      // Map order types to buy/sell for calculateTradeExecution
+      // shortSell is like 'sell' (receiving money), buyToCover is like 'buy' (paying money)
+      const tradeType: 'buy' | 'sell' = (order.type === 'buy' || order.type === 'buyToCover') ? 'buy' : 'sell';
+
+      // Calculate effective price with MM spread
+      const execution = calculateTradeExecution(currentPrice, order.shares, tradeType, mechanics, spreadMultiplier);
       const totalCost = execution.total;
 
       if (order.type === 'buy') {
-        // Check if enough funds are available
+        // Check if enough funds are available (including potential loan)
         const availableFunds = getAvailableFunds(currentCash);
+        const { hasLoanRequest, loanInterestRate, loanDurationCycles, canTakeLoan } = checkLoanEligibility(order);
+        const loanAmount = order.loanRequest?.amount ?? 0;
 
-        if (totalCost > availableFunds) {
-          // Not enough funds - add warning (only if one doesn't already exist)
+        // If order has loan request but can't take loan anymore, fail the order
+        if (hasLoanRequest && !canTakeLoan) {
           if (!hasExistingNotification(order.id)) {
-            failedOrders.push({
-              order,
-              reason: 'insufficient_funds',
-              requiredAmount: totalCost,
-              availableAmount: availableFunds,
-            });
+            failedOrders.push({ order, reason: 'insufficient_funds', requiredAmount: totalCost, availableAmount: availableFunds });
+            recordFailedTrade(order, totalCost, 'insufficient_funds', i18n.t('tradeHistory.failureDetails.loanLimitReached'));
+            dispatch(addNotification({
+              type: 'warning',
+              title: i18n.t('notification.buyOrderFailed.title'),
+              message: i18n.t('notification.loanLimitReached'),
+              autoDismissMs: 0,
+              failedOrderId: order.id,
+              failedOrderSymbol: order.symbol,
+            }));
+          }
+          return;
+        }
 
-            // Add failed trade to history
-            const failedTrade: CompletedTrade = {
-              id: `failed-${order.id}`,
-              symbol: order.symbol,
-              type: order.type,
-              shares: order.shares,
-              pricePerShare: order.orderPrice,
-              totalAmount: totalCost,
-              timestamp: Date.now(),
-              status: 'failed',
-              failureReason: 'insufficient_funds',
-            };
-            dispatch(addCompletedTrade(failedTrade));
+        // Calculate total available funds (cash + loan if applicable)
+        const totalAvailableFunds = hasLoanRequest ? availableFunds + loanAmount : availableFunds;
 
-            // Interactive warning with order details for editing/deleting
+        if (totalCost > totalAvailableFunds) {
+          if (!hasExistingNotification(order.id)) {
+            failedOrders.push({ order, reason: 'insufficient_funds', requiredAmount: totalCost, availableAmount: totalAvailableFunds });
+            recordFailedTrade(order, totalCost, 'insufficient_funds', i18n.t('tradeHistory.failureDetails.insufficientFunds', {
+              required: formatCurrency(totalCost),
+              available: formatCurrency(totalAvailableFunds),
+            }));
             dispatch(addNotification({
               type: 'warning',
               title: i18n.t('notification.buyOrderFailed.title'),
@@ -405,20 +492,23 @@ export const executePendingOrders = () => {
                 shares: order.shares,
                 symbol: order.symbol,
                 required: formatCurrency(totalCost),
-                available: formatCurrency(availableFunds),
+                available: formatCurrency(totalAvailableFunds),
               }),
-              autoDismissMs: 0, // No auto-dismiss for interactive warnings
+              autoDismissMs: 0,
               failedOrderId: order.id,
               failedOrderSymbol: order.symbol,
             }));
           }
-          // Order remains pending - don't execute, don't remove
           return;
         }
 
         // IMPORTANT: Remove order FIRST to avoid race condition
         // (prevents negative availableCash display)
         dispatch(removeOrder(order.id));
+
+        if (hasLoanRequest && loanAmount > 0) {
+          disburseLoan(loanAmount, loanInterestRate, loanDurationCycles);
+        }
 
         // Execute purchase
         const totalPricePerShare = totalCost / order.shares;
@@ -430,24 +520,81 @@ export const executePendingOrders = () => {
 
         // Add trade to history
         const completedTrade: CompletedTrade = {
-          id: `trade-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `trade-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
           symbol: order.symbol,
           type: 'buy',
           shares: order.shares,
           pricePerShare: totalPricePerShare,
           totalAmount: totalCost,
           timestamp: Date.now(),
+          cycle: currentCycle,
         };
         dispatch(addCompletedTrade(completedTrade));
 
         // Update cash for following orders
         currentCash -= totalCost;
-      } else {
+      } else if (order.type === 'sell') {
+        // Check if enough shares are available
+        const holding = state.portfolio.holdings.find(h => h.symbol === order.symbol);
+        const alreadySoldShares = executedSellShares[order.symbol] ?? 0;
+        const availableShares = (holding?.shares ?? 0) - alreadySoldShares;
+
+        if (order.shares > availableShares) {
+          // Not enough shares - add warning (only if one doesn't already exist)
+          if (!hasExistingNotification(order.id)) {
+            failedOrders.push({
+              order,
+              reason: 'insufficient_shares',
+              requiredAmount: order.shares,
+              availableAmount: availableShares,
+            });
+
+            const failureDetails = i18n.t('tradeHistory.failureDetails.insufficientShares', {
+              required: order.shares,
+              available: availableShares,
+            });
+
+            // Add failed trade to history
+            const failedTrade: CompletedTrade = {
+              id: `failed-${order.id}`,
+              symbol: order.symbol,
+              type: order.type,
+              shares: order.shares,
+              pricePerShare: order.orderPrice,
+              totalAmount: order.shares * currentPrice,
+              timestamp: Date.now(),
+              cycle: currentCycle,
+              status: 'failed',
+              failureReason: 'insufficient_shares',
+              failureDetails,
+            };
+            dispatch(addCompletedTrade(failedTrade));
+
+            // Interactive warning with order details for editing/deleting
+            dispatch(addNotification({
+              type: 'warning',
+              title: i18n.t('notification.sellOrderFailed.title'),
+              message: i18n.t('notification.sellOrderFailed.message', {
+                shares: order.shares,
+                symbol: order.symbol,
+                required: order.shares,
+                available: availableShares,
+              }),
+              autoDismissMs: 0, // No auto-dismiss for interactive warnings
+              failedOrderId: order.id,
+              failedOrderSymbol: order.symbol,
+            }));
+          }
+          // Order remains pending - don't execute, don't remove
+          return;
+        }
+
         // IMPORTANT: Remove order FIRST to avoid race condition
         dispatch(removeOrder(order.id));
 
-        // For sales: Calculate average purchase price (from current portfolio)
-        const holding = state.portfolio.holdings.find(h => h.symbol === order.symbol);
+        // Track sold shares for subsequent orders
+        executedSellShares[order.symbol] = alreadySoldShares + order.shares;
+
         const avgBuyPrice = holding?.avgBuyPrice;
 
         // Execute sale
@@ -465,13 +612,14 @@ export const executePendingOrders = () => {
 
         // Add trade to history
         const completedTrade: CompletedTrade = {
-          id: `trade-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `trade-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
           symbol: order.symbol,
           type: 'sell',
           shares: order.shares,
           pricePerShare: totalPricePerShare,
           totalAmount: execution.total,
           timestamp: Date.now(),
+          cycle: currentCycle,
           realizedProfitLoss,
           avgBuyPrice,
         };
@@ -479,12 +627,368 @@ export const executePendingOrders = () => {
 
         // Update cash for following orders
         currentCash += execution.total;
+      } else if (order.type === 'shortSell') {
+        // Short sell: Borrow and sell shares
+        // The collateral was already checked when the order was placed
+        // Now we just need to verify it's still valid and execute
+
+        // IMPORTANT: Remove order FIRST to avoid race condition
+        dispatch(removeOrder(order.id));
+
+        // Open the short position
+        dispatch(openShortPosition({
+          symbol: order.symbol,
+          shares: order.shares,
+          entryPrice: currentPrice,
+          collateralLocked: order.collateralToLock ?? (currentPrice * order.shares * SHORT_SELLING_CONFIG.initialMarginPercent),
+        }));
+
+        // Add short sell to trade history
+        const completedTrade: CompletedTrade = {
+          id: `trade-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+          symbol: order.symbol,
+          type: 'shortSell',
+          shares: order.shares,
+          pricePerShare: currentPrice,
+          totalAmount: order.shares * currentPrice,
+          timestamp: Date.now(),
+          cycle: currentCycle,
+        };
+        dispatch(addCompletedTrade(completedTrade));
+
+        // Short sell receives proceeds (minus spread/slippage)
+        currentCash += execution.total;
+      } else if (order.type === 'buyToCover') {
+        // Buy to cover: Close a short position
+        const shortPosition = state.shortPositions.positions.find(p => p.symbol === order.symbol);
+
+        if (!shortPosition || shortPosition.shares < order.shares) {
+          // Not enough shorted shares to cover
+          if (!hasExistingNotification(order.id)) {
+            const availableShortShares = shortPosition?.shares ?? 0;
+            failedOrders.push({ order, reason: 'insufficient_shares', requiredAmount: order.shares, availableAmount: availableShortShares });
+            recordFailedTrade(order, order.shares * currentPrice, 'insufficient_shares', i18n.t('tradeHistory.failureDetails.insufficientShortShares', {
+              required: order.shares,
+              available: availableShortShares,
+            }));
+            dispatch(addNotification({
+              type: 'warning',
+              title: i18n.t('notification.buyToCoverFailed.title'),
+              message: i18n.t('notification.buyToCoverFailed.message', {
+                shares: order.shares,
+                symbol: order.symbol,
+                available: availableShortShares,
+              }),
+              autoDismissMs: 0,
+              failedOrderId: order.id,
+              failedOrderSymbol: order.symbol,
+            }));
+          }
+          return;
+        }
+
+        const availableFunds = getAvailableFunds(currentCash);
+        const { hasLoanRequest, loanInterestRate, loanDurationCycles, canTakeLoan: canTakeLoanNow } = checkLoanEligibility(order);
+
+        // If order has loan request but can't take loan anymore, fail the order
+        if (hasLoanRequest && !canTakeLoanNow) {
+          if (!hasExistingNotification(order.id)) {
+            failedOrders.push({ order, reason: 'insufficient_funds', requiredAmount: totalCost, availableAmount: availableFunds });
+            recordFailedTrade(order, totalCost, 'insufficient_funds', i18n.t('tradeHistory.failureDetails.loanLimitReached'));
+            dispatch(addNotification({
+              type: 'warning',
+              title: i18n.t('notification.buyToCoverFailed.title'),
+              message: i18n.t('notification.loanLimitReached'),
+              autoDismissMs: 0,
+              failedOrderId: order.id,
+              failedOrderSymbol: order.symbol,
+            }));
+          }
+          return;
+        }
+
+        // Dynamic loan recalculation: recalculate needed loan at actual execution price
+        let availableCreditForOrder = 0;
+        if (hasLoanRequest && canTakeLoanNow) {
+          const baseCollateral = state.settings.initialCash * LOAN_CONFIG.baseCollateralPercent;
+          const collateralBreakdown = calculateCollateralValue(
+            state.portfolio.cash, state.portfolio.holdings, stocks, baseCollateral
+          );
+          const recommendedCreditLine = Math.floor(collateralBreakdown.total / 1000) * 1000;
+          const maxCreditLine = recommendedCreditLine * LOAN_CONFIG.maxCreditLineMultiplier;
+          const existingDebt = state.loans.loans.reduce((sum, loan) => sum + loan.balance, 0);
+          const otherPendingLoanAmount = state.pendingOrders.orders
+            .filter(o => o.loanRequest && o.id !== order.id)
+            .reduce((sum, o) => sum + (o.loanRequest?.amount ?? 0), 0);
+          availableCreditForOrder = Math.max(0, maxCreditLine - existingDebt - otherPendingLoanAmount);
+        }
+
+        let actualLoanAmount = 0;
+        if (hasLoanRequest && canTakeLoanNow && totalCost > availableFunds) {
+          const neededLoan = Math.ceil(totalCost - availableFunds);
+          actualLoanAmount = Math.min(neededLoan, availableCreditForOrder);
+        }
+
+        const totalAvailableFunds = availableFunds + actualLoanAmount;
+
+        // Helper: execute a cover for a given number of shares
+        const executeCover = (sharesToCover: number, coverTotalCost: number, coverLoanAmount: number) => {
+          dispatch(removeOrder(order.id));
+          if (coverLoanAmount > 0) {
+            disburseLoan(coverLoanAmount, loanInterestRate, loanDurationCycles);
+          }
+
+          dispatch(closeShortPosition({ symbol: order.symbol, shares: sharesToCover, exitPrice: currentPrice }));
+          dispatch(dismissNotificationsForMarginCall(order.symbol));
+
+          dispatch(addCompletedTrade({
+            id: `trade-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+            symbol: order.symbol,
+            type: 'buyToCover',
+            shares: sharesToCover,
+            pricePerShare: currentPrice,
+            totalAmount: coverTotalCost,
+            timestamp: Date.now(),
+            cycle: currentCycle,
+            realizedProfitLoss: (shortPosition.entryPrice - currentPrice) * sharesToCover,
+            avgBuyPrice: shortPosition.entryPrice,
+          }));
+
+          currentCash -= coverTotalCost;
+        };
+
+        if (totalCost <= totalAvailableFunds) {
+          // === FULL EXECUTION (with dynamically adjusted loan) ===
+          const isFullPositionCover = shortPosition.shares === order.shares;
+          executeCover(order.shares, totalCost, actualLoanAmount);
+
+          // Show success toast when short position is fully closed
+          if (isFullPositionCover) {
+            dispatch(addNotification({
+              type: 'success',
+              title: i18n.t('notification.coverComplete.title'),
+              message: i18n.t('notification.coverComplete.message', {
+                shares: order.shares,
+                symbol: order.symbol,
+              }),
+              autoDismissMs: 5000,
+            }));
+          }
+        } else {
+          // === PARTIAL EXECUTION ===
+          // Binary search for max affordable shares at current price
+          let low = 1;
+          let high = order.shares - 1;
+          let partialShares = 0;
+
+          while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            const exec = calculateTradeExecution(currentPrice, mid, 'buy', mechanics, spreadMultiplier);
+            if (exec.total <= totalAvailableFunds) {
+              partialShares = mid;
+              low = mid + 1;
+            } else {
+              high = mid - 1;
+            }
+          }
+
+          if (partialShares === 0) {
+            if (!hasExistingNotification(order.id)) {
+              failedOrders.push({ order, reason: 'insufficient_funds', requiredAmount: totalCost, availableAmount: totalAvailableFunds });
+              recordFailedTrade(order, totalCost, 'insufficient_funds', i18n.t('tradeHistory.failureDetails.insufficientFunds', {
+                required: formatCurrency(totalCost),
+                available: formatCurrency(totalAvailableFunds),
+              }));
+              dispatch(addNotification({
+                type: 'warning',
+                title: i18n.t('notification.buyToCoverFailed.title'),
+                message: i18n.t('notification.buyToCoverFailed.insufficientFunds', {
+                  required: formatCurrency(totalCost),
+                  available: formatCurrency(totalAvailableFunds),
+                }),
+                autoDismissMs: 0,
+                failedOrderId: order.id,
+                failedOrderSymbol: order.symbol,
+              }));
+            }
+            return;
+          }
+
+          const partialExecution = calculateTradeExecution(currentPrice, partialShares, 'buy', mechanics, spreadMultiplier);
+          const partialCost = partialExecution.total;
+          const remainingShares = order.shares - partialShares;
+
+          let partialLoanAmount = 0;
+          if (hasLoanRequest && partialCost > availableFunds) {
+            partialLoanAmount = Math.min(Math.ceil(partialCost - availableFunds), availableCreditForOrder);
+          }
+
+          executeCover(partialShares, partialCost, partialLoanAmount);
+
+          dispatch(addPendingOrder({
+            symbol: order.symbol,
+            type: 'buyToCover',
+            shares: remainingShares,
+            orderType: 'market',
+            orderPrice: currentPrice,
+            validityCycles: 0,
+          }));
+
+          dispatch(addNotification({
+            type: 'info',
+            title: i18n.t('notification.partialCover.title'),
+            message: i18n.t('notification.partialCover.message', {
+              executed: partialShares,
+              total: order.shares,
+              remaining: remainingShares,
+              symbol: order.symbol,
+            }),
+            autoDismissMs: 0,
+            autoDismissCycles: 5,
+          }));
+
+          dispatch(applyTrade({ symbol: order.symbol, type: 'buy', shares: partialShares }));
+          dispatch(executeMMTrade({ symbol: order.symbol, type: 'buy', shares: partialShares }));
+          executedOrderIds.push(order.id);
+          return;
+        }
       }
 
-      // Apply trade impact to the market
-      dispatch(applyTrade({ symbol: order.symbol, type: order.type, shares: order.shares }));
+      // Apply trade impact to the market (map short types to buy/sell)
+      const marketImpactType: 'buy' | 'sell' = (order.type === 'buy' || order.type === 'buyToCover') ? 'buy' : 'sell';
+      dispatch(applyTrade({ symbol: order.symbol, type: marketImpactType, shares: order.shares }));
+
+      // Update Market Maker inventory (also needs mapped type)
+      dispatch(executeMMTrade({ symbol: order.symbol, type: marketImpactType, shares: order.shares }));
 
       executedOrderIds.push(order.id);
+    });
+
+    // Check for orders that will expire after this tick
+    // (remainingCycles === 1 means they will be decremented to 0 and removed)
+    const currentOrders = getState().pendingOrders.orders;
+    currentOrders.forEach(order => {
+      // Market orders are executed, not expired - skip them
+      if (order.orderType === 'market') return;
+
+      // New orders skip their first tick, so they won't expire yet
+      if (order.isNew) return;
+
+      // Orders with remainingCycles === 1 will expire after the tick (decremented to 0, then removed)
+      if (order.remainingCycles === 1) {
+        const stock = stocks.find(s => s.symbol === order.symbol);
+        const currentPrice = stock?.currentPrice ?? order.orderPrice;
+
+        // Determine the specific reason for expiration based on order type
+        const getExpirationReason = (): string => {
+          const { orderType, type, limitPrice, stopPrice, stopTriggered } = order;
+
+          switch (orderType) {
+            case 'limit':
+              if (type === 'buy') {
+                // Limit Buy: Price was never low enough
+                return i18n.t('notification.orderExpired.reasons.limitBuyNotReached', {
+                  limit: formatCurrency(limitPrice!),
+                  current: formatCurrency(currentPrice),
+                });
+              } else {
+                // Limit Sell: Price was never high enough
+                return i18n.t('notification.orderExpired.reasons.limitSellNotReached', {
+                  limit: formatCurrency(limitPrice!),
+                  current: formatCurrency(currentPrice),
+                });
+              }
+
+            case 'stopBuy':
+              if (type === 'buy') {
+                // Stop Buy: Price never reached the stop
+                return i18n.t('notification.orderExpired.reasons.stopBuyNotTriggered', {
+                  stop: formatCurrency(stopPrice!),
+                  current: formatCurrency(currentPrice),
+                });
+              } else {
+                // Stop Loss: Price never fell to the stop
+                return i18n.t('notification.orderExpired.reasons.stopLossNotTriggered', {
+                  stop: formatCurrency(stopPrice!),
+                  current: formatCurrency(currentPrice),
+                });
+              }
+
+            case 'stopBuyLimit':
+              if (!stopTriggered) {
+                // Stop was never triggered
+                if (type === 'buy') {
+                  return i18n.t('notification.orderExpired.reasons.stopBuyNotTriggered', {
+                    stop: formatCurrency(stopPrice!),
+                    current: formatCurrency(currentPrice),
+                  });
+                } else {
+                  return i18n.t('notification.orderExpired.reasons.stopLossNotTriggered', {
+                    stop: formatCurrency(stopPrice!),
+                    current: formatCurrency(currentPrice),
+                  });
+                }
+              } else {
+                // Stop was triggered but limit was never reached
+                if (type === 'buy') {
+                  return i18n.t('notification.orderExpired.reasons.stopTriggeredLimitBuyNotReached', {
+                    limit: formatCurrency(limitPrice!),
+                    current: formatCurrency(currentPrice),
+                  });
+                } else {
+                  return i18n.t('notification.orderExpired.reasons.stopTriggeredLimitSellNotReached', {
+                    limit: formatCurrency(limitPrice!),
+                    current: formatCurrency(currentPrice),
+                  });
+                }
+              }
+
+            default:
+              return i18n.t('notification.orderExpired.reasons.generic');
+          }
+        };
+
+        const reason = getExpirationReason();
+
+        // Add expired trade to history with specific reason
+        const expiredTrade: CompletedTrade = {
+          id: `expired-${order.id}`,
+          symbol: order.symbol,
+          type: order.type,
+          shares: order.shares,
+          pricePerShare: order.orderPrice,
+          totalAmount: order.shares * order.orderPrice,
+          timestamp: Date.now(),
+          cycle: currentCycle,
+          status: 'failed',
+          failureReason: 'expired',
+          failureDetails: reason,
+        };
+        dispatch(addCompletedTrade(expiredTrade));
+
+        // Show notification for expired order with specific reason
+        // Include failedOrderId/Symbol so user can create a new order via Edit button
+        dispatch(addNotification({
+          type: 'warning',
+          title: i18n.t('notification.orderExpired.title'),
+          message: i18n.t('notification.orderExpired.message', {
+            type: order.type === 'buy' ? i18n.t('portfolio.buy') : i18n.t('portfolio.sell'),
+            shares: order.shares,
+            symbol: order.symbol,
+            reason,
+          }),
+          autoDismissMs: 0, // No auto-dismiss for interactive warnings
+          failedOrderId: order.id,
+          failedOrderSymbol: order.symbol,
+        }));
+
+        failedOrders.push({
+          order,
+          reason: 'expired' as const,
+          requiredAmount: 0,
+          availableAmount: 0,
+        });
+      }
     });
 
     // Decrement cycles and remove expired orders

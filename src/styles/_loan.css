@@ -1,0 +1,437 @@
+/* ==========================================================================
+   LOAN (BEM)
+   Block: loan
+   Modal for taking new loans
+   ========================================================================== */
+
+.loan {
+  width: 450px;
+  max-width: 95vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.loan .modal-body {
+  flex: 1;
+  overflow-y: auto;
+  /* Reserve space for scrollbar to prevent content shift */
+  scrollbar-gutter: stable;
+  /* Custom scrollbar for dark theme */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-secondary) transparent;
+}
+
+.loan .modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.loan .modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.loan .modal-body::-webkit-scrollbar-thumb {
+  background: var(--color-subtle);
+  border-radius: 3px;
+}
+
+.loan .modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-subtle-hover);
+}
+
+/* Credit Row */
+.loan__credit-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.loan__credit-row:last-child {
+  margin-bottom: 0;
+}
+
+.loan__credit-label {
+  color: var(--text-muted);
+}
+
+.loan__credit-value {
+  color: var(--text-emphasis);
+  font-weight: bold;
+}
+
+.loan__credit-value--available {
+  color: var(--color-positive);
+}
+
+/* Expandable Info Section */
+.loan__info-section {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.loan__info-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.loan__info-toggle:hover .loan__credit-label {
+  color: var(--text-emphasis);
+}
+
+.loan__info-toggle-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loan__info-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.loan__info-toggle:hover .loan__info-icon {
+  color: var(--text-emphasis);
+}
+
+/* Expandable Content Animation (CSS Grid approach) */
+.loan__expandable {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease-out;
+}
+
+.loan__expandable--open {
+  grid-template-rows: 1fr;
+}
+
+.loan__expandable-content {
+  overflow: hidden;
+}
+
+/* Collateral Breakdown */
+.loan__collateral {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.loan__collateral-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.loan__collateral-row--total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-primary);
+  font-weight: 500;
+}
+
+.loan__collateral-label {
+  color: var(--text-secondary);
+}
+
+.loan__collateral-value {
+  color: var(--text-emphasis);
+}
+
+.loan__collateral-value--negative {
+  color: var(--color-negative);
+}
+
+.loan__collateral-info {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-primary);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.loan__collateral-info p {
+  margin: 0 0 0.25rem 0;
+}
+
+.loan__collateral-info p:last-child {
+  margin-bottom: 0;
+}
+
+/* Amount Input */
+.loan__amount-section {
+  margin-bottom: 1rem;
+}
+
+.loan__amount-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.loan__amount-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.loan__amount-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.loan__amount-input:focus-within {
+  border-color: var(--accent-primary);
+}
+
+.loan__currency-symbol {
+  padding: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-panel);
+  font-weight: 500;
+}
+
+.loan__amount-input input {
+  flex: 1;
+  padding: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-emphasis);
+  font-size: 1rem;
+}
+
+.loan__amount-input input:focus {
+  outline: none;
+}
+
+/* Duration Selection - Button Style (like settings options) */
+.loan__duration-section {
+  margin-bottom: 1rem;
+}
+
+.loan__duration-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.loan__duration-options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.loan__duration-option {
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 50px;
+  text-align: center;
+}
+
+.loan__duration-option:hover:not(:disabled) {
+  border-color: var(--border-hover);
+  color: var(--text-emphasis);
+}
+
+.loan__duration-option--selected {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+  font-weight: 500;
+}
+
+.loan__duration-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loan__duration-unit {
+  margin-left: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  align-self: center;
+}
+
+/* Amount Hint */
+.loan__amount-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Rate Row */
+.loan__rate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.loan__rate-label {
+  color: var(--text-muted);
+}
+
+.loan__rate-value {
+  color: var(--text-emphasis);
+  font-weight: 600;
+}
+
+/* Fee Row */
+.loan__fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.loan__fee-label {
+  color: var(--text-muted);
+}
+
+.loan__fee-value {
+  color: var(--color-warning);
+}
+
+/* Net Disbursement Row */
+.loan__net-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: var(--bg-accent-subtle);
+  border-radius: 0.5rem;
+}
+
+.loan__net-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.loan__net-value {
+  color: var(--color-positive);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Interest Rate Details */
+.loan__rate-details {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-primary);
+}
+
+.loan__rate-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.loan__rate-label {
+  color: var(--text-muted);
+}
+
+.loan__rate-value {
+  color: var(--text-emphasis);
+}
+
+.loan__rate-value--positive {
+  color: var(--color-positive);
+}
+
+.loan__rate-value--negative {
+  color: var(--color-negative);
+}
+
+.loan__rate-info {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-primary);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Cost Summary */
+.loan__cost-summary {
+  background: var(--bg-accent-subtle);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.loan__cost-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.loan__cost-row:last-child {
+  margin-bottom: 0;
+}
+
+.loan__cost-label {
+  color: var(--text-muted);
+}
+
+.loan__cost-value {
+  color: var(--text-emphasis);
+}
+
+.loan__cost-value--fee {
+  color: var(--color-warning);
+}
+
+.loan__cost-value--total {
+  color: var(--color-positive);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Confirm Button */
+.loan__confirm-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--color-positive);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.loan__confirm-btn:hover:not(:disabled) {
+  background: var(--color-positive-hover);
+}
+
+.loan__confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

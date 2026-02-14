@@ -5,7 +5,9 @@
     "close": "Close",
     "max": "Max",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "insufficientFunds": "Insufficient funds",
+    "invalidAmount": "Invalid amount"
   },
   "settings": {
     "title": "Settings",
@@ -13,35 +15,47 @@
     "appearance": "Appearance",
     "dark": "Dark",
     "light": "Light",
-    "updateInterval": "Update Interval (seconds)",
+    "updateInterval": "Trading Cycle Duration",
+    "seconds": "sec",
+    "marketCap": "${{value}}B MCap",
     "virtualPlayers": "Number of virtual players (0-{{max}})",
-    "settings": "Settings"
+    "settings": "Settings",
+    "gameControls": "Game State",
+    "saveGame": "Save Game",
+    "loadGame": "Load Game",
+    "saveGameSuccess": "Game saved",
+    "saveGameError": "Error saving game",
+    "loadGameSuccess": "Game loaded",
+    "loadGameError": "Error loading game",
+    "resetGame": "Start New Game",
+    "resetGameConfirm": "Are you sure you want to start a new game? All progress will be lost."
   },
   "game": {
     "start": "Start Game",
+    "newGame": "New Game",
+    "continueGame": "Continue Game",
     "startingCapital": "Starting Capital",
     "preparingMarket": "Preparing market...",
     "nextCycle": "Next trading cycle:",
+    "currentCycle": "Next Update",
+    "remainingTime": "Remaining Rounds",
     "resume": "Resume",
     "pause": "Pause",
-    "speed": "Speed: {{speed}}x (click for {{next}}x)",
-    "trades": "{{count}} Trades",
-    "players": "{{count}} Players",
-    "showPlayers": "Show virtual players",
-    "hidePlayers": "Hide virtual players"
+    "speed": "Speed: {{speed}}x",
+    "trades": "Market Overview – {{count}} Trades",
+    "players": "Market Overview – {{count}} Players",
+    "marketOverview": "Market Overview",
+    "showPlayers": "Show market overview",
+    "hidePlayers": "Hide market overview"
   },
   "gameModes": {
     "realLife": {
       "name": "Real Life",
-      "description": "Realistic market conditions"
+      "description": "Normal market conditions"
     },
     "hardLife": {
       "name": "Hard Life",
-      "description": "Difficult mode with additional challenges"
-    },
-    "sandbox": {
-      "name": "Sandbox",
-      "description": "Free play without restrictions"
+      "description": "Expensive trades, no insight into market and competition"
     }
   },
   "orderTypes": {
@@ -90,8 +104,27 @@
     "stopHintSell": "Order triggered when price ≤ stop",
     "limitHintBuy": "Buy only when price ≤ limit",
     "limitHintSell": "Sell only when price ≥ limit",
-    "invalidStopBuyLimit": "Invalid price combination: For Stop Buy Limit, the limit price (${{limit}}) must be higher than the stop price (${{stop}}). Otherwise the order can never be executed.",
-    "invalidStopLossLimit": "Invalid price combination: For Stop Loss Limit, the limit price (${{limit}}) must be lower than the stop price (${{stop}}). Otherwise the order can never be executed."
+    "invalidStopBuyLimit": "Invalid price combination: For Stop Buy Limit, the limit price must be higher than the stop price.",
+    "invalidStopLossLimit": "Invalid price combination: For Stop Loss Limit, the limit price must be lower than the stop price.",
+    "triggerAt": "Triggers at",
+    "limitBuyHint": "Executes only when price ≤ limit.",
+    "limitSellHint": "Executes only when price ≥ limit.",
+    "stopBuyHint": "Triggers at price ≥ stop, then executes at market price.",
+    "stopSellHint": "Triggers at price ≤ stop, then executes at market price.",
+    "stopBuyLimitHint": "Triggers at price ≥ stop, executes only at price ≤ limit.",
+    "stopSellLimitHint": "Triggers at price ≤ stop, executes only at price ≥ limit.",
+    "availableCredit": "Available Credit",
+    "loanRequired": "Loan Required",
+    "loanAmount": "Loan Amount",
+    "interestRate": "Interest Rate",
+    "originationFee": "Origination Fee",
+    "buyWithLoan": "Take Loan and Buy",
+    "exceedsMaxBuy": "Maximum: {{max}} shares (available: {{cash}})",
+    "exceedsMaxSell": "Maximum: {{max}} shares available",
+    "exceedsMaxSellShortMargin": "Maximum: {{max}} shares - remainder serves as collateral for short positions",
+    "sellBlockedByShortCollateral": "Cannot sell - all shares serve as collateral for short positions",
+    "sellLimitedByShortCollateral": "Only {{max}} shares sellable - remainder serves as collateral for short positions",
+    "sharesAutoCorrected": "Quantity adjusted to {{max}} (max. available: {{cash}})"
   },
   "errors": {
     "invalidQuantity": "Please enter a valid quantity.",
@@ -101,7 +134,7 @@
     "invalidStopPrice": "Please enter a valid stop price."
   },
   "portfolio": {
-    "title": "Your Portfolio",
+    "title": "Portfolio",
     "available": "Available",
     "reserved": "Reserved",
     "stockValue": "Stock Value",
@@ -113,29 +146,50 @@
     "noOrders": "no pending orders",
     "buy": "BUY",
     "sell": "SELL",
+    "shortSell": "SHORT",
+    "buyToCover": "COVER",
     "editOrder": "Edit order",
     "cancelOrder": "Cancel order",
+    "orderLocked": "Order is being executed and cannot be modified",
+    "executing": "executing",
     "nextCycle": "Next Cycle",
-    "tradingCycles": "{{count}} trading cycles",
+    "created": "(created)",
+    "createdCycles_one": "(created) {{count}} trading cycle",
+    "createdCycles_other": "(created) {{count}} trading cycles",
+    "tradingCycles_one": "{{count}} trading cycle",
+    "tradingCycles_other": "{{count}} trading cycles",
+    "executionFailed": "execution failed",
     "remainingCycles": "Remaining trading cycles until execution",
     "symbol": "Symbol",
     "qty": "Qty",
     "buyPrice": "Buy",
     "current": "Current",
-    "pl": "P/L"
+    "pl": "P/L",
+    "withLoan": "Loan: ${{amount}} @ {{rate}}%"
   },
   "stockList": {
-    "title": "Exchange",
+    "title": "Trading Floor",
     "symbol": "Symbol",
     "price": "Price",
     "change": "Chg.",
-    "marketCap": "MCap",
-    "trend": "Trend"
+    "trend": "Trend",
+    "sector": "Grp.",
+    "sectors": {
+      "tech": "Technology",
+      "techShort": "T",
+      "finance": "Finance",
+      "financeShort": "F",
+      "industrial": "Industrial",
+      "industrialShort": "I",
+      "commodities": "Commodities",
+      "commoditiesShort": "R"
+    }
   },
   "chart": {
-    "marketIndex": "Market Index",
+    "marketIndex": "Market Condition",
+    "sectorIndices": "Sector Indices",
     "orderHistory": "Order History",
-    "assets": "Assets ({{count}})",
+    "assets": "Assets",
     "stock": "Stocks",
     "stockNotFound": "Stock not found",
     "pendingOrder": "Pending order exists",
@@ -153,29 +207,71 @@
     "buyOrderFailed": {
       "title": "Buy order not executed",
       "message": "{{shares}}x {{symbol}} could not be purchased. Required: ${{required}}, Available: ${{available}}"
+    },
+    "sellOrderFailed": {
+      "title": "Sell order not executed",
+      "message": "{{shares}}x {{symbol}} could not be sold. Required: {{required}} shares, Available: {{available}} shares"
+    },
+    "buyToCoverFailed": {
+      "title": "Buy to cover failed",
+      "message": "{{shares}}x {{symbol}} could not be covered. Available: {{available}} short shares",
+      "insufficientFunds": "Insufficient funds to cover. Required: ${{required}}, Available: ${{available}}"
+    },
+    "partialCover": {
+      "title": "Partial cover executed",
+      "message": "{{executed}} of {{total}} shares {{symbol}} covered. {{remaining}} shares remain as pending order."
+    },
+    "coverComplete": {
+      "title": "Short position covered",
+      "message": "{{shares}} shares {{symbol}} fully covered. Short position closed."
+    },
+    "loanLimitReached": "Order could not be executed: Maximum number of loans reached.",
+    "orderExpired": {
+      "title": "Order expired",
+      "message": "{{type}} {{shares}}x {{symbol}} has expired. {{reason}}",
+      "reasons": {
+        "limitBuyNotReached": "Limit of ${{limit}} not reached (current: ${{current}})",
+        "limitSellNotReached": "Limit of ${{limit}} not reached (current: ${{current}})",
+        "stopBuyNotTriggered": "Stop at ${{stop}} not triggered (current: ${{current}})",
+        "stopLossNotTriggered": "Stop at ${{stop}} not triggered (current: ${{current}})",
+        "stopTriggeredLimitBuyNotReached": "Stop triggered, but limit of ${{limit}} not reached (current: ${{current}})",
+        "stopTriggeredLimitSellNotReached": "Stop triggered, but limit of ${{limit}} not reached (current: ${{current}})",
+        "generic": "Price condition not met"
+      }
     }
   },
   "tradeHistory": {
     "title": "Order History",
     "recentTrades": "Recent Trades",
     "noTrades": "No trades yet",
+    "expired": "Expired",
     "buys": "{{count}} Buys",
     "sells": "{{count}} Sells",
     "buy": "BUY",
     "sell": "SELL",
+    "shortSell": "SHORT SELL",
+    "buyToCover": "COVER",
     "failed": "FAILED",
     "time": "Time",
+    "cycle": "Cycle",
     "type": "Type",
     "symbol": "Symbol",
     "shares": "Qty",
     "price": "Price",
     "total": "Total",
     "pl": "P/L",
+    "plPercent": "%",
     "failureReasons": {
       "insufficient_funds": "Insufficient funds",
       "insufficient_shares": "Insufficient shares",
       "expired": "Order expired",
       "unknown": "Unknown reason"
+    },
+    "failureDetails": {
+      "insufficientFunds": "Required: ${{required}}, Available: ${{available}}",
+      "insufficientShares": "Required: {{required}} pcs, Available: {{available}} pcs",
+      "insufficientShortShares": "Required: {{required}} short pcs, Available: {{available}} short pcs",
+      "loanLimitReached": "Maximum number of loans reached"
     },
     "chart": {
       "noTrades": "No trades executed yet",
@@ -200,7 +296,41 @@
       "aggressiveDesc": "Large positions, high trading frequency, holds even at losses"
     }
   },
+  "sectors": {
+    "tech": "Tech",
+    "finance": "Finance",
+    "industrial": "Industrial",
+    "commodities": "Commodities"
+  },
+  "market": {
+    "crashTitle": "{{sector}} Crash!",
+    "crashMessage": "The {{sector}} sector has crashed! Price drop of approx. {{impact}}%."
+  },
+  "economicClimate": {
+    "title": "Economic Climate",
+    "fearGreedIndex": "Fear & Greed Index",
+    "fearGreedDescription": "Measures market sentiment: Low = Fear (cautious investors), High = Greed (risk-seeking investors).",
+    "globalPhase": "Global Phase",
+    "sectorPhases": "Sector Phases",
+    "phases": {
+      "prosperity": "Prosperity",
+      "boom": "Boom",
+      "consolidation": "Consolidation",
+      "panic": "Panic",
+      "recession": "Recession",
+      "recovery": "Recovery"
+    },
+    "fearLevels": {
+      "extremeFear": "Extreme Fear",
+      "fear": "Fear",
+      "neutral": "Neutral",
+      "greed": "Greed",
+      "extremeGreed": "Extreme Greed"
+    }
+  },
   "virtualPlayers": {
+    "title": "Virtual Players",
+    "tradesCount": "{{count}} Trades",
     "transactions": "Transactions",
     "noTransactions": "No transactions yet",
     "decisionFactors": "Decision Factors",
@@ -213,6 +343,7 @@
     "sellScore": "Sell Score",
     "sellThreshold": "(≥40 = sell)",
     "cash": "Cash",
+    "debt": "Debt",
     "clickDetails": "Click for details",
     "risk": {
       "averse": "Conservative",
@@ -245,67 +376,388 @@
       "sell": "SELL"
     }
   },
+  "marketMaker": {
+    "title": "Market Maker Inventory",
+    "inventory": "Inventory",
+    "spread": "Spread",
+    "lowInventory": "Limited availability",
+    "highInventory": "High availability",
+    "normalInventory": "Normal availability",
+    "barTooltip": "Inventory: {{percent}}% – Green (80-120%): normal, Yellow (50-80%): low, Red (<50%): critical, Blue (>120%): excess",
+    "spreadTooltip": "Spread markup: {{percent}}% – Higher markup when inventory is low, lower when inventory is high"
+  },
   "help": {
     "linkText": "How does the game work?",
     "title": "Welcome to D-GRE Stock Exchange",
-    "understood": "Got it, let's go!",
-    "intro": {
-      "title": "What is this?",
-      "text": "D-GRE Stock Exchange is a realistic stock market game where you can try real trading strategies with virtual money. Buy and sell stocks from 14 well-known companies, watch price movements in real-time, and try to grow your portfolio. Virtual players also trade and influence prices – just like on the real stock market."
-    },
-    "howToPlay": {
-      "title": "How to Play",
-      "step1": {
-        "title": "Watch the Market",
-        "text": "On the right, you'll see all available stocks with their current prices and trends. Click on a stock to see its detailed chart."
+    "understood": "Close",
+    "sections": {
+      "gameMechanics": {
+        "title": "Game Mechanics",
+        "intro": "D-GRE Stock Exchange is a realistic stock market game. Trade 16 stocks with virtual money, compete against AI players, and try to grow your portfolio. Prices update each trading cycle -- the game is played in rounds.",
+        "durationTitle": "Game Duration",
+        "durationIntro": "Choose how long you want to play before the game starts:",
+        "duration30min": "360 rounds (approx. 30 minutes)",
+        "duration20min": "240 rounds (approx. 20 minutes)",
+        "duration10min": "120 rounds (approx. 10 minutes)",
+        "duration5min": "60 rounds (approx. 5 minutes)",
+        "durationUnlimited": "Unlimited -- play as long as you want, no ranking at the end.",
+        "speedTitle": "Game Speed",
+        "speedIntro": "You can change the speed during the game:",
+        "speed1x": "1x -- 5 seconds per round (default)",
+        "speed2x": "2x -- 2.5 seconds per round",
+        "speed3x": "3x -- approx. 1.7 seconds per round",
+        "autoPauseName": "Auto-Pause",
+        "autoPause": "The game automatically pauses when you open the trade panel, loan dialog, settings, or this help screen. It resumes when you close them.",
+        "endScreenName": "End Screen & Ranking",
+        "endScreen": "When time runs out, you see a ranking against all virtual players. Your net worth is calculated as cash + stock value - debt + short position profit/loss.",
+        "previewHotkey": "Press Alt+R at any time to preview the current standings without ending the game."
       },
-      "step2": {
-        "title": "Buy Stocks",
-        "text": "Click the Buy button on any stock. Choose the quantity and order type (Market for instant purchase, Limit for a specific price)."
+      "loans": {
+        "title": "Loan System",
+        "intro": "You can borrow money to increase your buying power. But be careful -- loans cost interest and must be repaid on time!",
+        "creditLineName": "Credit Line",
+        "creditLine": "Your credit line is based on your stock holdings. Large-cap stocks (market cap > $200B) count as 70% of their value, small/mid-cap stocks as 50%. Cash does not count as collateral. The maximum credit is 2.5x the recommended amount.",
+        "durationName": "Loan Duration",
+        "duration": "Each loan runs for {{minLoanDuration}} to {{maxLoanDuration}} cycles. When it expires, the full amount is automatically repaid from your cash.",
+        "interestName": "Interest",
+        "interest": "The base interest rate is {{baseInterestRate}}% and is charged every {{interestChargeCycles}} cycles. The rate increases if you use a lot of your credit line (+1% at 50% utilization, +3% at 75%) or trade aggressively (+2%). Conservative traders get a 1% discount.",
+        "feesName": "Fees",
+        "fees": "A {{originationFee}}% origination fee is deducted when you take a loan. If you repay early, a {{earlyRepaymentFee}}% early repayment fee applies.",
+        "creditScoreName": "Credit Score",
+        "creditScore": "Your credit score ranges from 0 to 100 and starts at 50. Repaying loans on time improves it, while overdue payments lower it. A higher score means better interest rates on future loans.",
+        "multipleLoansName": "Multiple Loans",
+        "multipleLoans": "You can have up to {{maxLoans}} loans at the same time. However, each additional loan adds +1% to the interest rate."
       },
-      "step3": {
-        "title": "Manage Your Portfolio",
-        "text": "On the left, you'll see your portfolio with all purchased stocks, available cash, and open orders. Keep an eye on the total value!"
+      "trading": {
+        "title": "Trading",
+        "intro": "You can trade stocks using different order types. Each order is processed after one trading cycle. A {{feePercent}}% transaction fee applies to every trade.",
+        "orderTypesTitle": "Order Types",
+        "marketOrderName": "Market Order",
+        "marketOrder": "Buys or sells at the current market price. Executes after one cycle. A small cash buffer is reserved to account for price fluctuations.",
+        "limitOrderName": "Limit Order",
+        "limitOrder": "Buy at or below / sell at or above a price you set. You choose the validity period (default: {{orderValidity}} cycles). If the price condition is not met in time, the order expires.",
+        "stopBuyName": "Stop Buy",
+        "stopBuy": "Triggers a market buy when the price rises to your stop price. Useful for buying into an upward breakout.",
+        "stopLossName": "Stop Loss",
+        "stopLoss": "Triggers a market sell when the price falls to your stop price. Used to automatically limit your losses.",
+        "stopBuyLimitName": "Stop Buy Limit",
+        "stopBuyLimit": "A two-stage order: first triggers at the stop price, then only executes if the limit price is also met. Gives you more control than a regular stop buy.",
+        "stopLossLimitName": "Stop Loss Limit",
+        "stopLossLimit": "A two-stage order: triggers at the stop price, then only executes if the limit price is met. Prevents selling at an unexpectedly low price.",
+        "shortSellingTitle": "Short Selling",
+        "shortSellingIntro": "Short selling lets you bet on falling prices. You borrow shares, sell them immediately, and hope to buy them back later at a lower price.",
+        "shortHowItWorksName": "How It Works",
+        "shortHowItWorks": "You sell borrowed shares at the current price. If the price drops, you buy them back cheaper and keep the difference as profit. If the price rises, you lose money.",
+        "shortMarginName": "Margin Requirements",
+        "shortMargin": "Opening a short requires {{initialMargin}}% of the position value as collateral, locked from your credit line. You must maintain at least {{maintenanceMargin}}% at all times.",
+        "shortBorrowFeesName": "Borrow Fees",
+        "shortBorrowFees": "You pay {{baseBorrowFee}}% per cycle to borrow shares. If more than 50% of a stock's float is shorted, the fee is multiplied by {{hardToBorrowMultiplier}}x (hard to borrow).",
+        "shortMarginCallName": "Margin Calls",
+        "shortMarginCall": "If your collateral drops below {{maintenanceMargin}}%, you receive a margin call. You then have {{marginCallGraceCycles}} cycles to add margin or close the position. Otherwise, it is forcibly liquidated.",
+        "buyToCoverName": "Buy to Cover",
+        "buyToCover": "To close a short position, you buy back the borrowed shares. This is called 'buy to cover'. Any profit or loss is realized at that point."
       },
-      "step4": {
-        "title": "Sell for Profit",
-        "text": "When the price has risen, sell your stocks for a profit. Or use Stop-Loss orders to limit your losses."
+      "economy": {
+        "title": "Economy",
+        "intro": "The game simulates a dynamic economy with market indices, sector relationships, and changing economic phases.",
+        "indicesTitle": "Market Indices",
+        "mainIndexName": "D-GREX Prime",
+        "mainIndex": "The main index tracks the weighted performance of all 16 stocks. It starts at 10,000 points. Larger companies have more influence on the index value.",
+        "sectorIndicesName": "Sector Indices",
+        "sectorIndices": "Four sector indices (D-GREX Tek, Fin, Ind, Raw) show the performance of Technology, Finance, Industrial, and Commodities. Use them to spot which sectors are strong or weak.",
+        "sectorDynamicsTitle": "Sector Dynamics",
+        "sectorDynamicsIntro": "Stocks in the same industry influence each other, just like in real markets.",
+        "correlationName": "Sector Correlation",
+        "correlation": "Stocks in the same sector share a common trend. When one tech stock rises, other tech stocks often follow. This momentum builds and fades over multiple cycles.",
+        "interSectorName": "Inter-Sector Effects",
+        "interSector": "Sectors also affect each other. Strong financial stocks can support tech and industrial (through credit). Rising industrial values increase commodity demand. But expensive commodities can burden industry.",
+        "marketMakerTitle": "Market Maker",
+        "marketMakerIntro": "A virtual market maker acts as the counterparty for all your trades. Its inventory level affects trading conditions.",
+        "inventoryName": "Inventory Display",
+        "inventory": "The color bar shows inventory: green (80-120%) is normal, yellow (50-80%) is low, red (<50%) is critical, and blue (>120%) is excess.",
+        "dynamicSpreadName": "Dynamic Spread",
+        "dynamicSpread": "Low market maker inventory means a higher spread (more expensive to trade). High inventory means a lower spread (cheaper to trade).",
+        "rebalancingName": "Automatic Recovery",
+        "rebalancing": "Each cycle, the market maker's inventory moves 1% back toward normal. Extreme values recover over time.",
+        "spreadSlippageTitle": "Spread & Slippage",
+        "spreadName": "Spread",
+        "spread": "The spread is the difference between the buy price and the sell price of a stock. Currently {{spreadPercent}}%. This is a hidden trading cost on every transaction, in addition to the {{feePercent}}% transaction fee.",
+        "slippageName": "Slippage",
+        "slippage": "Large orders can move the price. The 'effective price' shown before you trade includes this price impact so you know your actual cost.",
+        "fearGreedTitle": "Fear & Greed Index",
+        "fearGreed": "A sentiment gauge from 0 to 100. 0-25 = Extreme Fear, 26-45 = Fear, 46-55 = Neutral, 56-75 = Greed, 76-100 = Extreme Greed. It reflects the overall mood of the market.",
+        "marketPhasesTitle": "Market Phases",
+        "marketPhasesIntro": "The economy cycles through six phases that affect stock prices, volatility, and trading costs:",
+        "phaseProsperity": "Prosperity -- Stable growth, moderate volatility. A good time for steady gains.",
+        "phaseBoom": "Boom -- High growth, rising prices. Profits are easy, but a correction may follow.",
+        "phaseConsolidation": "Consolidation -- Uncertainty, mixed signals. The market decides its next direction.",
+        "phasePanic": "Panic -- Sharp drops, high volatility. Prices can fall rapidly.",
+        "phaseRecession": "Recession -- Prolonged downturn, low prices. Can be an opportunity for bargain hunters.",
+        "phaseRecovery": "Recovery -- The market turns around. Prices start climbing again from low levels."
+      },
+      "tips": {
+        "title": "Tips for Success",
+        "tip1": "Diversify across sectors -- don't put all your money into one stock or industry.",
+        "tip2": "Watch the charts and sector indices before buying. Look for trends and momentum.",
+        "tip3": "Use stop-loss orders to automatically limit your losses if a stock drops.",
+        "tip4": "Start with small positions to learn how the market works before investing heavily.",
+        "tip5": "Watch sector momentum -- when one sector rises, related sectors may follow."
+      }
+    }
+  },
+  "loans": {
+    "title": "Loans",
+    "liabilities": "Liabilities",
+    "totalDebt": "Total Debt",
+    "noLoans": "no active loans",
+    "repay": "Repay",
+    "repayNoFee": "Repay (no fee)",
+    "fee": "fee",
+    "cannotRepayInsufficientFunds": "Insufficient funds to repay",
+    "newLoan": "New Loan",
+    "takeLoan": "Take Loan",
+    "remaining": "{{count}} remaining",
+    "creditLine": "Credit Line",
+    "recommendedCreditLine": "Recommended Credit Line",
+    "maxCreditLine": "Max Credit Line",
+    "recommendedCredit": "Recommended Credit",
+    "recommendedCreditHint": "= Collateral, rounded down to $1,000",
+    "maxCredit": "Maximum Credit",
+    "currentDebt": "Current Debt",
+    "availableCredit": "Available Credit",
+    "utilization": "Utilization",
+    "collateral": "Collateral",
+    "collateralLargeCap": "Large Cap Stocks (70%)",
+    "collateralSmallCap": "Small/Mid Cap Stocks (50%)",
+    "collateralTotal": "Total Collateral",
+    "recommendedCreditFormula": "Recommended Credit = Collateral (rounded down to $1,000)",
+    "maxCreditFormula": "Max. Credit = Recommended Credit × {{multiplier}}",
+    "amount": "Loan Amount",
+    "duration": "Duration",
+    "cycles": "cycles",
+    "cyclesRemaining": "{{cycles}} cycles remaining",
+    "dueIn": "due in: {{cycles}} cycles",
+    "loanAbbreviation": "L",
+    "dueNow": "Due now!",
+    "overdue": "Overdue",
+    "overdueFor": "Overdue for {{cycles}} cycles",
+    "overdueTooltip": "Loan is overdue! Credit score decreases each cycle.",
+    "interestRate": "Interest Rate",
+    "baseRate": "Base Rate",
+    "riskProfileAdjustment": "Risk Profile",
+    "riskProfileHint": "(conservative = bonus, aggressive = surcharge)",
+    "profitHistoryAdjustment": "Trading History",
+    "profitHistoryHint": "(surcharge for high realized losses)",
+    "utilizationSurcharge": "Utilization Surcharge",
+    "utilizationHint": "(Debt / Max. Credit: ≥50% +1%, ≥75% +3%, 100% +6%)",
+    "loanCountPenalty": "Multiple Loan Penalty",
+    "additionalLoanSurcharge": "Additional Loan Surcharge",
+    "additionalLoanHint": "(+1% per additional loan)",
+    "creditScoreAdjustment": "Credit Score",
+    "durationDiscount": "Duration Discount",
+    "durationDiscountHint": "(longer duration = lower rate)",
+    "effectiveRate": "Effective Rate",
+    "originationFee": "Origination Fee",
+    "netDisbursement": "Net Disbursement",
+    "maxAvailable": "Max available",
+    "conditions": "Loan Terms",
+    "interestBreakdownTitle": "Interest Rate Breakdown",
+    "interestChargeNote": "Interest is charged every {{cycles}} trading cycles.",
+    "creditLineTitle": "Credit Line Calculation",
+    "ofValue": "of value",
+    "creditLineNote": "Only stocks serve as collateral. Cash is not counted.",
+    "repaymentFeeInfo": "{{percent}}% repayment fee on early payoff.",
+    "blockedByTradePanel": "Cannot take loan while trade panel is open",
+    "loanCount": "{{current}} of {{max}} loans",
+    "maxLoansReached": "Maximum loans reached",
+    "slotsAvailable": "{{count}} available",
+    "confirmLoan": "Confirm Loan",
+    "principal": "Principal",
+    "balance": "Balance",
+    "interestPaid": "Interest Paid",
+    "interest": "Interest",
+    "perCycles": "every {{cycles}} cycles",
+    "interestCycleInfo": "Interest is charged every {{cycles}} trading cycles",
+    "noCollateral": "No loan available - no stock collateral",
+    "creditScore": {
+      "title": "Credit Score",
+      "baseValue": "Base Value",
+      "description": "Your credit score affects interest rates for future loans. On-time repayments improve it, overdue payments lower it.",
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "recentEvents": "Recent Events",
+      "events": {
+        "repaidEarly": "Repaid early",
+        "repaidOnTime": "Repaid on time",
+        "autoRepaid": "Auto-repaid",
+        "overdue": "Overdue",
+        "overdueMultiple": "Delinquencies",
+        "defaultPenalty": "Default penalty"
+      },
+      "delinquency": {
+        "title": "Delinquencies",
+        "totalLoans": "Overdue Loans (total)",
+        "totalCycles": "Overdue Cycles (total)",
+        "maxOverdue": "Longest Delinquency",
+        "avgOverdue": "Avg. Delinquency"
       }
     },
-    "rules": {
-      "title": "Game Rules",
-      "rule1": "You start with customizable starting capital (default: $100,000).",
-      "rule2": "Prices update every few seconds – you can adjust the speed in settings.",
-      "rule3": "You can only execute one order per stock per trading cycle.",
-      "rule4": "There are trading fees and spreads like on the real stock market.",
-      "rule5": "Virtual players with different strategies also influence prices.",
-      "rule6": "Goal: Grow your starting capital through smart investment decisions!"
-    },
-    "orderTypes": {
-      "title": "Order Types Explained",
-      "marketName": "Market Order",
-      "limitName": "Limit Order",
-      "stopName": "Stop Buy / Stop Loss",
-      "market": "Immediate buy/sell at current market price.",
-      "limit": "Only executes when the price reaches your desired level.",
-      "stop": "Automatic trigger at a specific price – ideal for breakouts or stop-loss."
-    },
-    "marketMechanics": {
-      "title": "Spread & Slippage",
-      "spreadName": "Spread",
-      "slippageName": "Slippage",
-      "spread": "The spread is the difference between the buy price (ask) and sell price (bid) of a stock. When you buy, you pay slightly more than the displayed price; when you sell, you receive slightly less. This difference represents a hidden trading cost and is how market makers earn their profit.",
-      "slippage": "Slippage occurs when your order is executed at a different price than expected. This happens especially with market orders and during high volatility. In real markets, large orders can also move the price. The displayed effective price includes potential slippage so you know your actual cost."
-    },
-    "tips": {
-      "title": "Tips for Beginners",
-      "tip1": "Diversify! Don't put all your money in one company.",
-      "tip2": "Watch the trends in the chart before you buy.",
-      "tip3": "Use Stop-Loss orders to avoid large losses."
-    },
-    "virtualPlayers": {
-      "title": "Virtual Players",
-      "text": "In the footer bar, you'll find the 'Show virtual players' button. This opens a panel showing all AI-controlled players. You can see their portfolios, cash balances, and trading decisions. Observe their strategies – from conservative to risk-seeking – and learn how different approaches work in the market."
+    "notifications": {
+      "dueSoonTitle": "Loan Due Soon",
+      "dueSoonMessage": "{{loanName}} of ${{amount}} is due in {{cycles}} cycles.",
+      "repaidTitle": "Loan Repaid",
+      "repaidMessage": "{{loanName}} was automatically repaid: ${{amount}}",
+      "overdueTitle": "Loan Overdue!",
+      "overdueMessage": "{{loanName}}: Not enough cash for repayment. Remaining debt: ${{amount}}."
     }
+  },
+  "shorts": {
+    "title": "Short Selling",
+    "shortSell": "Short Sell",
+    "buyToCover": "Buy to Cover",
+    "position": "Short Position",
+    "positions": "Short Positions",
+    "noPositions": "No short positions",
+    "entryPrice": "Entry Price",
+    "currentPrice": "Current Price",
+    "shares": "Shares",
+    "unrealizedPL": "Unrealized P/L",
+    "collateral": "Collateral",
+    "totalExposure": "Total Exposure",
+    "lockedCollateral": "Locked Collateral",
+    "profitLoss": "P/L",
+    "marginCallGrace": "cycles remaining",
+    "borrowFee": "Borrow Fee",
+    "borrowFeePerCycle": "Borrow Fee per Cycle",
+    "totalBorrowFees": "Total Borrow Fees Paid",
+    "marginRequired": "Margin Required",
+    "marginAvailable": "Available Margin",
+    "marginUtilization": "Margin Utilization",
+    "easyToBorrow": "Easy to Borrow",
+    "hardToBorrow": "Hard to Borrow",
+    "easyToBorrowHint": "Standard borrow fee - enough shares available to borrow",
+    "hardToBorrowHint": "Increased borrow fee - high demand for borrowing this stock",
+    "cycle": "cycle",
+    "shortInterest": "Short Interest",
+    "maxShortable": "Max. Shortable",
+    "cover": "Cover",
+    "coverAll": "Cover All",
+    "addMargin": "Add Margin",
+    "addMarginPrompt": "How much margin do you want to add to {{symbol}}? (Available: ${{available}})",
+    "addMarginAmount": "Amount",
+    "marginAdded": "{{amount}} margin added to {{symbol}}",
+    "currentCollateral": "Current Collateral",
+    "addingMargin": "Adding",
+    "newCollateral": "New Collateral",
+    "marginCall": "Margin Call",
+    "marginCallWarning": "Note: A margin call occurs if margin falls below {{percent}}%.",
+    "atRisk": "At Risk",
+    "coverBlockedMaxLoans": "Cannot cover: Loan limit reached (3/3)",
+    "coverBlockedNoCollateral": "Cannot cover: No collateral for loan",
+    "coverBlockedInsufficientFunds": "Cannot cover: Insufficient funds",
+    "coverLimitedByFunds": "Only {{max}} of {{total}} shares coverable (limited by available funds)",
+    "addMarginBlockedNoCash": "Cannot add margin: No cash available",
+    "notifications": {
+      "marginCallTitle": "Margin Call!",
+      "marginCallMessage": "Short position {{symbol}} is below maintenance margin. You have {{cycles}} cycles to add margin or cover.",
+      "forcedCoverWarningTitle": "Forced Cover Imminent",
+      "forcedCoverWarningMessage": "Short position {{symbol}} will be forcibly covered next cycle if no action is taken.",
+      "forcedCoverTitle": "Forced Cover Executed",
+      "forcedCoverMessage": "Short position {{symbol}} was forcibly covered: {{shares}} shares, realized P/L: ${{pl}}",
+      "borrowFeeCharged": "Borrow fee deducted: ${{amount}}"
+    },
+    "help": {
+      "title": "What is Short Selling?",
+      "description": "In short selling, you sell borrowed shares that you don't own. You're betting that the price will fall so you can buy them back cheaper later.",
+      "margin": "You must post collateral (margin) from your credit line.",
+      "risk": "Warning: The loss potential is theoretically unlimited, as prices can rise indefinitely.",
+      "fees": "Borrow fees are charged per cycle for borrowed shares."
+    },
+    "errors": {
+      "shortSellingDisabled": "Short selling is not available",
+      "insufficientCollateral": "Insufficient collateral",
+      "exceedsMaxShort": "Exceeds maximum shortable for this stock",
+      "noSharesAvailable": "No shares available to borrow",
+      "insufficientMargin": "Insufficient margin to open position",
+      "positionNotFound": "Short position not found"
+    }
+  },
+  "gameStart": {
+    "duration": "Game Duration",
+    "duration5min": "60 Rounds (approx. 5 min)",
+    "duration10min": "120 Rounds (approx. 10 min)",
+    "duration20min": "240 Rounds (approx. 20 min)",
+    "duration30min": "360 Rounds (approx. 30 min)",
+    "durationUnlimited": "Unlimited"
+  },
+  "gameEnd": {
+    "title": "Game Over",
+    "yourResult": "Your Result",
+    "ranking": "Rank",
+    "netWorth": "Net Worth",
+    "profit": "Profit/Loss",
+    "riskProfile": "Risk Profile",
+    "rankingTitle": "D-GREX Ranking",
+    "rank": "Rank",
+    "player": "Player",
+    "you": "You",
+    "playAgain": "Play Again",
+    "loadLastSave": "Load Last Save",
+    "continueGame": "Continue Game",
+    "newGame": "New Game",
+    "riskLevel": {
+      "conservative": "Conservative",
+      "moderate": "Moderate",
+      "aggressive": "Aggressive"
+    },
+    "gameSummary": "Game Summary",
+    "duration": "Duration",
+    "cycles": "{{count}} rounds",
+    "averageClimate": "Average Climate",
+    "dominantPhase": "Dominant Phase",
+    "climate": {
+      "veryPositive": "Very positive",
+      "positive": "Positive",
+      "neutral": "Neutral",
+      "negative": "Negative",
+      "veryNegative": "Very negative"
+    },
+    "chartLegend": {
+      "phase": "Economic Phase",
+      "fearGreed": "Fear & Greed"
+    },
+    "netWorthBreakdown": "Net Worth Breakdown",
+    "cashBalance": "Cash",
+    "stocksValue": "Stock Value",
+    "liabilities": "Liabilities",
+    "creditScoreLabel": "Credit Score",
+    "creditScoreCalculation": "Calculation",
+    "totalInterestPaid": "Interest Paid",
+    "bestTrade": "Best Trade",
+    "worstTrade": "Worst Trade",
+    "bestShort": "Best Short",
+    "worstShort": "Worst Short",
+    "bestHolding": "Best Position",
+    "worstHolding": "Worst Position",
+    "tradeProfit": "Profit",
+    "tradeLoss": "Loss",
+    "sharesAt": "{{shares}} shares @ {{price}}",
+    "holdingDetail": "{{shares}} shares @ {{avgPrice}} → {{currentPrice}}",
+    "economicClimate": "Economic Climate",
+    "creditEvents": {
+      "base": "Base: {{value}}",
+      "repaidEarly": "early repayment",
+      "repaidOnTime": "on-time repayment",
+      "autoRepaid": "auto repayment",
+      "overdue": "overdue",
+      "defaultPenalty": "default penalty"
+    }
+  },
+  "debug": {
+    "title": "Debug Output",
+    "copy": "Copy",
+    "copied": "Copied!"
   }
 }

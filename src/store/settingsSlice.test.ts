@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import settingsReducer, { setUpdateInterval, decrementCountdown, resetCountdown, togglePause, setVirtualPlayerCount, setGameMode, setSpeedMultiplier, setLanguage } from './settingsSlice';
+import settingsReducer, { setUpdateInterval, setCountdown, decrementCountdown, resetCountdown, togglePause, setPaused, setVirtualPlayerCount, setGameMode, setSpeedMultiplier, setLanguage, setInitialCash, restoreSettings } from './settingsSlice';
 
 describe('settingsSlice', () => {
   const createInitialState = (overrides = {}) => ({
@@ -7,7 +7,7 @@ describe('settingsSlice', () => {
     countdown: 15,
     isPaused: false,
     virtualPlayerCount: 5,
-    gameMode: 'sandbox' as const,
+    gameMode: 'realLife' as const,
     speedMultiplier: 1 as const,
     language: 'de' as const,
     initialCash: 100000,
@@ -110,6 +110,32 @@ describe('settingsSlice', () => {
 
       expect(newState.updateInterval).toBe(30);
       expect(newState.countdown).toBe(15);
+    });
+  });
+
+  describe('setPaused', () => {
+    it('should set isPaused to true', () => {
+      const initialState = createInitialState({ isPaused: false });
+
+      const newState = settingsReducer(initialState, setPaused(true));
+
+      expect(newState.isPaused).toBe(true);
+    });
+
+    it('should set isPaused to false', () => {
+      const initialState = createInitialState({ isPaused: true });
+
+      const newState = settingsReducer(initialState, setPaused(false));
+
+      expect(newState.isPaused).toBe(false);
+    });
+
+    it('should allow setting same value', () => {
+      const initialState = createInitialState({ isPaused: true });
+
+      const newState = settingsReducer(initialState, setPaused(true));
+
+      expect(newState.isPaused).toBe(true);
     });
   });
 
@@ -230,6 +256,152 @@ describe('settingsSlice', () => {
       const newState = settingsReducer(initialState, setLanguage('de'));
 
       expect(newState.language).toBe('de');
+    });
+  });
+
+  describe('setCountdown', () => {
+    it('should set countdown to specific value', () => {
+      const initialState = createInitialState({ countdown: 15 });
+
+      const newState = settingsReducer(initialState, setCountdown(10));
+
+      expect(newState.countdown).toBe(10);
+    });
+
+    it('should allow setting countdown to 0', () => {
+      const initialState = createInitialState({ countdown: 15 });
+
+      const newState = settingsReducer(initialState, setCountdown(0));
+
+      expect(newState.countdown).toBe(0);
+    });
+
+    it('should not affect other settings', () => {
+      const initialState = createInitialState();
+
+      const newState = settingsReducer(initialState, setCountdown(5));
+
+      expect(newState.updateInterval).toBe(30);
+      expect(newState.isPaused).toBe(false);
+    });
+  });
+
+  describe('setInitialCash', () => {
+    it('should set initialCash', () => {
+      const initialState = createInitialState({ initialCash: 100000 });
+
+      const newState = settingsReducer(initialState, setInitialCash(50000));
+
+      expect(newState.initialCash).toBe(50000);
+    });
+
+    it('should allow setting to higher value', () => {
+      const initialState = createInitialState({ initialCash: 100000 });
+
+      const newState = settingsReducer(initialState, setInitialCash(500000));
+
+      expect(newState.initialCash).toBe(500000);
+    });
+
+    it('should allow setting to minimum value', () => {
+      const initialState = createInitialState({ initialCash: 100000 });
+
+      const newState = settingsReducer(initialState, setInitialCash(10000));
+
+      expect(newState.initialCash).toBe(10000);
+    });
+  });
+
+  describe('restoreSettings', () => {
+    it('should restore gameMode', () => {
+      const initialState = createInitialState({ gameMode: 'realLife' });
+
+      const newState = settingsReducer(initialState, restoreSettings({ gameMode: 'hardLife' }));
+
+      expect(newState.gameMode).toBe('hardLife');
+    });
+
+    it('should restore updateInterval', () => {
+      const initialState = createInitialState({ updateInterval: 30 });
+
+      const newState = settingsReducer(initialState, restoreSettings({ updateInterval: 60 }));
+
+      expect(newState.updateInterval).toBe(60);
+    });
+
+    it('should restore virtualPlayerCount', () => {
+      const initialState = createInitialState({ virtualPlayerCount: 5 });
+
+      const newState = settingsReducer(initialState, restoreSettings({ virtualPlayerCount: 10 }));
+
+      expect(newState.virtualPlayerCount).toBe(10);
+    });
+
+    it('should restore initialCash', () => {
+      const initialState = createInitialState({ initialCash: 100000 });
+
+      const newState = settingsReducer(initialState, restoreSettings({ initialCash: 200000 }));
+
+      expect(newState.initialCash).toBe(200000);
+    });
+
+    it('should restore speedMultiplier', () => {
+      const initialState = createInitialState({ speedMultiplier: 1 });
+
+      const newState = settingsReducer(initialState, restoreSettings({ speedMultiplier: 2 }));
+
+      expect(newState.speedMultiplier).toBe(2);
+    });
+
+    it('should restore isPaused', () => {
+      const initialState = createInitialState({ isPaused: false });
+
+      const newState = settingsReducer(initialState, restoreSettings({ isPaused: true }));
+
+      expect(newState.isPaused).toBe(true);
+    });
+
+    it('should restore countdown', () => {
+      const initialState = createInitialState({ countdown: 15 });
+
+      const newState = settingsReducer(initialState, restoreSettings({ countdown: 25 }));
+
+      expect(newState.countdown).toBe(25);
+    });
+
+    it('should restore multiple settings at once', () => {
+      const initialState = createInitialState();
+
+      const newState = settingsReducer(initialState, restoreSettings({
+        gameMode: 'hardLife',
+        updateInterval: 45,
+        virtualPlayerCount: 8,
+        speedMultiplier: 3,
+      }));
+
+      expect(newState.gameMode).toBe('hardLife');
+      expect(newState.updateInterval).toBe(45);
+      expect(newState.virtualPlayerCount).toBe(8);
+      expect(newState.speedMultiplier).toBe(3);
+    });
+
+    it('should not change language when restoring', () => {
+      const initialState = createInitialState({ language: 'de' });
+
+      const newState = settingsReducer(initialState, restoreSettings({
+        gameMode: 'hardLife',
+        // Note: language is intentionally not restored
+      }));
+
+      expect(newState.language).toBe('de');
+    });
+
+    it('should handle empty restore payload', () => {
+      const initialState = createInitialState();
+
+      const newState = settingsReducer(initialState, restoreSettings({}));
+
+      expect(newState).toEqual(initialState);
     });
   });
 });

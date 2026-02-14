@@ -1,26 +1,24 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { applyTrade } from '../store/stocksSlice';
-import { buyStock, sellStock } from '../store/portfolioSlice';
-import { selectStock, openTradeModal, closeTradeModal, setChartTab } from '../store/uiSlice';
+import { selectStock, openTradeModal, closeTradeModal, setChartTab, type TradeType } from '../store/uiSlice';
 import { addPendingOrder, cancelOrder, markSymbolAsTraded, selectAllPendingOrders } from '../store/pendingOrdersSlice';
-import { addCompletedTrade } from '../store/tradeHistorySlice';
-import { calculateTradeExecution } from '../utils/tradingMechanics';
-import { TRADING_MECHANICS } from '../config';
-import type { PendingOrder, CompletedTrade, GameMode, Stock, Portfolio } from '../types';
+import { dismissNotificationsForOrder, addNotification } from '../store/notificationsSlice';
+import { selectAllShortPositions, addCollateral } from '../store/shortPositionsSlice';
+import { deductCash } from '../store/portfolioSlice';
+import { formatCurrency, getFormatLocale } from '../utils/formatting';
+import type { PendingOrder, Stock } from '../types';
 import type { OrderData } from '../components/TradePanel';
 
 interface UseTradingOptions {
   stocks: Stock[];
-  portfolio: Portfolio;
-  gameMode: GameMode;
 }
 
 interface UseTradingReturn {
   /** Currently edited order */
   editingOrder: PendingOrder | null;
   /** Opens the Trade-Panel for a stock */
-  handleTrade: (symbol: string, type: 'buy' | 'sell') => void;
+  handleTrade: (symbol: string, type: TradeType) => void;
   /** Cancels an order */
   handleCancelOrder: (orderId: string) => void;
   /** Opens the Trade-Panel to edit an order */
@@ -41,16 +39,14 @@ interface UseTradingReturn {
  */
 export const useTrading = ({
   stocks,
-  portfolio,
-  gameMode,
 }: UseTradingOptions): UseTradingReturn => {
+  const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const [editingOrder, setEditingOrder] = useState<PendingOrder | null>(null);
   const pendingOrders = useAppSelector(selectAllPendingOrders);
+  const shortPositions = useAppSelector(selectAllShortPositions);
 
-  const mechanics = TRADING_MECHANICS[gameMode];
-
-  const handleTrade = useCallback((symbol: string, type: 'buy' | 'sell'): void => {
+  const handleTrade = useCallback((symbol: string, type: TradeType): void => {
     dispatch(selectStock(symbol));
     dispatch(setChartTab('stock'));
     dispatch(openTradeModal({ symbol, type }));
@@ -58,6 +54,7 @@ export const useTrading = ({
 
   const handleCancelOrder = useCallback((orderId: string): void => {
     dispatch(cancelOrder(orderId));
+    dispatch(dismissNotificationsForOrder(orderId));
   }, [dispatch]);
 
   const handleEditOrder = useCallback((order: PendingOrder): void => {
@@ -65,6 +62,7 @@ export const useTrading = ({
     dispatch(selectStock(order.symbol));
     dispatch(setChartTab('stock'));
     dispatch(openTradeModal({ symbol: order.symbol, type: order.type }));
+    dispatch(dismissNotificationsForOrder(order.id));
   }, [dispatch]);
 
   const handleEditFailedOrder = useCallback((orderId: string, symbol: string): void => {
@@ -91,9 +89,85 @@ export const useTrading = ({
   }, [dispatch]);
 
   const executeTrade = useCallback((orderData: OrderData): void => {
-    const { symbol, type, shares, orderType, limitPrice, stopPrice, validityCycles } = orderData;
+    const { symbol, type, shares, orderType, limitPrice, stopPrice, validityCycles, loanRequest, collateralToLock, marginAmount } = orderData;
     const stock = stocks.find(s => s.symbol === symbol);
     if (!stock) return;
+
+    // Add margin is executed immediately (no pending order needed)
+    if (type === 'addMargin' && marginAmount && marginAmount > 0) {
+      const locale = getFormatLocale(i18n.language);
+      dispatch(deductCash(marginAmount));
+      dispatch(addCollateral({ symbol, amount: marginAmount }));
+      dispatch(addNotification({
+        type: 'success',
+        title: t('shorts.addMargin'),
+        message: t('shorts.marginAdded', { symbol, amount: formatCurrency(marginAmount, 0, locale) }),
+        autoDismissMs: 5000,
+      }));
+      return;
+    }
+
+    // Short sell and buy to cover orders now go through the pending order system
+    // They execute after 1 cycle delay like regular orders
+    if (type === 'shortSell') {
+      // Track if this is an edit (before we cancel the old order)
+      const isEdit = !!editingOrder;
+
+      // When editing: Cancel old order first
+      if (editingOrder) {
+        dispatch(cancelOrder(editingOrder.id));
+        setEditingOrder(null);
+      }
+
+      dispatch(addPendingOrder({
+        symbol,
+        type: 'shortSell',
+        shares,
+        orderType,
+        orderPrice: stock.currentPrice,
+        limitPrice,
+        stopPrice,
+        // Market orders always execute in the next cycle (validityCycles: 1)
+        validityCycles: orderType === 'market' ? 1 : validityCycles,
+        isEdit,
+        collateralToLock,
+      }));
+      dispatch(markSymbolAsTraded(symbol));
+      return;
+    }
+
+    if (type === 'buyToCover') {
+      // Get the short position to verify it exists
+      const shortPosition = shortPositions.find(p => p.symbol === symbol);
+      if (!shortPosition) return;
+
+      // Track if this is an edit (before we cancel the old order)
+      const isEdit = !!editingOrder;
+
+      // When editing: Cancel old order first
+      if (editingOrder) {
+        dispatch(cancelOrder(editingOrder.id));
+        setEditingOrder(null);
+      }
+
+      dispatch(addPendingOrder({
+        symbol,
+        type: 'buyToCover',
+        shares,
+        orderType,
+        orderPrice: stock.currentPrice,
+        limitPrice,
+        stopPrice,
+        // Market orders always execute in the next cycle (validityCycles: 1)
+        validityCycles: orderType === 'market' ? 1 : validityCycles,
+        isEdit,
+      }));
+      dispatch(markSymbolAsTraded(symbol));
+      return;
+    }
+
+    // Track if this is an edit (before we cancel the old order)
+    const isEdit = !!editingOrder;
 
     // When editing: Cancel old order first
     if (editingOrder) {
@@ -101,72 +175,26 @@ export const useTrading = ({
       setEditingOrder(null);
     }
 
-    // Non-market orders or orders with delay are created as pending orders
-    const needsPendingOrder = orderType !== 'market' || mechanics.orderDelayCycles > 0;
-
-    if (needsPendingOrder) {
-      dispatch(addPendingOrder({
-        symbol,
-        type,
-        shares,
-        orderType,
-        orderPrice: stock.currentPrice,
-        limitPrice,
-        stopPrice,
-        validityCycles: orderType === 'market' ? mechanics.orderDelayCycles : validityCycles,
-      }));
-      dispatch(markSymbolAsTraded(symbol));
-      return;
-    }
-
-    // Immediate execution (only market orders without delay)
-    const execution = calculateTradeExecution(stock.currentPrice, shares, type, mechanics);
-    const totalPricePerShare = execution.total / shares;
-
-    // For sales: Calculate average buy price and realized profit/loss
-    const holding = portfolio.holdings.find(h => h.symbol === symbol);
-    let realizedProfitLoss: number | undefined;
-    let avgBuyPrice: number | undefined;
-
-    if (type === 'sell' && holding) {
-      avgBuyPrice = holding.avgBuyPrice;
-      realizedProfitLoss = (totalPricePerShare - avgBuyPrice) * shares;
-    }
-
-    if (type === 'buy') {
-      dispatch(buyStock({
-        symbol,
-        shares,
-        price: totalPricePerShare,
-      }));
-    } else {
-      dispatch(sellStock({
-        symbol,
-        shares,
-        price: totalPricePerShare,
-      }));
-    }
-
-    // Add trade to history
-    const completedTrade: CompletedTrade = {
-      id: `trade-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    // All orders are created as pending orders
+    // Market orders execute at the start of the NEXT cycle (after virtual players have traded)
+    // This ensures market orders get the price after VP trades have influenced it
+    // Type assertion is safe: addMargin, shortSell, buyToCover all return early above
+    dispatch(addPendingOrder({
       symbol,
-      type,
+      type: type as 'buy' | 'sell',
       shares,
-      pricePerShare: totalPricePerShare,
-      totalAmount: execution.total,
-      timestamp: Date.now(),
-      realizedProfitLoss,
-      avgBuyPrice,
-    };
-    dispatch(addCompletedTrade(completedTrade));
-
-    // Apply market impact
-    dispatch(applyTrade({ symbol, type, shares }));
-
-    // Mark stock as traded in this cycle
+      orderType,
+      orderPrice: stock.currentPrice,
+      limitPrice,
+      stopPrice,
+      // Market orders always execute in the next cycle (validityCycles: 1)
+      // Other order types use the user-specified validity
+      validityCycles: orderType === 'market' ? 1 : validityCycles,
+      isEdit,
+      loanRequest,
+    }));
     dispatch(markSymbolAsTraded(symbol));
-  }, [stocks, portfolio.holdings, mechanics, editingOrder, dispatch]);
+  }, [stocks, editingOrder, dispatch, shortPositions, t, i18n]);
 
   return {
     editingOrder,

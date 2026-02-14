@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { calculateMarketIndex, INDEX_BASE_POINTS } from './indexCalculation';
-import type { Stock } from '../types';
+import {
+  calculateMarketIndex,
+  calculateSectorIndex,
+  calculateAllSectorIndices,
+  INDEX_BASE_POINTS,
+  SECTOR_INDEX_CONFIG,
+} from './indexCalculation';
+import type { Stock, Sector } from '../types';
 
 describe('calculateMarketIndex', () => {
   const createStock = (
@@ -10,6 +16,7 @@ describe('calculateMarketIndex', () => {
   ): Stock => ({
     symbol,
     name: symbol,
+    sector: 'tech',
     currentPrice: priceHistory[priceHistory.length - 1]?.close ?? 0,
     change: 0,
     changePercent: 0,
@@ -230,5 +237,148 @@ describe('calculateMarketIndex', () => {
     // Current weighted price = (100 + 200) / 2 = 150
     // Index = 10000
     expect(result.currentPrice).toBe(INDEX_BASE_POINTS);
+  });
+});
+
+describe('calculateSectorIndex', () => {
+  const createStock = (
+    symbol: string,
+    sector: Sector,
+    priceHistory: { time: number; open: number; high: number; low: number; close: number }[],
+    marketCapBillions: number = 100
+  ): Stock => ({
+    symbol,
+    name: symbol,
+    sector,
+    currentPrice: priceHistory[priceHistory.length - 1]?.close ?? 0,
+    change: 0,
+    changePercent: 0,
+    priceHistory,
+    marketCapBillions,
+  });
+
+  it('should return correct name and symbol for each sector', () => {
+    const sectors: Sector[] = ['tech', 'finance', 'industrial', 'commodities'];
+
+    for (const sector of sectors) {
+      const result = calculateSectorIndex([], sector);
+      expect(result.name).toBe(SECTOR_INDEX_CONFIG[sector].name);
+      expect(result.symbol).toBe(SECTOR_INDEX_CONFIG[sector].symbol);
+      expect(result.sector).toBe(sector);
+    }
+  });
+
+  it('should only include stocks from the specified sector', () => {
+    const stocks: Stock[] = [
+      createStock('AAPL', 'tech', [
+        { time: 1000, open: 100, high: 110, low: 90, close: 100 },
+        { time: 2000, open: 100, high: 120, low: 95, close: 120 },
+      ], 100),
+      createStock('JPM', 'finance', [
+        { time: 1000, open: 200, high: 210, low: 190, close: 200 },
+        { time: 2000, open: 200, high: 205, low: 175, close: 180 },
+      ], 100),
+    ];
+
+    const techIndex = calculateSectorIndex(stocks, 'tech');
+    const financeIndex = calculateSectorIndex(stocks, 'finance');
+
+    // Tech stock went up 20%
+    expect(techIndex.currentPrice).toBe(12000);
+    // Finance stock went down 10%
+    expect(financeIndex.currentPrice).toBe(9000);
+  });
+
+  it('should return empty index for sector with no stocks', () => {
+    const stocks: Stock[] = [
+      createStock('AAPL', 'tech', [
+        { time: 1000, open: 100, high: 110, low: 90, close: 100 },
+      ], 100),
+    ];
+
+    const result = calculateSectorIndex(stocks, 'commodities');
+
+    expect(result.currentPrice).toBe(0);
+    expect(result.priceHistory).toHaveLength(0);
+    expect(result.sector).toBe('commodities');
+  });
+
+  it('should weight stocks within sector by market cap', () => {
+    const stocks: Stock[] = [
+      createStock('AAPL', 'tech', [
+        { time: 1000, open: 100, high: 110, low: 90, close: 100 },
+        { time: 2000, open: 100, high: 120, low: 95, close: 120 },
+      ], 900), // 90% weight, +20%
+      createStock('MSFT', 'tech', [
+        { time: 1000, open: 100, high: 110, low: 90, close: 100 },
+        { time: 2000, open: 100, high: 105, low: 75, close: 80 },
+      ], 100), // 10% weight, -20%
+    ];
+
+    const result = calculateSectorIndex(stocks, 'tech');
+
+    // Weighted: 0.9 * 20% + 0.1 * (-20%) = 18% - 2% = 16%
+    expect(result.currentPrice).toBe(11600);
+  });
+});
+
+describe('calculateAllSectorIndices', () => {
+  const createStock = (
+    symbol: string,
+    sector: Sector,
+    priceHistory: { time: number; open: number; high: number; low: number; close: number }[],
+    marketCapBillions: number = 100
+  ): Stock => ({
+    symbol,
+    name: symbol,
+    sector,
+    currentPrice: priceHistory[priceHistory.length - 1]?.close ?? 0,
+    change: 0,
+    changePercent: 0,
+    priceHistory,
+    marketCapBillions,
+  });
+
+  it('should return indices for all four sectors', () => {
+    const stocks: Stock[] = [
+      createStock('AAPL', 'tech', [{ time: 1000, open: 100, high: 110, low: 90, close: 100 }], 100),
+      createStock('JPM', 'finance', [{ time: 1000, open: 100, high: 110, low: 90, close: 100 }], 100),
+      createStock('BA', 'industrial', [{ time: 1000, open: 100, high: 110, low: 90, close: 100 }], 100),
+      createStock('XOM', 'commodities', [{ time: 1000, open: 100, high: 110, low: 90, close: 100 }], 100),
+    ];
+
+    const result = calculateAllSectorIndices(stocks);
+
+    expect(result.tech).toBeDefined();
+    expect(result.finance).toBeDefined();
+    expect(result.industrial).toBeDefined();
+    expect(result.commodities).toBeDefined();
+
+    expect(result.tech.name).toBe('D-GREX Tek');
+    expect(result.finance.name).toBe('D-GREX Fin');
+    expect(result.industrial.name).toBe('D-GREX Ind');
+    expect(result.commodities.name).toBe('D-GREX Raw');
+  });
+
+  it('should handle missing sectors gracefully', () => {
+    const stocks: Stock[] = [
+      createStock('AAPL', 'tech', [{ time: 1000, open: 100, high: 110, low: 90, close: 100 }], 100),
+    ];
+
+    const result = calculateAllSectorIndices(stocks);
+
+    expect(result.tech.currentPrice).toBe(INDEX_BASE_POINTS);
+    expect(result.finance.currentPrice).toBe(0);
+    expect(result.industrial.currentPrice).toBe(0);
+    expect(result.commodities.currentPrice).toBe(0);
+  });
+});
+
+describe('SECTOR_INDEX_CONFIG', () => {
+  it('should have correct configuration for all sectors', () => {
+    expect(SECTOR_INDEX_CONFIG.tech).toEqual({ name: 'D-GREX Tek', symbol: 'DGREX-T' });
+    expect(SECTOR_INDEX_CONFIG.finance).toEqual({ name: 'D-GREX Fin', symbol: 'DGREX-F' });
+    expect(SECTOR_INDEX_CONFIG.industrial).toEqual({ name: 'D-GREX Ind', symbol: 'DGREX-I' });
+    expect(SECTOR_INDEX_CONFIG.commodities).toEqual({ name: 'D-GREX Raw', symbol: 'DGREX-R' });
   });
 });
